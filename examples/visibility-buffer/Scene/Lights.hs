@@ -35,6 +35,7 @@ import Geomancy (Vec3, vec3, withVec4)
 import qualified Geomancy.Vec4 as Vec4
 import qualified Vulkan.Core10 as Vk
 
+import qualified Pipeline.Common as Common
 import qualified Pipeline.Shade as Shade
 import qualified Scene.Cave as Cave
 import qualified Upload
@@ -45,13 +46,11 @@ position (Shade.Light posHalf _colInt) = withVec4 posHalf \x y z _half -> vec3 x
 
 {- | Where a light is spent: the resolve fades its contribution to zero here.
 
-The @0.0125@ floor is mirrored as @reach² = intensity * 80@ in the resolve's
-falloff window ("Pipeline.Shade.Shader") — that window is what makes culling
-shadow occluders at this radius exact rather than approximate. For the
-intensity-20 orb it lands at 40 m, matching the 'glowstones' doc's figure.
+The CPU mirror of the shaders' @lightReach2@ ('Common.lightReachFactor'). For an
+intensity-20 light it lands at 40 m, matching the 'glowstones' doc's figure.
 -}
 reach :: Shade.Light -> Float
-reach (Shade.Light _posHalf colInt) = withVec4 colInt \_r _g _b i -> sqrt (i / 0.0125)
+reach (Shade.Light _posHalf colInt) = withVec4 colInt \_r _g _b i -> sqrt (i * Common.lightReachFactor)
 
 {- | The static glowing blocks
 
@@ -86,7 +85,7 @@ Chosen so a backroom meters just past the auto-exposure ceiling: lit enough to r
 dark enough that walking in from the stage costs the viewer a real adaptation.
 -}
 glowstoneIntensity :: Float
-glowstoneIntensity = 8
+glowstoneIntensity = 5
 
 {- | A dynamic orb: an animated light drawn as a glowing sphere.
 
@@ -112,15 +111,15 @@ data Orb = Orb
 
 {- | The scene's dynamic orbs — any number, including none.
 
-Each takes an object slot, a lights-SSBO entry and its own shadow-cube slice, all
-refreshed per frame — so the orb's shadows are the only ones that move. The shadow
-refresh culls occluders to one sphere covering every orb's 'reach' (a shared
-occluder set), so far-apart orbs degrade its effectiveness — see @orbCullSphere@
-in "Scene".
+Each takes an object slot, a lights-SSBO entry, its own shadow-cube slice and its
+own culled occluder set (the cave cubes within its 'reach', "Pipeline.Cull") —
+all refreshed per frame, so the orb shadows are the only ones that move and
+far-apart orbs don't inflate each other's shadow draws.
 -}
 orbs :: [Orb]
 orbs =
-  [ Orb{phase = 0.6, speed = 1, orbit = 8, bob = 1.5, size = 0.25, color = vec3 0.7 0.9 1.0, intensity = 20}
+  [ Orb{phase = 0.6, speed = 0.5, orbit = 2, bob = 5, size = 0.125, color = 1, intensity = 10}
+  , Orb{phase = 30, speed = -0.25, orbit = 32, bob = 1.5, size = 0.25, color = vec3 1.0 0.45 0.7, intensity = 2}
   ]
 
 -- | The orb's world position at time @t@ (seconds).

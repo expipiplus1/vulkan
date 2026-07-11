@@ -31,6 +31,8 @@ module Vulkan.Utils.FrameGraph.Image
   , flagsUsage
   , transitionImageTo
   , transitionImagesTo
+  , sliceLayers
+  , copyManagedImageToHost
   ) where
 
 import Control.Monad (foldM, unless, when)
@@ -157,6 +159,8 @@ data Usage
   | StorageWrite Vk.PipelineStageFlags
   | -- | Sampled in the given shader stage (fragment, compute, …).
     Sampled Vk.PipelineStageFlags
+  | -- | Read by the host after a fence (@GENERAL@, the layout mapped linear images live in).
+    HostRead
   deriving stock (Eq, Ord, Show)
 
 {- | The target state each 'Usage' requires. Stage/access mirror the
@@ -195,9 +199,11 @@ usageState = \case
     ImageState Vk.IMAGE_LAYOUT_GENERAL stage Vk.ACCESS_SHADER_WRITE_BIT
   Sampled stage ->
     ImageState Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL stage Vk.ACCESS_SHADER_READ_BIT
+  HostRead ->
+    ImageState Vk.IMAGE_LAYOUT_GENERAL Vk.PIPELINE_STAGE_HOST_BIT Vk.ACCESS_HOST_READ_BIT
 
 {- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
-The five fixed usages are small tags; the storage and sampled usages set a
+The fixed usages are small tags; the storage and sampled usages set a
 marker bit and pack their read/write bit and shader stage into the low half.
 -}
 usageFlags :: Usage -> FG.Flags
@@ -207,6 +213,7 @@ usageFlags = \case
   TransferSrc -> FG.Flags 2
   TransferDst -> FG.Flags 3
   Present -> FG.Flags 4
+  HostRead -> FG.Flags 5
   StorageRead stage -> FG.Flags (storageMarker .|. stageBits stage)
   StorageWrite stage -> FG.Flags (storageMarker .|. writeBit .|. stageBits stage)
   Sampled stage -> FG.Flags (sampledMarker .|. stageBits stage)
@@ -223,7 +230,9 @@ flagsUsage (FG.Flags w)
       1 -> DepthAttachment
       2 -> TransferSrc
       3 -> TransferDst
-      _ -> Present
+      4 -> Present
+      5 -> HostRead
+      _ -> error ("Vulkan.Utils.FrameGraph.Image.flagsUsage: not an image usage: " <> show w)
 
 -- Bit layout packing a storage/sampled usage's stage into the 64-bit 'FG.Flags'.
 storageMarker, sampledMarker, writeBit, stageMask :: Word64
@@ -248,6 +257,7 @@ usageWrites = \case
   Present -> False
   StorageRead _ -> False
   Sampled _ -> False
+  HostRead -> False
 
 {- | Record the barrier bringing the image into the 'Usage''s state and update
 the tracked state. Standalone counterpart to the hook path, for barriers
@@ -278,6 +288,29 @@ transitionImagesTo cb accesses = do
       nextTransition lastQueue mi usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
+
+{- | Copy an image into a host-readable one via the trackers.
+
+The source moves to @TRANSFER_SRC@ from whatever state it is actually in, the
+destination through @TRANSFER_DST@ to 'HostRead' — no assumed layouts, no
+hand-rolled host barrier. Copies the first mip and layer of each wrapper's
+slice (the aspects must match).
+-}
+copyManagedImageToHost :: (MonadIO m) => Vk.CommandBuffer -> Vk.Extent2D -> ManagedImage -> ManagedImage -> m ()
+copyManagedImageToHost cb (Vk.Extent2D w h) src cpu = do
+  transitionImagesTo cb [(src, TransferSrc), (cpu, TransferDst)]
+  Vk.cmdCopyImage
+    cb
+    src.image
+    (usageState TransferSrc).layout
+    cpu.image
+    (usageState TransferDst).layout
+    [Vk.ImageCopy (sliceLayers src) (Vk.Offset3D 0 0 0) (sliceLayers cpu) (Vk.Offset3D 0 0 0) (Vk.Extent3D w h 1)]
+  transitionImageTo cb cpu HostRead
+
+-- | The slice's first mip and layer, as a transfer command's subresource.
+sliceLayers :: ManagedImage -> Vk.ImageSubresourceLayers
+sliceLayers mi = Vk.ImageSubresourceLayers mi.range.aspectMask mi.range.baseMipLevel mi.range.baseArrayLayer 1
 
 {- | The hook path: 'transitionImageTo' rules, but queued and queue-aware.
 

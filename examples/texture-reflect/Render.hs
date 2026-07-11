@@ -33,7 +33,7 @@ import Foreign.Ptr (castPtr)
 import Foreign.Storable (poke, sizeOf)
 import qualified Fragr as FG
 import HeadlessBoot (submitAndWait)
-import ImageReadback (copyImageToHost, makeReadbackImage)
+import ImageReadback (makeReadbackImage)
 import RenderTarget (createColorTarget, createDepthTarget)
 import System.Exit (exitFailure)
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
@@ -44,7 +44,7 @@ import qualified Vulkan.Core13 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (Usage (..), importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (..), copyManagedImageToHost, importManagedImage, newManagedImage, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
@@ -110,11 +110,12 @@ render allocator device graphicsQueueFamilyIndex = do
   -- Each pass owns its targets and pipeline; the offscreen handle and view flow
   -- into the cube pass (which samples the drawn image and reads it back).
   (offscreenView, offscreenColored) <- offscreenTrianglePass shared globalsSet
-  sceneImage <- cubePass shared offscreenView offscreenColored
+  scene <- cubePass shared offscreenView offscreenColored
 
   FG.compile graph
 
   (cpuImage, readback) <- makeReadbackImage allocator device colorFormat extent
+  cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
   (_, commandPool) <-
     Vk.withCommandPool device zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex} Nothing allocate
   graphicsQueue <- Vk.getDeviceQueue device graphicsQueueFamilyIndex 0
@@ -125,9 +126,9 @@ render allocator device graphicsQueueFamilyIndex = do
   Vk.useCommandBuffer cb oneShot $ do
     -- Records both passes, firing the transition hooks in between.
     FG.execute graph recorder ()
-    -- Scene is left in COLOR_ATTACHMENT_OPTIMAL; the readback issues its own
-    -- colour->transfer-src barrier.
-    copyImageToHost cb extent sceneImage cpuImage
+    -- The readback picks the scene up from the tracker (the cube pass left it
+    -- in COLOR_ATTACHMENT_OPTIMAL) — no assumed layouts.
+    copyManagedImageToHost cb extent scene cpuManaged
   submitAndWait device graphicsQueue cb "Timed out in the render-to-texture passes"
   readback
 
@@ -141,7 +142,7 @@ offscreenTrianglePass :: Shared -> Vk.DescriptorSet -> ResourceT IO (Vk.ImageVie
 offscreenTrianglePass shared globalsSet = do
   (offscreenImage, offscreenView) <- createSampledColorTarget shared.allocator shared.device colorFormat extent
 
-  offscreenH <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
+  (_, offscreenH) <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
   let mkHandle = FG.writeWith offscreenH (usageFlags ColorAttachment)
 
   tri <- Tri.allocatePipeline shared.device colorFormat shared.set0Layout
@@ -158,20 +159,20 @@ offscreenTrianglePass shared globalsSet = do
   pure (offscreenView, offscreenColored)
 
 {- | Cube pass: create the scene colour and depth targets, draw the cube
-sampling the offscreen image, and hand back the scene image for readback. Owns
-the cube pipeline, the sampler and its set 1. Reading @offscreenColored@ as a
-sampled texture is what places the colour->sampled barrier (formerly the
-hand-written @colorToSampled@); the scene/depth writes transition those
-attachments. Set 0 (Globals) is still bound from the offscreen pass — only set 1
-is bound here.
+sampling the offscreen image, and hand back the scene's tracked image for
+readback. Owns the cube pipeline, the sampler and its set 1. Reading
+@offscreenColored@ as a sampled texture is what places the colour->sampled
+barrier (formerly the hand-written @colorToSampled@); the scene/depth writes
+transition those attachments. Set 0 (Globals) is still bound from the
+offscreen pass — only set 1 is bound here.
 -}
-cubePass :: Shared -> Vk.ImageView -> FG.Handle -> ResourceT IO Vk.Image
+cubePass :: Shared -> Vk.ImageView -> FG.Handle -> ResourceT IO ManagedImage
 cubePass shared offscreenView offscreenColored = do
   (_, (sceneImage, sceneView)) <- createColorTarget shared.allocator shared.device colorFormat extent
   (_, (depthImage, depthView)) <- createDepthTarget shared.allocator shared.device depthFormat extent
 
-  sceneH <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  depthH <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+  (sceneManaged, sceneH) <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
+  (_, depthH) <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   let cubeSetup = do
         FG.readWith offscreenColored (usageFlags (Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT))
         FG.writeWith_ sceneH (usageFlags ColorAttachment)
@@ -195,13 +196,14 @@ cubePass shared offscreenView offscreenColored = do
       Vk.cmdBindVertexBuffers cb 0 [cubeBuffer] [0]
       Vk.cmdDraw cb cubeVertexCount 1 0 0
 
-  pure sceneImage
+  pure sceneManaged
 
 -- | Import a raw image into the graph as a layout-tracked 'ManagedImage'.
-importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO FG.Handle
+importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO (ManagedImage, FG.Handle)
 importImage graph name image aspect = do
   managed <- newManagedImage image aspect
-  importManagedImage graph name managed
+  handle <- importManagedImage graph name managed
+  pure (managed, handle)
 
 {- | The set 0 (Globals UBO, all stages) and set 1 (sampler) layouts, merged
 across all four shaders. One layout object per set, reused across both pipeline

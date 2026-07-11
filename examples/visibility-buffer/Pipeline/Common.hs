@@ -19,6 +19,9 @@ module Pipeline.Common
   , frag
   , vertexStruct
   , objectStruct
+  , lightStruct
+  , lightReachFactor
+  , lightReach2
   , tables
   , pullVertex
   , dais
@@ -51,6 +54,23 @@ meshEntryStruct = GlslChunk [glsl|struct MeshEntry { uint baseVertex; uint verte
 -- | The object table's element ("Scene.Objects").
 objectStruct :: GlslChunk
 objectStruct = GlslChunk [glsl|struct Object { mat4 transform; vec4 emissive; uint meshId; uint materialId; uint flags; uint pad; };|]
+
+-- | The lights SSBO's element ("Scene.Lights"): @posHalf.w@ is the block half-size, @colInt.w@ the intensity.
+lightStruct :: GlslChunk
+lightStruct = GlslChunk [glsl|struct Light { vec4 posHalf; vec4 colInt; };|]
+
+{- | Where a light is spent, squared.
+
+The one falloff cutoff: the resolve fades contributions to zero here and the
+occluder cull tests against its root ('Scene.Lights.reach' is the CPU mirror),
+which is what makes culling shadow occluders at that radius exact.
+-}
+lightReachFactor :: Float
+lightReachFactor = 80
+
+-- | @lightReach2@ over a 'lightStruct' @Light@, from 'lightReachFactor'.
+lightReach2 :: GlslChunk
+lightReach2 = GlslChunk [glsl|float lightReach2(Light l) { return l.colInt.w * $lightReachFactor; }|]
 
 -- | All three table structs, for the shaders that walk object → mesh → vertices.
 tables :: GlslChunk

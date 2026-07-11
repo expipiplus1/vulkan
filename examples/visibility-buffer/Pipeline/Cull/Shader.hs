@@ -3,13 +3,14 @@
 
 {-| Per-frame cave-cube culling.
 
-One invocation per generated cave cube. Two independent tests refill the compacted
+One invocation per generated cave cube. Independent tests refill the compacted
 draws the caller just reset: the camera test (bounding sphere vs. the frustum, then
 vs. last frame's depth pyramid when @hizValid@) appends to the camera remap and
-bumps @mainCube.instanceCount@; the orb shadow reach (sphere vs. sphere) appends to
-the occluder remap and bumps @occCube.instanceCount@. The other objects
-(glowstones, knot, orbs) are never culled — their remap entries are identity and
-their draw commands untouched.
+bumps @mainCube.instanceCount@; each orb's shadow reach (sphere vs. sphere, the
+resolve's falloff window read from the lights SSBO) appends to that orb's own
+occluder range and bumps its draw's count — far-apart orbs don't inflate each
+other's sets. The other objects (glowstones, knot, orbs) are never culled — their
+remap entries are identity and their draw commands untouched.
 
 The pyramid lags a frame, so the occlusion test is conservative only for the
 camera that rendered it: a freshly disoccluded cube pops in one frame late, and
@@ -24,8 +25,9 @@ module Pipeline.Cull.Shader
 import Data.ByteString (ByteString)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
 
-import Pipeline.Common (objectStruct)
+import Pipeline.Common (lightReach2, lightStruct, objectStruct)
 import qualified Pipeline.Common as Common
+import Scene.Objects (orbOccCountWord0, orbOccCountWordStride)
 
 code :: ByteString
 code =
@@ -35,22 +37,29 @@ code =
     layout(local_size_x = 256) in;
 
     $objectStruct
+    $lightStruct
+    $lightReach2
     layout(set = 0, binding = 0, std430) readonly buffer Objects { Object objects[]; };
     // The indirect buffer as raw words, as in the generator: cmd[1] =
-    // mainCube.instanceCount, cmd[13] = occCube.instanceCount.
+    // mainCube.instanceCount; the per-orb counter words are spliced from
+    // "Scene.Objects", the command layout's owner.
     layout(set = 0, binding = 1, std430) buffer Indirect { uint cmd[]; };
     layout(set = 0, binding = 2, std430) writeonly buffer VisibleMain { uint visMain[]; };
     layout(set = 0, binding = 3, std430) writeonly buffer VisibleOcc { uint visOcc[]; };
     // Last frame's depth pyramid: each texel is the farthest (reverse-Z minimum)
     // depth of its footprint ("Pipeline.HiZ.Shader"). NEAREST-sampled in GENERAL.
     layout(set = 0, binding = 4) uniform sampler2D hiz;
+    layout(set = 0, binding = 5, std430) readonly buffer Lights { Light lights[]; };
 
     layout(push_constant, std430) uniform Params {
       mat4 viewProj;
-      vec4 orbSphere;   // xyz = centre, w = shadow reach (< 0 when there are no orbs)
       uint caveBase;
       uint caveCount;
-      uint hizValid;    // 0 = pyramid not built yet (first frame, after resize)
+      uint hizValid;      // 0 = pyramid not built yet (first frame, after resize)
+      uint orbBase;       // first orb in the lights SSBO
+      uint orbCount;
+      uint orbOccBase;    // entry index of orb 0's occluder range in visOcc
+      uint orbOccCap;     // entries per orb range; appends beyond it are dropped
     } pc;
 
     // Is the sphere entirely behind the (unnormalized) clip plane?
@@ -116,9 +125,17 @@ code =
         visMain[n] = slot;
       }
 
-      if (pc.orbSphere.w >= 0.0 && distance(centre, pc.orbSphere.xyz) <= pc.orbSphere.w + radius) {
-        uint n = atomicAdd(cmd[13], 1u);
-        visOcc[pc.caveBase + n] = slot;
+      for (uint o = 0u; o < pc.orbCount; ++o) {
+        Light orb = lights[pc.orbBase + o];
+        // The falloff window: where the resolve spends the light is exactly
+        // where its occluders matter — an occluder of a lit receiver lies on
+        // the light→receiver segment, inside the same sphere.
+        float reach = sqrt(lightReach2(orb));
+        if (distance(centre, orb.posHalf.xyz) <= reach + radius) {
+          uint n = atomicAdd(cmd[$orbOccCountWord0 + $orbOccCountWordStride * o], 1u);
+          if (n < pc.orbOccCap)
+            visOcc[pc.orbOccBase + o * pc.orbOccCap + n] = slot;
+        }
       }
     }
   |]

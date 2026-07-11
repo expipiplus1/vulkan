@@ -10,9 +10,9 @@
 
 {-| The per-frame cull pipeline.
 
-Wraps the "Pipeline.Cull.Shader" compute pass: 'reset' rewinds the two cube
-draw commands, 'record' refills them (and their instance remaps) with the cave
-cubes that pass this frame's tests. Two graph passes at the top of the frame
+Wraps the "Pipeline.Cull.Shader" compute pass: 'reset' rewinds the camera and
+per-orb occluder cube draws, 'record' refills them (and their instance remaps)
+with the cave cubes that pass this frame's tests. Two graph passes at the top of the frame
 ("Scene"); the barriers between the fills, the dispatch and the draws that
 consume the refill are the graph tracker's.
 -}
@@ -26,6 +26,7 @@ module Pipeline.Cull
   , record
   ) where
 
+import Control.Monad (forM_)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import qualified Data.Vector as V
@@ -71,14 +72,16 @@ data CullBuffers = CullBuffers
   { objects :: Vk.Buffer
   -- ^ the shared object table (read: cave-cube bounds from the transforms).
   , indirect :: Vk.Buffer
-  -- ^ the draw commands ("Scene.Objects"); the two cube @instanceCount@s are the counters.
+  -- ^ the draw commands ("Scene.Objects"); the cube @instanceCount@s are the counters.
   , visMain :: Vk.Buffer
   -- ^ the camera instance remap, refilled from the frustum test.
   , visOcc :: Vk.Buffer
-  -- ^ the occluder instance remap, refilled from the orb-reach test.
+  -- ^ the occluder instance remap, its per-orb ranges refilled from the reach tests.
+  , lights :: Vk.Buffer
+  -- ^ the lights SSBO (read: each orb's centre and reach).
   }
 
--- | The set: 'CullBuffers' at bindings 0-3, the depth pyramid sampled at 4.
+-- | The set: 'CullBuffers' at bindings 0-3 and 5, the depth pyramid sampled at 4.
 allocateSet :: Vk.Device -> Pipeline -> CullBuffers -> Vk.Sampler -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
 allocateSet dev cull bufs sampler hizView = do
   (_, pool) <-
@@ -87,7 +90,7 @@ allocateSet dev cull bufs sampler hizView = do
       zero
         { Vk.maxSets = 1
         , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4
+            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 5
             , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
             ]
         }
@@ -102,19 +105,21 @@ allocateSet dev cull bufs sampler hizView = do
     , bufferWrite set 2 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visMain
     , bufferWrite set 3 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visOcc
     , combinedImageSamplerWrite set 4 sampler hizView Vk.IMAGE_LAYOUT_GENERAL
+    , bufferWrite set 5 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.lights
     ]
     []
   pure set
 
 {- | Reset the cube draws.
 
-@mainCube.instanceCount@ rewinds to the glowstone prefix (= @caveBase@),
-@occCube@'s to empty.
+@mainCube.instanceCount@ rewinds to the glowstone prefix (= @caveBase@), each
+orb's occluder cube to empty. The full occluder set (@occCube@) keeps the
+generator's count — only the bake draws it.
 -}
 reset :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Word32 -> m ()
 reset cb indirect caveBase = do
   Vk.cmdFillBuffer cb indirect Objects.mainCubeCountOffset 4 caveBase
-  Vk.cmdFillBuffer cb indirect Objects.occCubeCountOffset 4 0
+  forM_ Objects.orbOccCountOffsets \off -> Vk.cmdFillBuffer cb indirect off 4 0
 
 -- | Record the cull dispatch, refilling the reset draws from this frame's tests.
 record :: (MonadIO m) => Pipeline -> Vk.DescriptorSet -> Params -> Vk.CommandBuffer -> m ()

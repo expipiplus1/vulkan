@@ -18,10 +18,9 @@ module Headless
 
 import qualified Codec.Picture as JP
 import Control.Monad (foldM, forM_, unless, when)
-import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate, runResourceT)
 import qualified Data.ByteString.Lazy as BSL
-import Data.IORef (writeIORef)
 import qualified Data.IntSet as IntSet
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.Text.IO as TIO
@@ -36,10 +35,9 @@ import ImageReadback (makeReadbackImage, savePng)
 import Numeric.Half (Half)
 import System.Exit (exitFailure)
 import Vulkan.CStruct.Extends (SomeStruct (..))
-import qualified Vulkan.Core10 as ImageMemoryBarrier (ImageMemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags, usageState)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), copyManagedImageToHost, newManagedImage, sliceLayers, transitionImageTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -47,7 +45,7 @@ import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
 import Buffer (readbackBuffer)
-import Driver (beginPrimary, commandPool)
+import Driver (beginPrimary, commandPool, oneShot)
 import qualified Exposure
 import Options (Options)
 import qualified Options
@@ -128,7 +126,7 @@ render
   -> Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
-  -> ResourceT IO (JP.Image JP.PixelRGBA8, JP.Image JP.PixelRGBA8, Vk.Image, Vk.Image, Float)
+  -> ResourceT IO (JP.Image JP.PixelRGBA8, JP.Image JP.PixelRGBA8, ManagedImage, ManagedImage, Float)
 render opts allocator dev queues async = do
   -- The two families share the visibility buffer when compute is async.
   let
@@ -141,6 +139,7 @@ render opts allocator dev queues async = do
   sceneStatic <- Scene.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
   scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedFamilies True
   (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat extent
+  cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
@@ -152,7 +151,9 @@ render opts allocator dev queues async = do
         outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 exposure debugMode
         FG.addPass_ graph "readback" (readbackSetup outs.displayOut) do
           cb <- recordingCommandBuffer
-          copyToHost cb extent scene.targets.display.image cpuImage
+          -- The declared read already moved display to TRANSFER_SRC; the copy's
+          -- own transitions then only touch the destination.
+          copyManagedImageToHost cb extent scene.targets.display cpuManaged
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
         runGraph dev queues async graph
@@ -174,12 +175,14 @@ render opts allocator dev queues async = do
   saved <- if opts.debugMode == 0 then pure img else runMode (Exposure.target opts.meter lum) opts.debugMode
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
   -- it after this).
-  dumpShadowFace allocator dev (graphicsQueue, graphicsFamily) (Scene.shadowImage scene)
+  forM_ (Scene.shadowImage scene) $ dumpShadowFace allocator dev (graphicsQueue, graphicsFamily)
   let (visImage, depthImage) = Scene.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where
+    -- The queue must match the scene passes': on single-queue hardware there
+    -- is no semaphore for a cross-queue transition to lean on.
     readbackSetup displayOut = do
-      FG.setQueue computeQueue
+      FG.setQueue (computeQueueId async)
       FG.setSideEffect
       FG.readWith displayOut (usageFlags TransferSrc)
 
@@ -253,51 +256,6 @@ runGraph dev queues async graph = do
         }
         :: Vk.SubmitInfo '[]
 
-{- | Copy a @TRANSFER_SRC@ image to the host image, then make it readable.
-
-The readback hook left the source in @TRANSFER_SRC@.
--}
-copyToHost :: (MonadIO m) => Vk.CommandBuffer -> Vk.Extent2D -> Vk.Image -> Vk.Image -> m ()
-copyToHost cb (Vk.Extent2D w h) src cpuImage = do
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT
-    Vk.PIPELINE_STAGE_TRANSFER_BIT
-    zero
-    []
-    []
-    [hostBarrier zero Vk.ACCESS_TRANSFER_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL cpuImage]
-  let layers = Vk.ImageSubresourceLayers Vk.IMAGE_ASPECT_COLOR_BIT 0 0 1
-  Vk.cmdCopyImage
-    cb
-    src
-    Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-    cpuImage
-    Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-    [Vk.ImageCopy layers (Vk.Offset3D 0 0 0) layers (Vk.Offset3D 0 0 0) (Vk.Extent3D w h 1)]
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_TRANSFER_BIT
-    Vk.PIPELINE_STAGE_HOST_BIT
-    zero
-    []
-    []
-    [hostBarrier Vk.ACCESS_TRANSFER_WRITE_BIT Vk.ACCESS_HOST_READ_BIT Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL Vk.IMAGE_LAYOUT_GENERAL cpuImage]
-
-hostBarrier :: Vk.AccessFlags -> Vk.AccessFlags -> Vk.ImageLayout -> Vk.ImageLayout -> Vk.Image -> SomeStruct Vk.ImageMemoryBarrier
-hostBarrier srcAccess dstAccess oldLayout newLayout img =
-  SomeStruct
-    zero
-      { ImageMemoryBarrier.srcAccessMask = srcAccess
-      , ImageMemoryBarrier.dstAccessMask = dstAccess
-      , ImageMemoryBarrier.oldLayout = oldLayout
-      , ImageMemoryBarrier.newLayout = newLayout
-      , ImageMemoryBarrier.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-      , ImageMemoryBarrier.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-      , ImageMemoryBarrier.image = img
-      , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange Vk.IMAGE_ASPECT_COLOR_BIT 0 1 0 1
-      }
-
 ----------------------------------------------------------------
 -- Debug dumps (intermediate buffers)
 ----------------------------------------------------------------
@@ -308,11 +266,10 @@ The visibility buffer's instance-id and triangle-id channels (coloured per id) a
 depth buffer (grey; brighter = nearer, reverse-Z). Returns the ray-miss count: the
 pixels where reverse-Z depth is still the cleared @0@ (nothing was drawn).
 -}
-dumpDebug :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> Vk.Image -> Vk.Image -> Vk.Extent2D -> ResourceT IO Int
+dumpDebug :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> ManagedImage -> Vk.Extent2D -> ResourceT IO Int
 dumpDebug allocator dev qf visImage depthImage extent@(Vk.Extent2D w h) = do
-  visPtr <- copyImageToHostBuffer allocator dev qf visImage Vk.IMAGE_ASPECT_COLOR_BIT Vk.IMAGE_LAYOUT_GENERAL extent 8
-  -- Depth ends the frame in GENERAL: the depth-pyramid build sampled it.
-  depthPtr <- copyImageToHostBuffer allocator dev qf depthImage Vk.IMAGE_ASPECT_DEPTH_BIT Vk.IMAGE_LAYOUT_GENERAL extent 4
+  visPtr <- copyImageToHostBuffer allocator dev qf visImage extent 8
+  depthPtr <- copyImageToHostBuffer allocator dev qf depthImage extent 4
   liftIO $ do
     let
       wi = fromIntegral w
@@ -343,14 +300,10 @@ radiance verbatim (float RGB, no clamp) — the artifact to measure. @debug-lumi
 is a 16-bit grey ramp of the per-pixel @log2@ luminance the reduction sums, over
 'probeEvRange'. Prints the extent, the luminance range, and a host-side geometric mean
 that must agree with the GPU's.
-
-The readback leaves the image in @TRANSFER_SRC_OPTIMAL@, so the graph's tracked state
-is resynced — the debug-mode reruns below copy into this probe again.
 -}
 dumpLumProbe :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> Vk.Extent2D -> ResourceT IO ()
 dumpLumProbe allocator dev qf probe extent@(Vk.Extent2D w h) = do
-  ptr <- copyImageToHostBuffer allocator dev qf probe.image Vk.IMAGE_ASPECT_COLOR_BIT Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL extent 8
-  liftIO $ writeIORef probe.stateRef (usageState TransferSrc)
+  ptr <- copyImageToHostBuffer allocator dev qf probe extent 8
   liftIO $ do
     let
       wi = fromIntegral w
@@ -394,10 +347,10 @@ probeEvRange = (-14, 2)
 
 Reconstruct the light-space distance from the first moment (@ln(m.r)/C@) as greyscale.
 -}
-dumpShadowFace :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> Vk.Image -> ResourceT IO ()
+dumpShadowFace :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> ResourceT IO ()
 dumpShadowFace allocator dev qf moments = do
   let res = fromIntegral Scene.shadowRes
-  ptr <- copyImageToHostBuffer allocator dev qf moments Vk.IMAGE_ASPECT_COLOR_BIT Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL (Vk.Extent2D Scene.shadowRes Scene.shadowRes) 16
+  ptr <- copyImageToHostBuffer allocator dev qf moments (Vk.Extent2D Scene.shadowRes Scene.shadowRes) 16
   liftIO $
     savePng "debug-shadow.png"
       =<< JP.withImage res res \x y -> do
@@ -407,45 +360,25 @@ dumpShadowFace allocator dev qf moments = do
           v = round (255 * max 0 (min 1 d))
         pure (JP.PixelRGBA8 v v v 255)
 
-{- | Copy an image (currently in @currentLayout@) to a mapped host buffer.
+{- | Copy the first layer of a tracked image's slice to a mapped host buffer.
 
-Returns the invalidated mapped pointer. @bpp@ is the format's bytes per pixel; the
-image must have been created with @TRANSFER_SRC@ usage.
+The @TRANSFER_SRC@ transition comes from the image's tracker (and covers the
+whole slice, advancing it). Returns the invalidated mapped pointer. @bpp@ is
+the format's bytes per pixel; the image must have been created with
+@TRANSFER_SRC@ usage.
 -}
-copyImageToHostBuffer :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> Vk.Image -> Vk.ImageAspectFlags -> Vk.ImageLayout -> Vk.Extent2D -> Int -> ResourceT IO (Ptr ())
-copyImageToHostBuffer allocator dev (queue, family) image aspect currentLayout (Vk.Extent2D w h) bpp = do
+copyImageToHostBuffer :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> Vk.Extent2D -> Int -> ResourceT IO (Ptr ())
+copyImageToHostBuffer allocator dev qf mi (Vk.Extent2D w h) bpp = do
   let size = fromIntegral (fromIntegral w * fromIntegral h * bpp) :: Vk.DeviceSize
   (_, (buffer, alloc, mapped)) <- readbackBuffer allocator size
-  pool <- commandPool dev family
-  cb <- beginPrimary dev pool
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT
-    Vk.PIPELINE_STAGE_TRANSFER_BIT
-    zero
-    []
-    []
-    [ SomeStruct
-        zero
-          { ImageMemoryBarrier.dstAccessMask = Vk.ACCESS_TRANSFER_READ_BIT
-          , ImageMemoryBarrier.oldLayout = currentLayout
-          , ImageMemoryBarrier.newLayout = Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-          , ImageMemoryBarrier.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-          , ImageMemoryBarrier.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-          , ImageMemoryBarrier.image = image
-          , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 0 1
-          }
-    ]
-  Vk.cmdCopyImageToBuffer
-    cb
-    image
-    Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-    buffer
-    [Vk.BufferImageCopy 0 0 0 (Vk.ImageSubresourceLayers aspect 0 0 1) (Vk.Offset3D 0 0 0) (Vk.Extent3D w h 1)]
-  Vk.endCommandBuffer cb
-  (_, fence) <- Vk.withFence dev zero Nothing allocate
-  Vk.queueSubmit queue [SomeStruct (zero{Vk.commandBuffers = [Vk.commandBufferHandle cb]} :: Vk.SubmitInfo '[])] fence
-  _ <- Vk.waitForFences dev [fence] True maxBound
+  oneShot dev qf \cb -> do
+    transitionImageTo cb mi TransferSrc
+    Vk.cmdCopyImageToBuffer
+      cb
+      mi.image
+      Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+      buffer
+      [Vk.BufferImageCopy 0 0 0 (sliceLayers mi) (Vk.Offset3D 0 0 0) (Vk.Extent3D w h 1)]
   VMA.invalidateAllocation allocator alloc 0 Vk.WHOLE_SIZE
   pure mapped
 

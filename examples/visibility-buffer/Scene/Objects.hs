@@ -12,17 +12,19 @@ base ('caveBase'), so every draw command's @firstInstance@ is static:
   0            G-1     G                    K-1          K   K+1     O
 @
 
-The indirect buffer holds five 'Vk.DrawIndirectCommand's: @mainCube mainKnot
-mainSphere@ (the camera pass draws these three) then @occCube occKnot@ (the shadow
-pass draws these two, @occCube@ skipping the non-occluder glowstones; the orb spheres
-are not occluders). The gen bumps the two cube @instanceCount@s; every other field
-is CPU-static.
+The indirect buffer holds @mainCube mainKnot mainSphere@ (the camera pass draws
+these three), @occCube occKnot@ (the full occluder set the static bake draws,
+@occCube@ skipping the non-occluder glowstones; the orb spheres are not
+occluders), then one @orbOccCube orbOccKnot@ pair per orb — the per-frame
+@shadow.orbs@ refresh draws orb @i@'s pair, whose cube range the cull compacts
+to that orb's reach alone. The gen bumps the main and full-occ cube
+@instanceCount@s once; the cull resets and refills the per-orb ones each frame.
 
 The vertex shaders don't index the table by @gl_InstanceIndex@ directly: each draw
 family goes through an instance remap (camera @visMain@, occluder @visOcc@) holding
 one object id per drawn instance. The never-culled slots are identity
-('uploadStaticRemap', and the gen seeds its cubes likewise); the per-frame cull
-compacts the cave range ("Pipeline.Cull").
+('uploadStaticRemap', and the gen seeds its cubes likewise); the per-orb ranges
+sit past 'remapBytes' in @visOcc@, 'orbOccCap' entries each.
 -}
 module Scene.Objects
   ( Layout (..)
@@ -30,16 +32,22 @@ module Scene.Objects
   , objectBufferBytes
   , indirectBytes
   , remapBytes
+  , occRemapBytes
+  , orbOccCap
   , mainDrawOffset
   , mainCubeCountOffset
   , occluderDrawOffset
-  , occCubeCountOffset
+  , orbOccDrawOffset
+  , orbOccCountOffsets
+  , orbOccCountWord0
+  , orbOccCountWordStride
   , drawStride
   , mainDrawCount
   , occluderDrawCount
   , uploadDrawCommands
   , uploadStaticObjects
   , uploadStaticRemap
+  , seedOrbOccRemap
   , writeOrbObjects
   ) where
 
@@ -103,39 +111,72 @@ mainDrawOffset = 0
 occluderDrawOffset :: Vk.DeviceSize
 occluderDrawOffset = fromIntegral mainDrawCount * fromIntegral drawStride
 
-{- | Byte offsets of the two cube @instanceCount@s — the gen's and the cull's counters.
+-- | Byte offset of orb @i@'s @[orbOccCube, orbOccKnot]@ pair.
+orbOccDrawOffset :: Word32 -> Vk.DeviceSize
+orbOccDrawOffset i = occluderDrawOffset + fromIntegral (occluderDrawCount + 2 * i) * fromIntegral drawStride
 
-The shaders hardcode them as word indices (@cmd[1]@, @cmd[13]@ in
-"Pipeline.Voxels.Gen" and "Pipeline.Cull.Shader"); keep all three in step.
+{- | Byte offset of the camera cube draw's @instanceCount@ — the gen's, then the cull's counter.
+
+"Pipeline.Voxels.Gen" hardcodes it (and the full occluder cube's, at
+@occluderDrawOffset + 4@) as word indices @cmd[1]@ / @cmd[13]@; keep them in step.
 -}
-mainCubeCountOffset, occCubeCountOffset :: Vk.DeviceSize
+mainCubeCountOffset :: Vk.DeviceSize
 mainCubeCountOffset = mainDrawOffset + 4
-occCubeCountOffset = occluderDrawOffset + 4
+
+-- | Byte offsets of the per-orb occluder-cube @instanceCount@s (the cull's counters).
+orbOccCountOffsets :: [Vk.DeviceSize]
+orbOccCountOffsets = [orbOccDrawOffset i + 4 | i <- [0 .. Lights.orbCount - 1]]
+
+{- | Orb @o@'s counter as a raw-word index: @orbOccCountWord0 + orbOccCountWordStride * o@.
+
+Spliced into "Pipeline.Cull.Shader"'s @cmd[]@ access, so the command layout has
+one owner.
+-}
+orbOccCountWord0, orbOccCountWordStride :: Word32
+orbOccCountWord0 = fromIntegral (orbOccDrawOffset 0 + 4) `div` 4
+orbOccCountWordStride = 2 * drawStride `div` 4
 
 indirectBytes :: Vk.DeviceSize
-indirectBytes = fromIntegral (mainDrawCount + occluderDrawCount) * fromIntegral drawStride
+indirectBytes = fromIntegral (mainDrawCount + occluderDrawCount + 2 * Lights.orbCount) * fromIntegral drawStride
 
 -- | Bytes for an instance remap: one @uint@ object id per drawable slot.
 remapBytes :: Layout -> Vk.DeviceSize
 remapBytes l = fromIntegral l.total * 4
 
-{- | Initialise the five draw commands.
+{- | Entries in one orb's occluder range: everything a reach sphere can plausibly
+hold, at a quarter of the cave capacity. The cull drops appends past it (losing
+those cubes' shadows for that orb); the count still runs over, so the draw's tail
+reads the 'seedOrbOccRemap' filler — duplicates of a real cube, not garbage.
+-}
+orbOccCap :: Layout -> Word32
+orbOccCap l = (l.knotBase - l.caveBase) `div` 4
 
-The cube @instanceCount@s (main starts at 'glowstoneCount', occluder at 0) are
-append counters — the generator's at bake, then the cull's each frame
-("Pipeline.Cull" resets and refills them); the rest are static.
+-- | 'remapBytes' plus the per-orb occluder ranges ('orbOccCap' entries each).
+occRemapBytes :: Layout -> Vk.DeviceSize
+occRemapBytes l = remapBytes l + fromIntegral (Lights.orbCount * orbOccCap l) * 4
+
+{- | Initialise the draw commands.
+
+The cube @instanceCount@s (main starts at 'glowstoneCount', the occluders at 0)
+are append counters — the generator's at bake, then the cull's each frame
+("Pipeline.Cull" resets and refills the per-orb ones); the rest are static.
 -}
 uploadDrawCommands :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
 uploadDrawCommands cb buffer l = Upload.slice cb buffer 0 commands
   where
     -- vertexCount, instanceCount, firstVertex, firstInstance
+    occKnot = Vk.DrawIndirectCommand Meshes.knotVertexCount knotObjectCount 0 l.knotBase
     commands =
       [ Vk.DrawIndirectCommand Meshes.cubeVertexCount glowstoneCount 0 0 -- mainCube (+ cave cubes)
       , Vk.DrawIndirectCommand Meshes.knotVertexCount knotObjectCount 0 l.knotBase -- mainKnot
       , Vk.DrawIndirectCommand Meshes.sphereVertexCount Lights.orbCount 0 l.orbBase -- mainSphere (orbs)
       , Vk.DrawIndirectCommand Meshes.cubeVertexCount 0 0 l.caveBase -- occCube (cave cubes only)
-      , Vk.DrawIndirectCommand Meshes.knotVertexCount knotObjectCount 0 l.knotBase -- occKnot
+      , occKnot
       ]
+        <> concat
+          [ [Vk.DrawIndirectCommand Meshes.cubeVertexCount 0 0 (l.total + i * orbOccCap l), occKnot] -- orb i's pair
+          | i <- [0 .. Lights.orbCount - 1]
+          ]
 
 {- | Write the CPU-known objects.
 
@@ -178,6 +219,16 @@ uploadStaticRemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m
 uploadStaticRemap cb buffer l = do
   when (l.caveBase > 0) $ Upload.slice cb buffer 0 [0 .. l.caveBase - 1 :: Word32]
   Upload.slice cb buffer l.knotBase [l.knotBase .. l.total - 1]
+
+{- | Fill the per-orb occluder ranges with the first cave slot.
+
+The filler is only ever drawn on range overflow (see 'orbOccCap'), and a
+duplicate of a real occluder shadows idempotently.
+-}
+seedOrbOccRemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
+seedOrbOccRemap cb buffer l =
+  when (Lights.orbCount > 0) $
+    Vk.cmdFillBuffer cb buffer (remapBytes l) (occRemapBytes l - remapBytes l) l.caveBase
 
 {- | (Re)write the dynamic orb spheres (from 'orbBase') for time @t@.
 

@@ -23,7 +23,7 @@ module Pipeline.Shade.Shader
 import Data.ByteString (ByteString)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
 
-import Pipeline.Common (dais, evsm, tables)
+import Pipeline.Common (dais, evsm, lightReach2, lightStruct, tables)
 import qualified Pipeline.Common as Common
 
 code :: ByteString
@@ -38,7 +38,8 @@ code =
 
     $tables
     layout(set = 0, binding = 2, std430) readonly buffer Vertices { Vertex verts[]; };
-    struct Light { vec4 posHalf; vec4 colInt; };
+    $lightStruct
+    $lightReach2
     layout(set = 0, binding = 3, std430) readonly buffer Lights { Light lights[]; };
     layout(set = 0, binding = 4) uniform samplerCubeArray shadowCube;
     layout(set = 0, binding = 5, std430) readonly buffer Objects { Object objects[]; };
@@ -102,10 +103,10 @@ code =
         float ndl = max(0.0, dot(n, L));
         if (ndl <= 0.0) continue;
         float d2 = dot(dv, dv);
-        // Fade to zero over the last 20% of the light's reach (Scene.Lights.reach:
-        // reach² = intensity / 0.0125). The shadow refresh culls occluders at that
-        // same reach, so the light must be spent there or culled shadows would leak.
-        float reach2 = lights[i].colInt.w * 80.0;
+        // Fade to zero over the last 20% of the light's reach. The shadow
+        // refresh culls occluders at that same reach, so the light must be
+        // spent there or culled shadows would leak.
+        float reach2 = lightReach2(lights[i]);
         float win = 1.0 - smoothstep(0.64 * reach2, reach2, d2);
         if (win <= 0.0) continue;
         float atten = win * lights[i].colInt.w / (d2 + 0.001);
