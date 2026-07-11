@@ -23,6 +23,9 @@ module Vulkan.Utils.FrameGraph.Image
   , importScratchImage
   , describedAs
   , imageInfo
+  , describedImage
+  , describedMip
+  , describedSlice
   , ImageState (..)
   , undefinedState
   , Usage (..)
@@ -112,6 +115,20 @@ describedAs t mi = mi{info = t}
 imageInfo :: Vk.Format -> Vk.Extent2D -> Text
 imageInfo format (Vk.Extent2D w h) =
   Text.pack (drop (Text.length "FORMAT_") (show format) <> " " <> show w <> "x" <> show h)
+
+{- | 'newManagedImage' with the 'imageInfo' description attached, stating the
+allocation's format/extent once.
+-}
+describedImage :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
+describedImage format ext image aspect = describedAs (imageInfo format ext) <$> newManagedImage image aspect
+
+-- | 'newManagedImageMip' with the mip's 'imageInfo' description attached.
+describedMip :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+describedMip format ext image aspect mip = describedAs (imageInfo format ext) <$> newManagedImageMip image aspect mip
+
+-- | A mip-0 layer range via 'newManagedImageSlice', with the 'imageInfo' description attached.
+describedSlice :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> m ManagedImage
+describedSlice format ext image aspect baseLayer layerCount = describedAs (imageInfo format ext) <$> newManagedImageSlice image aspect 0 1 baseLayer layerCount
 
 instance FG.Resource ManagedImage where
   type Desc ManagedImage = ImageDesc

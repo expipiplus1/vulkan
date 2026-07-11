@@ -72,7 +72,7 @@ import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedAs, imageInfo, importManagedImage, importScratchImage, newManagedImage, newManagedImageMip, newManagedImageSlice, transitionImageTo, transitionImagesTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, transitionImageTo, transitionImagesTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -704,20 +704,6 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , cullSet
       , hizPrimed
       }
-
-{- | 'newManagedImage' with the 'imageInfo' description attached, stating the
-allocation's format/extent once.
--}
-describedImage :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
-describedImage format ext image aspect = describedAs (imageInfo format ext) <$> newManagedImage image aspect
-
--- | 'newManagedImageMip' with the mip's 'imageInfo' description attached.
-describedMip :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
-describedMip format ext image aspect mip = describedAs (imageInfo format ext) <$> newManagedImageMip image aspect mip
-
--- | A mip-0 layer range via 'newManagedImageSlice', with the 'imageInfo' description attached.
-describedSlice :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> m ManagedImage
-describedSlice format ext image aspect baseLayer layerCount = describedAs (imageInfo format ext) <$> newManagedImageSlice image aspect 0 1 baseLayer layerCount
 
 -- | The tracked visibility and depth images after a frame, for headless debug dumps.
 debugImages :: Scene -> (ManagedImage, ManagedImage)

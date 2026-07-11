@@ -8,7 +8,7 @@ import qualified TriangleDynamic
 import Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeatures)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import qualified Vulkan.Utils.Requirements.TH as U
-import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Zero (zero)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
@@ -28,7 +28,7 @@ main = runResourceT $ do
               PhysicalDeviceDynamicRenderingFeatures.dynamicRendering
             |]
         , vmaFlags = zero
-        , swapchainConfig = defaultSwapchainConfig
+        , swapchainConfig = defaultSwapchainConfig{scSurfaceFormatPreferences = [unormEncoding]}
         }
       (Window.glfwAdapter window)
   TriangleDynamic.runTriangle

@@ -8,7 +8,7 @@ regardless of queue topology.
 The fractal only changes when the window resizes or the cursor moves; its
 steady state is "re-present the same image". Each frame declares a graph of up
 to three passes — @julia@ (compute → offscreen), @blit@ (offscreen → swapchain)
-and a terminal 'FG.finalize' (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
+and a terminal 'presentSwapchain' (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
 parameters changed and @blit@ only when the acquired swapchain image does not
 already hold the current fractal. fragr places exactly the barriers the
 surviving passes need: a fully idle frame records /nothing/ and just re-presents.
@@ -61,10 +61,11 @@ import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
+import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
-import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
@@ -126,6 +127,7 @@ windowConfig =
               , Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT
               ]
           , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_BLIT_DST_BIT]
+          , scSurfaceFormatPreferences = [unormEncoding]
           }
     }
 
@@ -218,7 +220,7 @@ allocateBindings dev allocator jp sharedFamilies sc = do
     createJuliaDescriptorSets dev (jpDescriptorSetLayout jp) [view]
 
   offscreen <- newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
-  swapImages <- traverse (\img -> newManagedImage img Vk.IMAGE_ASPECT_COLOR_BIT) (sImages sc)
+  swapImages <- newSwapchainImages sc
   lastConstants <- liftIO (newIORef Nothing)
   freshImages <- liftIO (newIORef IntSet.empty)
 
@@ -307,11 +309,10 @@ renderJulia vc jp topology colorRef bindings f = do
     -- Compute only on a parameter change; blit unless this image already holds
     -- the current fractal (a dirty frame invalidates every other image).
     needBlit = dirty || not (IntSet.member ix freshImages)
-    swapManaged = bSwapImages bindings V.! ix
 
   graph <- FG.newFrameGraph
   offscreenH <- importManagedImage graph "offscreen" bindings.bOffscreen
-  swapchainH <- importManagedImage graph "swapchain" swapManaged
+  (swapchainH, swapManaged) <- importSwapchain graph bindings.bSwapImages imageIndex
 
   colorPhase <- liftIO (readIORef colorRef)
   offscreenReady <-
@@ -328,11 +329,8 @@ renderJulia vc jp topology colorRef bindings f = do
         blitImage (sExtent sc) bindings.bOffscreen.image swapManaged.image cb
       else pure swapchainH
 
-  -- Always present: finalizing the imported swapchain registers a
-  -- side-effecting terminal pass, so the chain survives culling and the write
-  -- hook brings the image to PRESENT_SRC (a no-op barrier when it is already
-  -- there, i.e. an idle re-present).
-  FG.finalize graph swapchainReady (usageFlags Present)
+  -- Always present, even when every render pass got culled (an idle re-present).
+  presentSwapchain graph swapchainReady
 
   FG.compile graph
   executeAdaptive vc f imageIndex topology dirty needBlit graph

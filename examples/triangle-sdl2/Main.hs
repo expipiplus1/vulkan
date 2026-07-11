@@ -4,7 +4,7 @@ import Control.Monad.Trans.Resource (runResourceT)
 import Data.Text (Text)
 import qualified Triangle
 import qualified Vulkan.Utils.Init.SDL2.Window as Window
-import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Zero (zero)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
@@ -20,7 +20,7 @@ main = runResourceT $ do
         , instanceReqs = []
         , deviceReqs = []
         , vmaFlags = zero
-        , swapchainConfig = defaultSwapchainConfig
+        , swapchainConfig = defaultSwapchainConfig{scSurfaceFormatPreferences = [unormEncoding]}
         }
       (Window.sdl2Adapter window)
   Triangle.runTriangle
