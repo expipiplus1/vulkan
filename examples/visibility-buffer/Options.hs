@@ -59,7 +59,7 @@ optionsP =
     <*> option auto (long "size" <> metavar "PX" <> value 256 <> showDefault <> help "Headless render size (square)")
     <*> option auto (long "width" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window width")
     <*> option auto (long "height" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window height")
-    <*> option auto (long "debug-mode" <> metavar "N" <> value 0 <> showDefault <> help "Windowed debug view: 0 beauty, 1 albedo, 2 metalness, 3 roughness, 4 normal")
+    <*> option auto (long "debug-mode" <> metavar "N" <> value 0 <> showDefault <> help "Debug view (windowed and the headless PNG): 0 beauty, 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao")
     <*> meterP
     <*> tweaksP
   where
@@ -98,6 +98,10 @@ tweaksP =
     <$> tuningP
     <*> knob "bloom-strength" d.bloomStrength "Bloom mix bias toward the pyramid"
     <*> knob "bloom-radius" d.bloomRadius "Bloom upsample tent radius"
+    <*> knob "ao-radius" d.aoRadius "SSAO gather radius, in world units"
+    <*> knob "ao-intensity" d.aoIntensity "SSAO obscurance strength (0 disables)"
+    <*> knob "ao-bias" d.aoBias "SSAO horizon bias against self-occlusion"
+    <*> knob "ao-sharpness" d.aoSharpness "AO blur edge-stop (higher keeps edges crisper)"
   where
     d = Scene.defaultTweaks
 

@@ -49,6 +49,7 @@ import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.Int (Int32)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -88,6 +89,7 @@ import qualified Pipeline.Mesh as Mesh
 import qualified Pipeline.Shade as Shade
 import qualified Pipeline.Shadow as Shadow
 import Pipeline.Shadow.Params (Params (..))
+import qualified Pipeline.Ssao as Ssao
 import qualified Pipeline.Tonemap as Tonemap
 import qualified Pipeline.Voxels as Voxels
 import RenderTarget (allocateArrayTarget, allocateCubeArray, allocateImage, allocateLinearSampler, allocateMipChain, allocateNearestSampler, allocateTarget)
@@ -111,6 +113,16 @@ colorFormat = Vk.FORMAT_R8G8B8A8_UNORM
 
 depthFormat :: Vk.Format
 depthFormat = Vk.FORMAT_D32_SFLOAT
+
+-- | SSAO obscurance factor (1 = open).
+aoFormat :: Vk.Format
+aoFormat = Vk.FORMAT_R16_SFLOAT
+
+{- | SSAO prepass: world normal in xyz, view depth in w (0 = void) — the
+shaders declare @rgba16f@, so this can't retune with the colour chain.
+-}
+normalsFormat :: Vk.Format
+normalsFormat = Vk.FORMAT_R16G16B16A16_SFLOAT
 
 -- | EVSM shadow moments (4 exponential-variance moments per texel).
 shadowFormat :: Vk.Format
@@ -218,6 +230,15 @@ data SceneTargets = SceneTargets
   , toneView :: Vk.ImageView
   , display :: ManagedImage
   , displayView :: Vk.ImageView
+  , normals :: ManagedImage
+  -- ^ Half-res DAIS world normals ("Pipeline.Ssao"), w = 0 in the void.
+  , normalsView :: Vk.ImageView
+  , ao :: ManagedImage
+  -- ^ Half-res SSAO factor: gathered, blurred back in place, sampled by the resolve.
+  , aoView :: Vk.ImageView
+  , aoBlur :: ManagedImage
+  -- ^ Scratch between the two blur axes.
+  , aoBlurView :: Vk.ImageView
   }
 
 {- | Everything that survives a resize.
@@ -278,6 +299,11 @@ data Scene = Scene
   { static :: SceneStatic
   , targets :: SceneTargets
   , shadeSet :: Vk.DescriptorSet
+  , normalsSet :: Vk.DescriptorSet
+  , aoSet :: Vk.DescriptorSet
+  , aoBlurXSet :: Vk.DescriptorSet
+  -- ^ ao → aoBlur; 'aoBlurYSet' brings it back.
+  , aoBlurYSet :: Vk.DescriptorSet
   , lumSet :: Vk.DescriptorSet
   , toneSet :: Vk.DescriptorSet
   , gammaSet :: Vk.DescriptorSet
@@ -328,6 +354,7 @@ data ScenePipelines = ScenePipelines
   , knot :: Knot.Knot
   , cull :: Cull.Pipeline
   , hiz :: HiZ.HiZ
+  , ssao :: Ssao.Ssao
   }
 
 allocatePipelines :: Vk.Device -> ResourceT IO ScenePipelines
@@ -343,7 +370,8 @@ allocatePipelines dev = do
   knot <- Knot.allocateKnot dev
   cull <- Cull.allocatePipeline dev
   hiz <- HiZ.allocateHiZ dev
-  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull, hiz}
+  ssao <- Ssao.allocateSsao dev
+  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull, hiz, ssao}
 
 {- | Allocate the extent-independent scene.
 
@@ -514,7 +542,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).
   let
     Vk.Extent2D w0 h0 = extent
-    halfExtent = Vk.Extent2D (max 1 (w0 `div` 2)) (max 1 (h0 `div` 2))
+    halfExtent = halfExtentOf extent
     -- Level sizes of a 'halfExtent'-based pyramid (bloom and hiz alike).
     mipExtents n = V.generate n \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
     mipCount = bloomMipCount extent
@@ -581,7 +609,25 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       hizFullView
   hizPrimed <- liftIO (newIORef False)
 
-  shadeSet <- Shade.allocateDescriptorSet dev pls.shade visView colorHDRView static.vertexBuffer static.lightsBuffer static.sampler static.shadowCubeView static.objectsBuffer static.materialsBuffer static.meshTableBuffer
+  -- The SSAO chain ("Pipeline.Ssao"): half-res DAIS normals, the AO gather over
+  -- the depth pyramid, and the two-axis bilateral blur ping-ponging ao → aoBlur
+  -- → ao. All on the graphics queue; only the final AO factor crosses to the
+  -- (possibly async-compute) resolve, so it alone is CONCURRENT.
+  (_, (normalsImage, normalsView)) <-
+    allocateTarget allocator dev normalsFormat halfExtent Vk.IMAGE_USAGE_STORAGE_BIT Vk.IMAGE_ASPECT_COLOR_BIT Nothing "normals"
+  (_, (aoImage, aoView)) <-
+    allocateTarget allocator dev aoFormat halfExtent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "ao"
+  (_, (aoBlurImage, aoBlurView)) <-
+    allocateTarget allocator dev aoFormat halfExtent Vk.IMAGE_USAGE_STORAGE_BIT Vk.IMAGE_ASPECT_COLOR_BIT Nothing "aoBlur"
+  normals <- newManagedImage normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
+  ao <- newManagedImage aoImage Vk.IMAGE_ASPECT_COLOR_BIT
+  aoBlur <- newManagedImage aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
+  normalsSet <- Ssao.allocateNormalsSet dev pls.ssao.normals visView normalsView static.vertexBuffer static.objectsBuffer static.meshTableBuffer
+  aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hizFullView normalsView aoView
+  aoBlurXSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoView aoBlurView
+  aoBlurYSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoBlurView aoView
+
+  shadeSet <- Shade.allocateDescriptorSet dev pls.shade visView colorHDRView static.vertexBuffer static.lightsBuffer static.sampler static.shadowCubeView static.objectsBuffer static.materialsBuffer static.meshTableBuffer aoView
   lumSet <- Luminance.allocateSet dev pls.luminance (bloomViews V.! lumMip) static.lumBuffer
   toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0)
   gammaSet <- Gamma.allocateSet dev pls.gamma toneView displayView
@@ -589,8 +635,12 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   pure
     Scene
       { static
-      , targets = SceneTargets{vis, visView, depth, depthView, colorHDR, colorHDRView, tone, toneView, display, displayView}
+      , targets = SceneTargets{vis, visView, depth, depthView, colorHDR, colorHDRView, tone, toneView, display, displayView, normals, normalsView, ao, aoView, aoBlur, aoBlurView}
       , shadeSet
+      , normalsSet
+      , aoSet
+      , aoBlurXSet
+      , aoBlurYSet
       , lumSet
       , toneSet
       , gammaSet
@@ -867,15 +917,18 @@ addScenePasses
   -- ^ camera eye position
   -> Float
   -> Word32
-  -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal)
+  -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao)
   -> ResourceT IO PassOutputs
 addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode = do
-  let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display} = scene.targets
+  let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display, normals, ao, aoBlur} = scene.targets
   visH <- importManagedImage graph "visibility" vis
   depthH <- importManagedImage graph "depth" depth
   colorH <- importManagedImage graph "colorHDR" colorHDR
   toneH <- importManagedImage graph "tone" tone
   displayH <- importManagedImage graph "display" display
+  normalsH <- importManagedImage graph "normals" normals
+  aoH <- importManagedImage graph "ao" ao
+  aoBlurH <- importManagedImage graph "aoBlur" aoBlur
 
   (visWritten, depthWritten) <-
     FG.addPass graph "geometry" (geometrySetup visH depthH) \_ -> do
@@ -888,7 +941,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
         -- Every mesh (glowstones + cave cubes, the knot, the orb sphere) in one
         -- multi-draw: the pipeline pulls geometry + per-object transforms from the tables.
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipeline
-        pushCamera cb pls.mesh.pipelineLayout eye extent
+        pushCamera cb pls.mesh.pipelineLayout viewProj
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
         Vk.cmdDrawIndirect cb scene.static.indirect Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
       -- Producer-side transition for the (possibly async-compute) shade pass:
@@ -897,11 +950,66 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       -- 'shadeStage' (see the Headless submit) for the hand-off to be ordered.
       transitionImageTo cb vis (StorageRead shadeStage)
 
+  -- Depth pyramid ("Pipeline.HiZ"): min-reduce the depth buffer right after the
+  -- raster, on the default (graphics) queue — depth stays EXCLUSIVE to the family
+  -- that rendered it. Read by the SSAO gather below and, a frame later, by
+  -- 'recordCull' outside the graph (hence the side effect).
+  hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
+  let
+    nReduce = V.length scene.hizSets
+    hizPass (src, ws) (i, dstH) = do
+      w <-
+        FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
+          cb <- recordingCommandBuffer
+          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.pipeline
+          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.layout 0 [scene.hizSets V.! i] []
+          dispatchMip cb (scene.hizExtents V.! i)
+      pure (w, w : ws)
+  (hizLast, hizReduced) <- foldM hizPass (depthWritten, []) (V.toList (V.indexed (V.take nReduce hizHs)))
+  -- The fused tail: every remaining mip from the last reduced level, one dispatch.
+  hizTail <- case scene.hizTailSet of
+    Nothing -> pure []
+    Just tailSet ->
+      FG.addPass graph "hiz.tail" (hizTailSetup hizLast (V.drop nReduce hizHs)) \_ -> do
+        cb <- recordingCommandBuffer
+        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.pipeline
+        HiZ.pushTail cb pls.hiz.tail (fromIntegral (V.length hizHs - nReduce))
+        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.layout 0 [tailSet] []
+        Vk.cmdDispatch cb 1 1 1
+
+  -- SSAO ("Pipeline.Ssao"), also graphics-queue: resolve half-res DAIS normals
+  -- from the visibility buffer, then march the fresh pyramid for obscurance.
+  normalsWritten <-
+    FG.addPass graph "ssao.normals" (computeSetup [visWritten] normalsH) \_ -> do
+      cb <- recordingCommandBuffer
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.normals.pipeline
+      Ssao.push cb pls.ssao.normals Ssao.Prepass{Ssao.viewProj = viewProj}
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.normals.layout 0 [scene.normalsSet] []
+      dispatchMip cb halfExtent
+  aoWritten <-
+    FG.addPass graph "ssao" (computeSetup (normalsWritten : hizReduced <> hizTail) aoH) \_ -> do
+      cb <- recordingCommandBuffer
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.ao.pipeline
+      pushAo cb pls.ssao.ao tweaks eye extent
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.ao.layout 0 [scene.aoSet] []
+      dispatchMip cb halfExtent
+  -- Separable cross-bilateral blur: X into the scratch, Y back in place. The
+  -- in-place Y write renames the ao handle, ordering it after the X pass's read.
+  let blurPass name set axes src dstH =
+        FG.addPass graph name (computeSetup [src, normalsWritten] dstH) \_ -> do
+          cb <- recordingCommandBuffer
+          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.blur.pipeline
+          pushBlur cb pls.ssao.blur tweaks axes
+          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.blur.layout 0 [set] []
+          dispatchMip cb halfExtent
+  aoBlurredX <- blurPass "ssao.blur.x" scene.aoBlurXSet (1, 0) aoWritten aoBlurH
+  aoBlurred <- blurPass "ssao.blur.y" scene.aoBlurYSet (0, 1) aoBlurredX aoWritten
+
   colorWritten <-
-    FG.addPass graph "shade" (shadeSetup visWritten colorH) \_ -> do
+    FG.addPass graph "shade" (shadeSetup visWritten aoBlurred colorH) \_ -> do
       cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
-      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning eye extent debugMode
+      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning viewProj eye debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
@@ -980,33 +1088,12 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [scene.gammaSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
-  -- Depth pyramid for the next frame's cull ("Pipeline.HiZ"): min-reduce the
-  -- depth buffer down the chain, on the default (graphics) queue — depth stays
-  -- EXCLUSIVE to the family that rendered it. Side-effect passes: nothing in
-  -- this graph reads the mips; the next 'recordCull' samples them.
-  hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
-  let
-    nReduce = V.length scene.hizSets
-    hizPass src (i, dstH) =
-      FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
-        cb <- recordingCommandBuffer
-        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.pipeline
-        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.layout 0 [scene.hizSets V.! i] []
-        dispatchMip cb (scene.hizExtents V.! i)
-  hizLast <- foldM hizPass depthWritten (V.indexed (V.take nReduce hizHs))
-  -- The fused tail: every remaining mip from the last reduced level, one dispatch.
-  let tailHs = V.drop nReduce hizHs
-  forM_ scene.hizTailSet \tailSet ->
-    FG.addPass_ graph "hiz.tail" (hizTailSetup hizLast tailHs) do
-      cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.pipeline
-      HiZ.pushTail cb pls.hiz.tail (fromIntegral (V.length tailHs))
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.layout 0 [tailSet] []
-      Vk.cmdDispatch cb 1 1 1
-
   pure PassOutputs{toneOut = toneWritten, displayOut = displayWritten}
   where
     Vk.Extent2D w h = extent
+    halfExtent = halfExtentOf extent
+    -- One camera matrix per recorded frame, shared by every DAIS-style push.
+    viewProj = viewProjFor eye extent
     groups n = (n + 7) `div` 8
     dispatchMip cb (Vk.Extent2D mw mh) = Vk.cmdDispatch cb (groups mw) (groups mh) 1
     hostVisible = zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_HOST_READ_BIT} :: Vk.MemoryBarrier
@@ -1014,10 +1101,16 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       depthWritten <- FG.writeWith depthH (usageFlags DepthAttachment)
       visWritten <- FG.writeWith visH (usageFlags ColorAttachment)
       pure (visWritten, depthWritten)
-    shadeSetup visWritten colorH = do
+    shadeSetup visWritten aoWritten colorH = do
       FG.setQueue computeQueue
       FG.readWith visWritten (usageFlags (StorageRead shadeStage))
+      FG.readWith aoWritten (usageFlags (StorageRead shadeStage))
       FG.writeWith colorH (usageFlags (StorageWrite shadeStage))
+    -- The SSAO passes' shared shape: storage reads in, one storage write out,
+    -- on the pass's default (graphics) queue.
+    computeSetup (srcs :: [FG.Handle]) dstH = do
+      mapM_ (\r -> FG.readWith r (usageFlags (StorageRead shadeStage))) srcs
+      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
     luminanceSetup srcH = do
       FG.setQueue computeQueue
       FG.setSideEffect
@@ -1056,11 +1149,21 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
     hizTailSetup src dstHs = do
       FG.setSideEffect
       FG.readWith src (usageFlags (StorageRead shadeStage))
-      mapM_ (\h -> FG.writeWith_ h (usageFlags (StorageWrite shadeStage))) dstHs
+      mapM (\h -> FG.writeWith h (usageFlags (StorageWrite shadeStage))) (V.toList dstHs)
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3
 cameraTarget = vec3 0 0 0
+
+cameraFov, cameraNear :: Float
+cameraFov = 70 * pi / 180
+cameraNear = 0.05
+
+{- | Half the extent, floor-rounded and clamped to 1: the SSAO targets' size and
+the bloom/hi-z pyramid base.
+-}
+halfExtentOf :: Vk.Extent2D -> Vk.Extent2D
+halfExtentOf (Vk.Extent2D w h) = Vk.Extent2D (max 1 (w `div` 2)) (max 1 (h `div` 2))
 
 {- | The camera view-projection for @eye@ at @extent@ (geomancy, reverse-Z).
 
@@ -1068,22 +1171,35 @@ Near maps to 1, infinite far to 0 — depth clears to 0 and the test is GREATER 
 'geometrySetup').
 -}
 viewProjFor :: Vec3 -> Vk.Extent2D -> Mat4.Mat4
-viewProjFor eye (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (unTransform view)
+viewProjFor eye (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (viewFor eye)
   where
-    proj = Projection.reverseDepthRH (70 * pi / 180) 0.05 (fromIntegral w) (fromIntegral h)
-    view = View.lookAtRH eye cameraTarget (vec3 0 1 0)
+    proj = Projection.reverseDepthRH cameraFov cameraNear (fromIntegral w) (fromIntegral h)
+
+-- | The world-to-view half of 'viewProjFor'.
+viewFor :: Vec3 -> Mat4.Mat4
+viewFor eye = unTransform (View.lookAtRH eye cameraTarget (vec3 0 1 0))
+
+{- | The projection's @(sx, sy)@ diagonal: @ndc.xy = (sx, sy) * view.xy / view.z@.
+
+With 'cameraNear' over the pyramid depth this inverts the projection, so the AO
+gather reconstructs view-space positions without a matrix inverse.
+-}
+projScales :: Vk.Extent2D -> (Float, Float)
+projScales (Vk.Extent2D w h) = (sy * fromIntegral h / fromIntegral w, sy)
+  where
+    sy = recip (tan (cameraFov / 2))
 
 -- | Push the camera view-projection (the mesh pipeline's sole push constant).
-pushCamera :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Vec3 -> Vk.Extent2D -> m ()
-pushCamera cb layout eye extent =
+pushCamera :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Mat4.Mat4 -> m ()
+pushCamera cb layout viewProj =
   liftIO $ with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_VERTEX_BIT 0 (fromIntegral (sizeOf camera)) (castPtr p)
   where
-    camera = Mesh.Camera{Mesh.viewProj = viewProjFor eye extent}
+    camera = Mesh.Camera{Mesh.viewProj = viewProj}
 
 -- | Push the resolve's view-projection + eye position (DAIS + specular V) + shading knobs.
-pushResolve :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Vec3 -> Vk.Extent2D -> Word32 -> m ()
-pushResolve cb layout pushSize tuning eyePos extent debugMode =
+pushResolve :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Mat4.Mat4 -> Vec3 -> Word32 -> m ()
+pushResolve cb layout pushSize tuning viewProj eyePos debugMode =
   -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
   -- size (it trailing-pads to 16) — every real field lives below it.
   liftIO $ with camera \p ->
@@ -1092,7 +1208,7 @@ pushResolve cb layout pushSize tuning eyePos extent debugMode =
     eye = withVec3 eyePos \x y z -> vec4 x y z 1
     camera =
       Shade.Camera
-        { Shade.viewProj = viewProjFor eyePos extent
+        { Shade.viewProj = viewProj
         , Shade.camPos = eye
         , Shade.debugMode = debugMode
         , Shade.lightCount = Lights.count
@@ -1102,6 +1218,29 @@ pushResolve cb layout pushSize tuning eyePos extent debugMode =
         , Shade.shadowBias = tuning.shadowBias
         , Shade.normalBias = tuning.normalBias
         }
+
+-- | Push the AO gather's view matrix + unprojection scales + knobs.
+pushAo :: (MonadIO m) => Vk.CommandBuffer -> Ssao.Pipeline -> Tweaks -> Vec3 -> Vk.Extent2D -> m ()
+pushAo cb pl tweaks eye extent =
+  Ssao.push
+    cb
+    pl
+    Ssao.Ao
+      { Ssao.view = viewFor eye
+      , Ssao.sx = sx
+      , Ssao.sy = sy
+      , Ssao.zNear = cameraNear
+      , Ssao.radius = tweaks.aoRadius
+      , Ssao.intensity = tweaks.aoIntensity
+      , Ssao.bias = tweaks.aoBias
+      }
+  where
+    (sx, sy) = projScales extent
+
+-- | Push one axis of the AO blur.
+pushBlur :: (MonadIO m) => Vk.CommandBuffer -> Ssao.Pipeline -> Tweaks -> (Int32, Int32) -> m ()
+pushBlur cb pl tweaks (ax, ay) =
+  Ssao.push cb pl Ssao.Blur{Ssao.sharpness = tweaks.aoSharpness, Ssao.axisX = ax, Ssao.axisY = ay}
 
 -- | Push the tonemap's exposure + bloom strength + debug mode (COMPUTE stage).
 pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> Word32 -> m ()
@@ -1122,12 +1261,20 @@ data Tweaks = Tweaks
   -- ^ Bloom mix bias toward the pyramid.
   , bloomRadius :: Float
   -- ^ Bloom upsample tent radius, in UV.
+  , aoRadius :: Float
+  -- ^ SSAO gather radius, in world units.
+  , aoIntensity :: Float
+  -- ^ SSAO obscurance strength; 0 leaves the ambient terms untouched.
+  , aoBias :: Float
+  -- ^ SSAO horizon bias, in world units, against self-occlusion.
+  , aoSharpness :: Float
+  -- ^ AO blur edge-stop: a depth gap of z/sharpness costs one e-fold of weight.
   }
   deriving (Eq, Ord, Show)
 
--- | Bloom pair tuned for the cave: Jimenez's ~0.04 mix, a tight tent.
+-- | Bloom pair tuned for the cave (Jimenez's ~0.04 mix, a tight tent); AO sized to the knot.
 defaultTweaks :: Tweaks
-defaultTweaks = Tweaks{tuning = Shade.defaultTuning, bloomStrength = 0.04, bloomRadius = 0.005}
+defaultTweaks = Tweaks{tuning = Shade.defaultTuning, bloomStrength = 0.04, bloomRadius = 0.005, aoRadius = 0.4, aoIntensity = 1, aoBias = 0.02, aoSharpness = 16}
 
 {- | Bloom mip the luminance pass reduces.
 

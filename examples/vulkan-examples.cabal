@@ -988,6 +988,7 @@ executable visibility-buffer
       Pipeline.Bloom.Upsample
       Pipeline.Cull
       Pipeline.Cull.Shader
+      Pipeline.Dais
       Pipeline.Gamma
       Pipeline.Gamma.Shader
       Pipeline.HiZ
@@ -1003,6 +1004,8 @@ executable visibility-buffer
       Pipeline.Shadow
       Pipeline.Shadow.Occluder
       Pipeline.Shadow.Params
+      Pipeline.Ssao
+      Pipeline.Ssao.Shader
       Pipeline.Tonemap
       Pipeline.Tonemap.Shader
       Pipeline.Voxels

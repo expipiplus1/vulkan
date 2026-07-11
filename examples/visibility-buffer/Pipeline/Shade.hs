@@ -111,10 +111,11 @@ allocatePipeline dev params = do
 
 Visibility (0) and colour (1) storage images, the shared vertex SSBO (2, DAIS), the
 lights SSBO (3), the EVSM shadow cube-array sampler (4), the object table SSBO (5),
-the material table SSBO (6), and the mesh table SSBO (7).
+the material table SSBO (6), the mesh table SSBO (7), and the half-res SSAO factor
+(8, upsampled by the shared linear @sampler@).
 -}
-allocateDescriptorSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.ImageView -> Vk.Buffer -> Vk.Buffer -> Vk.Sampler -> Vk.ImageView -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
-allocateDescriptorSet dev pl visView colorView verts lights sampler shadowCube objects materials meshes = do
+allocateDescriptorSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.ImageView -> Vk.Buffer -> Vk.Buffer -> Vk.Sampler -> Vk.ImageView -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
+allocateDescriptorSet dev pl visView colorView verts lights sampler shadowCube objects materials meshes aoView = do
   (_, pool) <-
     Vk.withDescriptorPool
       dev
@@ -123,7 +124,7 @@ allocateDescriptorSet dev pl visView colorView verts lights sampler shadowCube o
         , Vk.poolSizes =
             [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 2
             , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 5
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
+            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 2
             ]
         }
       Nothing
@@ -140,6 +141,7 @@ allocateDescriptorSet dev pl visView colorView verts lights sampler shadowCube o
     , bufferWrite set 5 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER objects
     , bufferWrite set 6 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER materials
     , bufferWrite set 7 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER meshes
+    , combinedImageSamplerWrite set 8 sampler aoView Vk.IMAGE_LAYOUT_GENERAL
     ]
     []
   pure set

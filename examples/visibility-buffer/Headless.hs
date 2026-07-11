@@ -68,12 +68,13 @@ main opts = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
       | graphicsFamily == computeFamily = Nothing
       | otherwise = Just computeFamily
 
-  (image, visImage, depthImage, lum) <- render opts allocator device queues async
+  (image, saved, visImage, depthImage, lum) <- render opts allocator device queues async
   Vk.deviceWaitIdle device
 
   -- The gamma pass already encoded sRGB into the display image, so the PNG is
-  -- saved as-is. The checks run on it directly.
-  savePng opts.output image
+  -- saved as-is (the @--debug-mode@ channel if one was asked for); the checks
+  -- run on the beauty render.
+  savePng opts.output saved
 
   -- Dump the intermediate buffers (vis instance/triangle ids, depth); the depth
   -- buffer also yields the ray-miss count directly — no colour heuristics.
@@ -127,7 +128,7 @@ render
   -> Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
-  -> ResourceT IO (JP.Image JP.PixelRGBA8, Vk.Image, Vk.Image, Float)
+  -> ResourceT IO (JP.Image JP.PixelRGBA8, JP.Image JP.PixelRGBA8, Vk.Image, Vk.Image, Float)
 render opts allocator dev queues async = do
   -- The two families share the visibility buffer when compute is async.
   let
@@ -168,11 +169,14 @@ render opts allocator dev queues async = do
   forM_ (zip [1 :: Word32 ..] ["albedo", "metalness", "roughness", "normal"]) \(mode, name) -> do
     dbg <- runMode meterExposure mode
     liftIO $ savePng ("debug-mat-" <> name <> ".png") dbg
+  -- The saved PNG honours @--debug-mode@, so a headless run can capture any
+  -- channel; the checks and the probe stay on the beauty render above.
+  saved <- if opts.debugMode == 0 then pure img else runMode (Exposure.target opts.meter lum) opts.debugMode
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
   -- it after this).
   dumpShadowFace allocator dev (graphicsQueue, graphicsFamily) (Scene.shadowImage scene)
   let (visImage, depthImage) = Scene.debugImages scene
-  pure (img, visImage, depthImage, lum)
+  pure (img, saved, visImage, depthImage, lum)
   where
     readbackSetup displayOut = do
       FG.setQueue computeQueue
