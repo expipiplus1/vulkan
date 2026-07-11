@@ -173,7 +173,7 @@ cubePass shared offscreenView offscreenColored = do
   sceneH <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
   depthH <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   let cubeSetup = do
-        FG.readWith offscreenColored (usageFlags SampledFragment)
+        FG.readWith offscreenColored (usageFlags (Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT))
         FG.writeWith_ sceneH (usageFlags ColorAttachment)
         FG.writeWith_ depthH (usageFlags DepthAttachment)
 

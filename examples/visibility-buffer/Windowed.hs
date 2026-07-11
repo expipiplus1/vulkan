@@ -244,7 +244,7 @@ renderScene opts vc pls window controls startTime bindings f = do
 
   graph <- FG.newFrameGraph
   -- Single-queue: the compute passes stay on the default (graphics) queue.
-  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye exposure mode
+  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t exposure mode
   swapchainH <- importManagedImage graph "swapchain" swapManaged
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
@@ -275,11 +275,9 @@ renderScene opts vc pls window controls startTime bindings f = do
 
   let dev = vcDevice vc
   graphicsCb <- beginPrimary dev (rrCommandPool f.fRecycled)
-  -- Compact this frame's draws: frustum + last-frame occlusion for the camera,
-  -- orb reach for the shadow refresh.
-  Scene.recordCull graphicsCb pls bindings.scene eye extent t
-  -- Move the orb + refresh its shadow slice ahead of the scene graph (same buffer).
-  Scene.recordOrbFrame graphicsCb pls bindings.scene t
+  -- Move the orbs ahead of the graph; the cull and the shadow refresh that
+  -- consume the new positions are graph passes now ("Scene").
+  Scene.recordOrbUploads graphicsCb bindings.scene t
   recordGraph (const graphicsCb) (graphicsCb :| []) graph
 
   queueSubmitFrame vc f imageIndex [graphicsCb]

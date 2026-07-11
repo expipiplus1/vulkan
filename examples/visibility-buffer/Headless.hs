@@ -144,18 +144,18 @@ render opts allocator dev queues async = do
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
-      -- The cull prologue runs the same compaction as the windowed frame — the
-      -- second execution onwards is occlusion-culled against the previous one's
-      -- pyramid (same camera), so the depth-void check covers the culling too.
+      -- The graph's cull pass runs the same compaction as the windowed frame —
+      -- the second execution onwards is occlusion-culled against the previous
+      -- one's pyramid (same camera), so the depth-void check covers the culling too.
       runMode exposure debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye exposure debugMode
+        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 exposure debugMode
         FG.addPass_ graph "readback" (readbackSetup outs.displayOut) do
           cb <- recordingCommandBuffer
           copyToHost cb extent scene.targets.display.image cpuImage
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
-        runGraph dev queues async (\cb -> Scene.recordCull cb pls scene eye extent 0) graph
+        runGraph dev queues async graph
         readback
 
   -- Meter, then re-render at the exposure the viewer would settle on. The luminance
@@ -201,23 +201,20 @@ computeQueueId = maybe FG.defaultQueue (const computeQueue)
 
 {- | Record the graph across its queues and wait for completion.
 
-@prologue@ records into the graphics buffer ahead of the graph (the cull, whose
-consumers all draw on the graphics queue). Single queue: one buffer, one fenced
-submit. Async: geometry on the graphics queue signals a semaphore the compute
-buffer (shade + readback) waits on, fenced at the end.
+Single queue: one buffer, one fenced submit. Async: geometry on the graphics
+queue signals a semaphore the compute buffer (shade + readback) waits on,
+fenced at the end.
 -}
 runGraph
   :: Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
-  -> (Vk.CommandBuffer -> ResourceT IO ())
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
-runGraph dev queues async prologue graph = do
+runGraph dev queues async graph = do
   let (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
   graphicsPool <- commandPool dev graphicsFamily
   graphicsCb <- beginPrimary dev graphicsPool
-  prologue graphicsCb
 
   computePair <- case async of
     Just computeFamily -> do

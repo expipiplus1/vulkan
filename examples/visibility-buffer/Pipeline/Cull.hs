@@ -10,10 +10,11 @@
 
 {-| The per-frame cull pipeline.
 
-Wraps the "Pipeline.Cull.Shader" compute pass: 'record' resets the two cube
-draw commands and refills them (and their instance remaps) with the cave cubes
-that pass this frame's tests. Recorded at the top of the frame's command buffer,
-before anything that draws.
+Wraps the "Pipeline.Cull.Shader" compute pass: 'reset' rewinds the two cube
+draw commands, 'record' refills them (and their instance remaps) with the cave
+cubes that pass this frame's tests. Two graph passes at the top of the frame
+("Scene"); the barriers between the fills, the dispatch and the draws that
+consume the refill are the graph tracker's.
 -}
 module Pipeline.Cull
   ( Pipeline (..)
@@ -21,19 +22,18 @@ module Pipeline.Cull
   , CullBuffers (..)
   , allocateSet
   , Params (..)
+  , reset
   , record
   ) where
 
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
-import Data.Bits ((.|.))
 import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (castPtr)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
-import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import Vulkan.Utils.SpirV.Descriptors (pushConstantsSize)
@@ -106,44 +106,21 @@ allocateSet dev cull bufs sampler hizView = do
     []
   pure set
 
-{- | Record the per-frame cull into @cb@.
+{- | Reset the cube draws.
 
-Resets the cube draws (@mainCube@ to the glowstone prefix, @occCube@ to empty),
-then refills them from the tests. Bracketed by barriers against the previous
-frame's draws (they read the commands and remaps the reset overwrites) and this
-frame's (they consume the refill).
+@mainCube.instanceCount@ rewinds to the glowstone prefix (= @caveBase@),
+@occCube@'s to empty.
 -}
-record :: (MonadIO m) => Pipeline -> Vk.DescriptorSet -> Vk.Buffer -> Params -> Vk.CommandBuffer -> m ()
-record cull set indirect params cb = liftIO do
-  Vk.cmdPipelineBarrier
-    cb
-    (Vk.PIPELINE_STAGE_DRAW_INDIRECT_BIT .|. Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
-    Vk.PIPELINE_STAGE_TRANSFER_BIT
-    zero
-    [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT} :: Vk.MemoryBarrier]
-    []
-    []
-  -- mainCube.instanceCount ← the glowstone prefix (= caveBase); occCube's ← 0.
-  Vk.cmdFillBuffer cb indirect Objects.mainCubeCountOffset 4 params.caveBase
+reset :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Word32 -> m ()
+reset cb indirect caveBase = do
+  Vk.cmdFillBuffer cb indirect Objects.mainCubeCountOffset 4 caveBase
   Vk.cmdFillBuffer cb indirect Objects.occCubeCountOffset 4 0
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_TRANSFER_BIT
-    Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
-    zero
-    [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_SHADER_READ_BIT .|. Vk.ACCESS_SHADER_WRITE_BIT} :: Vk.MemoryBarrier]
-    []
-    []
+
+-- | Record the cull dispatch, refilling the reset draws from this frame's tests.
+record :: (MonadIO m) => Pipeline -> Vk.DescriptorSet -> Params -> Vk.CommandBuffer -> m ()
+record cull set params cb = liftIO do
   Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE cull.pipeline
   with params \p ->
     Vk.cmdPushConstants cb cull.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 cull.pushSize (castPtr p)
   Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE cull.layout 0 [set] []
   Vk.cmdDispatch cb ((params.caveCount + 255) `div` 256) 1 1
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
-    (Vk.PIPELINE_STAGE_DRAW_INDIRECT_BIT .|. Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT)
-    zero
-    [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_INDIRECT_COMMAND_READ_BIT .|. Vk.ACCESS_SHADER_READ_BIT} :: Vk.MemoryBarrier]
-    []
-    []

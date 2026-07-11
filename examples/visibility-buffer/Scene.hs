@@ -35,8 +35,7 @@ module Scene
   , allocateStatic
   , allocateTargets
   , addScenePasses
-  , recordCull
-  , recordOrbFrame
+  , recordOrbUploads
   , readLuminance
   , debugImages
   , lumProbe
@@ -44,7 +43,7 @@ module Scene
   , cameraTarget
   ) where
 
-import Control.Monad (foldM, forM_, unless, when)
+import Control.Monad (foldM, forM, forM_, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
@@ -72,7 +71,9 @@ import qualified Vulkan.Core13 as RenderingInfo (RenderingInfo (..))
 import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedAs, imageInfo, importManagedImage, importScratchImage, newManagedImage, newManagedImageMip, transitionImageTo, transitionImagesTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
+import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedAs, imageInfo, importManagedImage, importScratchImage, newManagedImage, newManagedImageMip, newManagedImageSlice, transitionImageTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -249,7 +250,8 @@ the one-shot generation submit); the extent-dependent 'Scene' is rebuilt on top 
 per swapchain.
 -}
 data SceneStatic = SceneStatic
-  { indirect :: Vk.Buffer
+  { indirect :: ManagedBuffer
+  -- ^ The draw commands, graph-tracked: the cull pass rewrites the cube draws.
   , objectsBuffer :: Vk.Buffer
   -- ^ The shared object table (the orb slot is rewritten per frame).
   , objLayout :: Objects.Layout
@@ -282,12 +284,22 @@ data SceneStatic = SceneStatic
   -- ^ Shadow view-projections SSBO (one @mat4@ per @(light, face)@).
   , shadowSet :: Vk.DescriptorSet
   -- ^ Occluder set for the shadow render (shared vertex/mesh/object tables + view-projs).
-  , visMain :: Vk.Buffer
-  -- ^ Camera instance remap (see "Scene.Objects"); the cull set binds it.
-  , visOcc :: Vk.Buffer
+  , visMain :: ManagedBuffer
+  -- ^ Camera instance remap (see "Scene.Objects"), graph-tracked like 'indirect'.
+  , visOcc :: ManagedBuffer
   -- ^ Occluder instance remap, as 'visMain'.
+  , orbShadow :: Maybe OrbShadow
+  -- ^ The per-frame orb shadow refresh's tracked targets; 'Nothing' without orbs.
   , caveCount :: Word32
   -- ^ Generated cave cubes, read back once for the cull dispatch.
+  }
+
+-- | The images the @shadow.orbs@ pass renders, wrapped for layout tracking.
+data OrbShadow = OrbShadow
+  { moments :: ManagedImage
+  -- ^ The orbs' slices of the EVSM moments array (from 'Lights.orbBase').
+  , depth :: ManagedImage
+  -- ^ The shared scratch depth cube.
   }
 
 {- | The extent-dependent scene.
@@ -327,8 +339,8 @@ data Scene = Scene
   , cullSet :: Vk.DescriptorSet
   -- ^ The cull's buffers + the whole pyramid, sampled ("Pipeline.Cull").
   , hizPrimed :: IORef Bool
-  {- ^ False until the first 'recordCull'; gates the occlusion test off the
-  not-yet-built pyramid.
+  {- ^ False until the first cull pass records; gates the occlusion test off
+  the not-yet-built pyramid.
   -}
   }
 
@@ -476,9 +488,24 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
     pure (total - objLayout.caveBase)
   sayErrString $ "cave cubes: " <> show caveCount <> " / " <> show Cave.maxCubes
 
+  -- Wrap the cull's working set for graph tracking. Everything starts fresh
+  -- (the setup submit above was fenced): the orb wrappers' first tracked
+  -- access is the @shadow.orbs@ pass's write, whose UNDEFINED transition
+  -- discards only slices that pass clears and fully redraws.
+  indirectMB <- Buf.describedAs "draw commands" <$> Buf.newManagedBuffer indirect
+  visMainMB <- Buf.describedAs "camera instance remap" <$> Buf.newManagedBuffer visMain
+  visOccMB <- Buf.describedAs "occluder instance remap" <$> Buf.newManagedBuffer visOcc
+  orbShadow <-
+    if Lights.orbCount == 0
+      then pure Nothing
+      else do
+        moments <- newManagedImageSlice shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT 0 1 (Lights.orbBase * cubeFaces) (Lights.orbCount * cubeFaces)
+        depth <- newManagedImage shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+        pure (Just OrbShadow{moments = describedAs (imageInfo shadowFormat (Vk.Extent2D shadowRes shadowRes)) moments, depth})
+
   pure
     SceneStatic
-      { indirect
+      { indirect = indirectMB
       , objectsBuffer
       , objLayout
       , meshSet
@@ -499,8 +526,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , lightsBuffer = lights
       , viewProjBuffer
       , shadowSet
-      , visMain
-      , visOcc
+      , visMain = visMainMB
+      , visOcc = visOccMB
+      , orbShadow
       , caveCount
       }
 
@@ -576,7 +604,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- Depth pyramid for the cull's occlusion test: half-res base, min-reduced to 1×1
   -- ('HiZ.mipCount'). Fed by the passes in 'addScenePasses' — per-level reduces
   -- down to the first tail-sized mip, one fused dispatch for the rest — and
-  -- sampled by 'recordCull' a frame later.
+  -- sampled by the next frame's cull pass.
   let
     hizMipCount = HiZ.mipCount halfExtent
     hizAllExtents = mipExtents hizMipCount
@@ -608,9 +636,9 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       pls.cull
       Cull.CullBuffers
         { Cull.objects = static.objectsBuffer
-        , Cull.indirect = static.indirect
-        , Cull.visMain = static.visMain
-        , Cull.visOcc = static.visOcc
+        , Cull.indirect = static.indirect.buffer
+        , Cull.visMain = static.visMain.buffer
+        , Cull.visOcc = static.visOcc.buffer
         }
       static.nearestSampler
       hizFullView
@@ -784,32 +812,6 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
           , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 0 n
           }
 
-{- | Compact this frame's draws: frustum- and occlusion-cull the cave cubes for the
-camera at @eye@, and reach-cull them around the orbs for the shadow refresh.
-
-Recorded at the top of the frame, before 'recordOrbFrame' and the graph. The
-occlusion test skips the first recording after 'allocateTargets' (the pyramid
-holds no frame yet — and a resize resets this), then self-arms: every recording
-is followed by a same-queue submit whose graph rebuilds the pyramid.
--}
-recordCull :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Vec3 -> Vk.Extent2D -> Float -> m ()
-recordCull cb pls scene eye extent t = do
-  hizValid <- liftIO (readIORef scene.hizPrimed)
-  -- Declare the pyramid read: the cull samples the mips outside the graph, so
-  -- the tracker must place the write→read barrier (and the first transition).
-  transitionImagesTo cb [(m, StorageRead shadeStage) | m <- V.toList scene.hizMips]
-  Cull.record pls.cull scene.cullSet scene.static.indirect (params hizValid) cb
-  liftIO (writeIORef scene.hizPrimed True)
-  where
-    params hizValid =
-      Cull.Params
-        { Cull.viewProj = viewProjFor eye extent
-        , Cull.orbSphere = orbCullSphere t
-        , Cull.caveBase = scene.static.objLayout.caveBase
-        , Cull.caveCount = scene.static.caveCount
-        , Cull.hizValid = if hizValid then 1 else 0
-        }
-
 {- | One sphere covering every orb's shadow 'Lights.reach' at time @t@ (@w < 0@ when
 there are no orbs).
 
@@ -826,40 +828,52 @@ orbCullSphere t =
   where
     dist a b = let d = a - b in sqrt (Vec3.dot d d)
 
-{- | Move the orbs and re-render their shadow-cube slices for time @t@.
+{- | Upload the orbs' per-frame state for time @t@.
 
-Recorded into the frame's graphics buffer before the scene graph. The glowstones never
-move, so only the orbs' moment layers are refreshed — the rest of the EVSM array stays
-baked ('recordShadows').
+Light positions, shadow view-projections and the orb object rows, recorded
+into the frame's graphics buffer ahead of the graph; the shadow slices
+themselves are refreshed in-graph (the @shadow.orbs@ pass). Still a
+hand-rolled sync site: the trailing barrier must cover every stage that reads
+these tables inside the graph, and the leading one every stage that read them
+in the previous, possibly still in-flight, frame.
 -}
-recordOrbFrame :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Float -> m ()
-recordOrbFrame cb pls scene t = liftIO $ unless (null Lights.orbs) do
+recordOrbUploads :: (MonadIO m) => Vk.CommandBuffer -> Scene -> Float -> m ()
+recordOrbUploads cb scene t = liftIO $ unless (null Lights.orbs) do
+  -- Execution-only WAR fence: the previous frame's vertex/compute reads of
+  -- the tables must retire before the transfers overwrite them.
+  Vk.cmdPipelineBarrier
+    cb
+    (Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
+    Vk.PIPELINE_STAGE_TRANSFER_BIT
+    zero
+    []
+    []
+    []
   Lights.updateOrbs cb scene.static.lightsBuffer t
   uploadOrbViewProjs cb scene.static.viewProjBuffer t
   Objects.writeOrbObjects cb scene.static.objectsBuffer scene.static.objLayout t
-  -- Transfer writes (lights + view-projs) → the shaders that read them, and open
-  -- the orbs' moment slices + shared depth for rendering.
   Vk.cmdPipelineBarrier
     cb
-    (Vk.PIPELINE_STAGE_TRANSFER_BIT .|. Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
-    (Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT .|. Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT .|. Vk.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)
+    Vk.PIPELINE_STAGE_TRANSFER_BIT
+    (Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
     zero
     [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_SHADER_READ_BIT} :: Vk.MemoryBarrier]
     []
-    [ momentSlices Vk.ACCESS_SHADER_READ_BIT Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-    , depthSlice zero Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-    ]
+    []
+
+{- | The @shadow.orbs@ pass body.
+
+Re-renders the orbs' shadow-cube slices for time @t@, drawing the occluder set
+the cull pass just compacted. The glowstones never move, so only the orbs'
+moment layers are refreshed — the rest of the EVSM array stays baked
+('recordShadows').
+-}
+recordOrbShadows :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> OrbShadow -> Float -> m ()
+recordOrbShadows cb pls scene orbShadow t = liftIO do
   forM_ (zip [0 ..] Lights.orbs) \(i, orb) -> do
-    -- The shared depth cube is rewritten per orb: WAW between passes.
-    when (i > 0) $
-      Vk.cmdPipelineBarrier
-        cb
-        Vk.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
-        Vk.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
-        zero
-        []
-        []
-        [depthSlice Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT (Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT .|. Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT) Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL]
+    -- The shared depth cube is rewritten per orb: a tracked same-state write
+    -- places the WAW barrier between the renders.
+    when (i > 0) $ transitionImageTo cb orbShadow.depth DepthAttachment
     let light = Lights.orbBase + i
     Vk.cmdUseRendering cb (shadowRenderingInfo (scene.static.shadowRenderViews V.! fromIntegral light) scene.static.shadowDepthView) do
       Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
@@ -867,36 +881,11 @@ recordOrbFrame cb pls scene t = liftIO $ unless (null Lights.orbs) do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
       Shadow.pushShadow cb pls.shadow (Lights.orbLight orb t) (light * cubeFaces)
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [scene.static.shadowSet] []
-      Vk.cmdDrawIndirect cb scene.static.indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
-  -- Hand the refreshed slices back to the resolve as a sampled texture.
-  Vk.cmdPipelineBarrier
-    cb
-    Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-    (Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
-    zero
-    []
-    []
-    [momentSlices Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.ACCESS_SHADER_READ_BIT Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL]
-  where
-    momentSlices srcA dstA old new =
-      layerBarrier scene.static.shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT (Lights.orbBase * cubeFaces) (Lights.orbCount * cubeFaces) srcA dstA old new
-    depthSlice srcA dstA old new =
-      layerBarrier scene.static.shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT 0 cubeFaces srcA dstA old new
-
--- | An image-memory barrier over @layerCount@ layers starting at @baseLayer@.
-layerBarrier :: Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> Vk.AccessFlags -> Vk.AccessFlags -> Vk.ImageLayout -> Vk.ImageLayout -> SomeStruct Vk.ImageMemoryBarrier
-layerBarrier img aspect baseLayer layerCount srcA dstA old new =
-  SomeStruct
-    zero
-      { ImageMemoryBarrier.srcAccessMask = srcA
-      , ImageMemoryBarrier.dstAccessMask = dstA
-      , ImageMemoryBarrier.oldLayout = old
-      , ImageMemoryBarrier.newLayout = new
-      , ImageMemoryBarrier.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-      , ImageMemoryBarrier.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-      , ImageMemoryBarrier.image = img
-      , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 baseLayer layerCount
-      }
+      Vk.cmdDrawIndirect cb scene.static.indirect.buffer Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
+  -- Producer-side hand-off to the (possibly async-compute) resolve, like the
+  -- geometry pass's: the COLOR_ATTACHMENT_OUTPUT source scope stays on a queue
+  -- that supports it, and the resolve's declared read finds the state matching.
+  transitionImageTo cb orbShadow.moments (Sampled shadeStage)
 
 -- | Multiview rendering info for one light's shadow cube (all six faces, viewMask 0x3F).
 shadowRenderingInfo :: Vk.ImageView -> Vk.ImageView -> Vk.RenderingInfo '[]
@@ -919,11 +908,13 @@ oneShot dev (queue, family) record = do
 
 {- | Add the whole scene graph.
 
-@geometry@ (raster → vis + depth) → @shade@ (resolve → HDR) → @luminance@
-(auto-exposure readback) → @tonemap@ (exposure + curve) → @gamma@ (sRGB encode).
-@computeQueue@ is the queue the compute passes run on ('FG.defaultQueue' to keep it
-single-queue); @exposure@ scales the tonemap. Returns the 'PassOutputs'; a driver
-reads whichever it presents.
+@cull@ (compact this frame's draws) → @shadow.orbs@ (refresh the orbs' shadow
+slices) → @geometry@ (raster → vis + depth) → @shade@ (resolve → HDR) →
+@luminance@ (auto-exposure readback) → @tonemap@ (exposure + curve) → @gamma@
+(sRGB encode). @computeQueue@ is the queue the compute passes run on
+('FG.defaultQueue' to keep it single-queue); @t@ places the orbs; @exposure@
+scales the tonemap. Returns the 'PassOutputs'; a driver reads whichever it
+presents.
 -}
 addScenePasses
   :: FG.FrameGraph Recorder ()
@@ -935,10 +926,12 @@ addScenePasses
   -> Vec3
   -- ^ camera eye position
   -> Float
+  -- ^ scene time (orb positions, and the reach the cull filters occluders by)
+  -> Float
   -> Word32
   -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao)
   -> ResourceT IO PassOutputs
-addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode = do
+addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMode = do
   let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display, normals, ao, aoBlur} = scene.targets
   -- vis + depth are read outside the graph (the headless debug dumps), so their
   -- writers must survive; everything else is scratch — consumed only through the
@@ -952,9 +945,55 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   normalsH <- importScratchImage graph "ssao.normals" normals
   aoH <- importScratchImage graph "ssao.ao" ao
   aoBlurH <- importScratchImage graph "ssao.blur" aoBlur
+  -- The cull's working set: graph-tracked buffers, so the compact→draw
+  -- barriers fall out of the declared accesses.
+  indirectH <- Buf.importScratchBuffer graph "cull.indirect" scene.static.indirect
+  visMainH <- Buf.importScratchBuffer graph "cull.visMain" scene.static.visMain
+  visOccH <- Buf.importScratchBuffer graph "cull.visOcc" scene.static.visOcc
+  hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
+
+  -- Compact this frame's draws: reset the two cube draw commands, then refill
+  -- them (and the instance remaps) from the frustum + occlusion tests for the
+  -- camera and the reach test around the orbs. The occlusion test samples the
+  -- previous frame's pyramid — the imported mip versions, read here before
+  -- this frame's rebuild renames them — and skips the first frame after
+  -- 'allocateTargets' (nothing built the pyramid yet; a resize resets this).
+  -- Kept alive by the draws' declared reads, no side effect needed.
+  indirectReset <-
+    FG.addPass graph "cull.reset" (FG.writeWith indirectH (Buf.usageFlags Buf.TransferDst)) \_ -> do
+      cb <- recordingCommandBuffer
+      Cull.reset cb scene.static.indirect.buffer scene.static.objLayout.caveBase
+  let cullSetup = do
+        V.forM_ hizHs \mipH -> FG.readWith mipH (usageFlags (StorageRead shadeStage))
+        indirectCulled <- FG.writeWith indirectReset (Buf.usageFlags (Buf.StorageReadWrite shadeStage))
+        visMainCulled <- FG.writeWith visMainH (Buf.usageFlags (Buf.StorageWrite shadeStage))
+        visOccCulled <- FG.writeWith visOccH (Buf.usageFlags (Buf.StorageWrite shadeStage))
+        pure (indirectCulled, visMainCulled, visOccCulled)
+  (indirectCulled, visMainCulled, visOccCulled) <-
+    FG.addPass graph "cull" cullSetup \_ -> do
+      cb <- recordingCommandBuffer
+      hizValid <- liftIO (readIORef scene.hizPrimed)
+      Cull.record pls.cull scene.cullSet (cullParams hizValid) cb
+      liftIO (writeIORef scene.hizPrimed True)
+
+  -- Refresh the orbs' shadow slices, drawing the occluder set the cull just
+  -- compacted for the same @t@ (an out-of-graph refresh would draw a set
+  -- filtered for another orb time). See 'recordOrbShadows'; the upload half
+  -- stays outside the graph ('recordOrbUploads').
+  orbMoments <- forM scene.static.orbShadow \orb -> do
+    momentsH <- importScratchImage graph "shadow.orbMoments" orb.moments
+    orbDepthH <- importScratchImage graph "shadow.orbDepth" orb.depth
+    let orbSetup = do
+          FG.readWith indirectCulled (Buf.usageFlags Buf.IndirectRead)
+          FG.readWith visOccCulled (Buf.usageFlags (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT))
+          FG.writeWith_ orbDepthH (usageFlags DepthAttachment)
+          FG.writeWith momentsH (usageFlags ColorAttachment)
+    FG.addPass graph "shadow.orbs" orbSetup \_ -> do
+      cb <- recordingCommandBuffer
+      recordOrbShadows cb pls scene orb t
 
   (visWritten, depthWritten) <-
-    FG.addPass graph "geometry" (geometrySetup visH depthH) \_ -> do
+    FG.addPass graph "geometry" (geometrySetup indirectCulled visMainCulled visH depthH) \_ -> do
       cb <- recordingCommandBuffer
       let
         info = Dynamic.renderingInfo (fullScissor extent) [(visView, Vk.Uint32 0 0 0 0)] (Just (depthView, 0.0))
@@ -966,7 +1005,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipeline
         pushCamera cb pls.mesh.pipelineLayout viewProj
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
-        Vk.cmdDrawIndirect cb scene.static.indirect Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
+        Vk.cmdDrawIndirect cb scene.static.indirect.buffer Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
       -- Producer-side transition for the (possibly async-compute) shade pass:
       -- done here so the COLOR_ATTACHMENT_OUTPUT source stage stays on a queue
       -- that supports it. The driver's semaphore wait must then cover
@@ -975,9 +1014,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
 
   -- Depth pyramid ("Pipeline.HiZ"): min-reduce the depth buffer right after the
   -- raster, on the default (graphics) queue — depth stays EXCLUSIVE to the family
-  -- that rendered it. Read by the SSAO gather below and, a frame later, by
-  -- 'recordCull' outside the graph (hence the side effect).
-  hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
+  -- that rendered it. Read by the SSAO gather below and, a frame later, by the
+  -- next graph's cull pass (hence the side effect: demand from a future graph).
   let
     nReduce = V.length scene.hizSets
     hizPass (src, ws) (i, dstH) = do
@@ -1029,7 +1067,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   aoBlurred <- blurPass "ssao.blur.y" scene.aoBlurYSet (0, 1) aoBlurredX aoWritten
 
   colorWritten <-
-    FG.addPass graph "shade" (shadeSetup visWritten aoBlurred colorH) \_ -> do
+    FG.addPass graph "shade" (shadeSetup visWritten aoBlurred orbMoments colorH) \_ -> do
       cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
       pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning viewProj eye debugMode
@@ -1128,14 +1166,25 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
     groups n = (n + 7) `div` 8
     dispatchMip cb (Vk.Extent2D mw mh) = Vk.cmdDispatch cb (groups mw) (groups mh) 1
     hostVisible = zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_HOST_READ_BIT} :: Vk.MemoryBarrier
-    geometrySetup visH depthH = do
+    cullParams hizValid =
+      Cull.Params
+        { Cull.viewProj = viewProj
+        , Cull.orbSphere = orbCullSphere t
+        , Cull.caveBase = scene.static.objLayout.caveBase
+        , Cull.caveCount = scene.static.caveCount
+        , Cull.hizValid = if hizValid then 1 else 0
+        }
+    geometrySetup indirectCulled visMainCulled visH depthH = do
+      FG.readWith indirectCulled (Buf.usageFlags Buf.IndirectRead)
+      FG.readWith visMainCulled (Buf.usageFlags (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT))
       depthWritten <- FG.writeWith depthH (usageFlags DepthAttachment)
       visWritten <- FG.writeWith visH (usageFlags ColorAttachment)
       pure (visWritten, depthWritten)
-    shadeSetup visWritten aoWritten colorH = do
+    shadeSetup visWritten aoWritten orbMoments colorH = do
       FG.setQueue computeQueue
       FG.readWith visWritten (usageFlags (StorageRead shadeStage))
       FG.readWith aoWritten (usageFlags (StorageRead shadeStage))
+      forM_ orbMoments \momentsH -> FG.readWith momentsH (usageFlags (Sampled shadeStage))
       FG.writeWith colorH (usageFlags (StorageWrite shadeStage))
     -- The SSAO passes' shared shape: storage reads in, one storage write out,
     -- on the pass's default (graphics) queue.

@@ -149,13 +149,14 @@ access. Encodes into 'FG.Flags' with 'usageFlags'.
 data Usage
   = ColorAttachment
   | DepthAttachment
-  | SampledFragment
   | TransferSrc
   | TransferDst
   | Present
   | -- | Storage read/write in the given shader stage (compute, fragment, …).
     StorageRead Vk.PipelineStageFlags
   | StorageWrite Vk.PipelineStageFlags
+  | -- | Sampled in the given shader stage (fragment, compute, …).
+    Sampled Vk.PipelineStageFlags
   deriving stock (Eq, Ord, Show)
 
 {- | The target state each 'Usage' requires. Stage/access mirror the
@@ -173,11 +174,6 @@ usageState = \case
       Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
       (Vk.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT .|. Vk.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT)
       (Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT .|. Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
-  SampledFragment ->
-    ImageState
-      Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-      Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT
-      Vk.ACCESS_SHADER_READ_BIT
   TransferSrc ->
     ImageState
       Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
@@ -197,21 +193,23 @@ usageState = \case
     ImageState Vk.IMAGE_LAYOUT_GENERAL stage Vk.ACCESS_SHADER_READ_BIT
   StorageWrite stage ->
     ImageState Vk.IMAGE_LAYOUT_GENERAL stage Vk.ACCESS_SHADER_WRITE_BIT
+  Sampled stage ->
+    ImageState Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL stage Vk.ACCESS_SHADER_READ_BIT
 
 {- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
-The six fixed usages are small tags; the storage usages set the high marker bit
-and pack their read/write bit and shader stage into the low half.
+The five fixed usages are small tags; the storage and sampled usages set a
+marker bit and pack their read/write bit and shader stage into the low half.
 -}
 usageFlags :: Usage -> FG.Flags
 usageFlags = \case
   ColorAttachment -> FG.Flags 0
   DepthAttachment -> FG.Flags 1
-  SampledFragment -> FG.Flags 2
-  TransferSrc -> FG.Flags 3
-  TransferDst -> FG.Flags 4
-  Present -> FG.Flags 5
+  TransferSrc -> FG.Flags 2
+  TransferDst -> FG.Flags 3
+  Present -> FG.Flags 4
   StorageRead stage -> FG.Flags (storageMarker .|. stageBits stage)
   StorageWrite stage -> FG.Flags (storageMarker .|. writeBit .|. stageBits stage)
+  Sampled stage -> FG.Flags (sampledMarker .|. stageBits stage)
 
 -- | Decode 'FG.Flags' produced by 'usageFlags'.
 flagsUsage :: FG.Flags -> Usage
@@ -219,17 +217,18 @@ flagsUsage (FG.Flags w)
   | w .&. storageMarker /= 0 =
       let stage = coerce (fromIntegral (w .&. stageMask) :: Word32)
       in if w .&. writeBit /= 0 then StorageWrite stage else StorageRead stage
+  | w .&. sampledMarker /= 0 = Sampled (coerce (fromIntegral (w .&. stageMask) :: Word32))
   | otherwise = case w of
       0 -> ColorAttachment
       1 -> DepthAttachment
-      2 -> SampledFragment
-      3 -> TransferSrc
-      4 -> TransferDst
+      2 -> TransferSrc
+      3 -> TransferDst
       _ -> Present
 
--- Bit layout packing a storage usage's stage into the 64-bit 'FG.Flags'.
-storageMarker, writeBit, stageMask :: Word64
+-- Bit layout packing a storage/sampled usage's stage into the 64-bit 'FG.Flags'.
+storageMarker, sampledMarker, writeBit, stageMask :: Word64
 storageMarker = 0x8000000000000000
+sampledMarker = 0x2000000000000000
 writeBit = 0x4000000000000000
 stageMask = 0x00000000FFFFFFFF
 
@@ -245,10 +244,10 @@ usageWrites = \case
   DepthAttachment -> True
   TransferDst -> True
   StorageWrite _ -> True
-  SampledFragment -> False
   TransferSrc -> False
   Present -> False
   StorageRead _ -> False
+  Sampled _ -> False
 
 {- | Record the barrier bringing the image into the 'Usage''s state and update
 the tracked state. Standalone counterpart to the hook path, for barriers

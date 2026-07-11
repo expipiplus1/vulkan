@@ -9,8 +9,8 @@ queue buffer; 'recordGraph' wraps the whole record step (fresh recorder, flush
 installed, run, close every buffer), leaving each driver to supply only its own
 submit policy.
 
-Nothing here is image-specific beyond the barrier payload type: it is the
-execution seam any 'FG.Resource' adapter records through.
+Nothing here is resource-specific beyond the barrier payload types (one lane
+per kind): it is the execution seam any 'FG.Resource' adapter records through.
 -}
 module Vulkan.Utils.FrameGraph.Recorder
   ( Recorder
@@ -19,6 +19,7 @@ module Vulkan.Utils.FrameGraph.Recorder
   , recorderCommandBuffer
   , recorderQueue
   , queueBarrier
+  , queueBufferBarrier
   , flushBarriers
   , recordingCommandBuffer
   , recordingBackend
@@ -56,10 +57,11 @@ data Barriers = Barriers
   { srcStage :: !Vk.PipelineStageFlags
   , dstStage :: !Vk.PipelineStageFlags
   , images :: [SomeStruct Vk.ImageMemoryBarrier]
+  , buffers :: [SomeStruct Vk.BufferMemoryBarrier]
   }
 
 noBarriers :: Barriers
-noBarriers = Barriers zero zero []
+noBarriers = Barriers zero zero [] []
 
 -- | A recorder pointed at an initial buffer on queue 0; swap it with 'setRecorder'.
 newRecorder :: (MonadIO m) => Vk.CommandBuffer -> m Recorder
@@ -103,7 +105,21 @@ queueBarrier rec src dst barrier = do
   Barriers{images} <- liftIO (readIORef rec.pending)
   when (any (overlapping barrier) images) (flushBarriers rec)
   liftIO $ modifyIORef' rec.pending \b ->
-    Barriers (b.srcStage .|. src) (b.dstStage .|. dst) (barrier : b.images)
+    b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, images = barrier : b.images}
+
+-- | 'queueBarrier' for the buffer lane; overlap is per whole buffer.
+queueBufferBarrier
+  :: (MonadIO m)
+  => Recorder
+  -> Vk.PipelineStageFlags
+  -> Vk.PipelineStageFlags
+  -> SomeStruct Vk.BufferMemoryBarrier
+  -> m ()
+queueBufferBarrier rec src dst barrier@(SomeStruct new) = do
+  Barriers{buffers} <- liftIO (readIORef rec.pending)
+  when (any (\(SomeStruct b) -> b.buffer == new.buffer) buffers) (flushBarriers rec)
+  liftIO $ modifyIORef' rec.pending \b ->
+    b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, buffers = barrier : b.buffers}
 
 -- | Whether two image barriers touch overlapping subresources.
 overlapping :: SomeStruct Vk.ImageMemoryBarrier -> SomeStruct Vk.ImageMemoryBarrier -> Bool
@@ -127,13 +143,13 @@ weaker) dependency than per-barrier commands, the price of batching.
 -}
 flushBarriers :: (MonadIO m) => Recorder -> m ()
 flushBarriers rec = liftIO do
-  Barriers{srcStage, dstStage, images} <- readIORef rec.pending
-  case images of
-    [] -> pure ()
+  Barriers{srcStage, dstStage, images, buffers} <- readIORef rec.pending
+  case (images, buffers) of
+    ([], []) -> pure ()
     _ -> do
       writeIORef rec.pending noBarriers
       (_queue, cb) <- readIORef rec.slot
-      Vk.cmdPipelineBarrier cb srcStage dstStage zero [] [] (V.fromList images)
+      Vk.cmdPipelineBarrier cb srcStage dstStage zero [] (V.fromList buffers) (V.fromList images)
 
 -- | The command buffer the executing pass records into ('recorderCommandBuffer' of the 'FG.Exec' context).
 recordingCommandBuffer :: FG.Exec Recorder alloc Vk.CommandBuffer
