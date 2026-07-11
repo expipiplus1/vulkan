@@ -32,7 +32,6 @@ import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.Text.IO as TIO
 import Data.Vector (Vector)
-import qualified Data.Vector as V
 import Data.Word (Word32)
 import qualified Fragr as FG
 import qualified Fragr.Dot as Dot
@@ -42,15 +41,15 @@ import Say (sayErrString)
 import UnliftIO.Exception (displayException)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
-import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR (..), SurfaceFormatKHR (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedAs, imageInfo, importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recordingCommandBuffer)
+import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
-import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, srgbEncoding)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
@@ -127,20 +126,12 @@ windowConfig =
         defaultSwapchainConfig
           { scRequiredUsageFlags = [Vk.IMAGE_USAGE_TRANSFER_DST_BIT, Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT]
           , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_BLIT_DST_BIT]
-          , scSurfaceFormatPreferences = [srgbEncoding]
+          , -- sRGB preferred so the linear @tone@ target blits straight to the
+            -- swapchain; a surface without one (MoltenVK leads with UNORM) gets
+            -- the gamma pass's @display@ — 'renderScene' checks the pick either way.
+            scSurfaceFormatPreferences = [srgbEncoding]
           }
     }
-
-{- | Does presenting through this surface format sRGB-encode blitted-in linear colour?
-
-Preferred, so the linear @tone@ target blits straight to the swapchain. Surfaces
-that offer no such format (MoltenVK leads with UNORM) get the gamma pass's
-@display@ target instead — 'renderScene' checks the picked format either way.
--}
-srgbEncoding :: SurfaceFormatKHR -> Bool
-srgbEncoding sf =
-  sf.format `elem` ([Vk.FORMAT_B8G8R8A8_SRGB, Vk.FORMAT_R8G8B8A8_SRGB, Vk.FORMAT_A8B8G8R8_SRGB_PACK32] :: [Vk.Format])
-    && sf.colorSpace == COLOR_SPACE_SRGB_NONLINEAR_KHR
 
 -- | Console name of a presented view (the digit key / @--debug-mode@ value).
 viewName :: Word32 -> String
@@ -193,7 +184,7 @@ allocateBindings allocator dev pls sceneStatic sc = do
   bindings <-
     liftIO . flip runInternalState st $ do
       scene <- Scene.allocateTargets allocator dev pls sceneStatic sc.sExtent Nothing False
-      swapImages <- traverse (\img -> describedAs (imageInfo sc.sFormat.format sc.sExtent) <$> newManagedImage img Vk.IMAGE_ASPECT_COLOR_BIT) sc.sImages
+      swapImages <- newSwapchainImages sc
       pure Bindings{scene, swapImages, exposure}
   key <- register (closeInternalState st)
   pure (bindings, key)
@@ -227,7 +218,6 @@ renderScene opts vc pls window controls startTime bindings f = do
     eye = Camera.eye orbit
     sc = fSwapchain f
     extent = sc.sExtent
-    swapManaged = bindings.swapImages V.! fromIntegral imageIndex
 
   -- Auto-exposure over the previous frame's mean luminance (the readback lags a
   -- frame; the adaptation hides it). Held while a debug view is up: the meter
@@ -245,7 +235,7 @@ renderScene opts vc pls window controls startTime bindings f = do
   graph <- FG.newFrameGraph
   -- Single-queue: the compute passes stay on the default (graphics) queue.
   outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t exposure mode
-  swapchainH <- importManagedImage graph "swapchain" swapManaged
+  (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
   -- output and beauty the linear @tone@ target; a UNORM pick blits the gamma
@@ -261,7 +251,7 @@ renderScene opts vc pls window controls startTime bindings f = do
     FG.addPass graph "blit" (blitSetup blitSrc swapchainH) \_ -> do
       cb <- recordingCommandBuffer
       blitImage extent blitSrcImage swapManaged.image cb
-  FG.finalize graph blitted (usageFlags Present)
+  presentSwapchain graph blitted
 
   FG.compile graph
 

@@ -25,6 +25,7 @@ library
       Vulkan.Utils.FrameGraph.Buffer
       Vulkan.Utils.FrameGraph.Image
       Vulkan.Utils.FrameGraph.Recorder
+      Vulkan.Utils.FrameGraph.Swapchain
   other-modules:
       Paths_vulkan_utils_framegraph
   hs-source-dirs:
