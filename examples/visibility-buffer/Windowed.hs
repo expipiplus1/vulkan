@@ -236,13 +236,8 @@ renderScene opts vc pls window controls startTime bindings f = do
       Scene.setExposure bindings.scene e'
 
   graph <- FG.newFrameGraph
-  -- Move the orbs ahead of the scene passes; the cull and the shadow refresh
-  -- consume the new positions, on the same queue (the pass's own barrier
-  -- covers them).
-  FG.addPass_ graph "orbs.upload" FG.setSideEffect do
-    cb <- recordingCommandBuffer
-    Scene.recordOrbUploads cb bindings.scene t
   -- Single-queue: the compute passes stay on the default (graphics) queue.
+  -- The orbs' table refresh is a scene pass now ("Scene").
   outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t Nothing mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
