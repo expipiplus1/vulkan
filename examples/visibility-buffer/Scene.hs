@@ -71,7 +71,7 @@ import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, transitionImageTo, transitionImagesTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, transitionImageTo, transitionImagesTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.Pipeline (Pipeline)
 import qualified Vulkan.Utils.Pipeline as Pipeline
@@ -354,9 +354,9 @@ debug channels live here). Beauty flows @toneOut@ (tonemapped, display-linear)
 @toneOut@ goes undemanded.
 -}
 data PassOutputs = PassOutputs
-  { colorOut :: FG.Handle
-  , toneOut :: FG.Handle
-  , displayOut :: FG.Handle
+  { colorOut :: FG.Handle ManagedImage
+  , toneOut :: FG.Handle ManagedImage
+  , displayOut :: FG.Handle ManagedImage
   }
 
 -- | The extent-independent pipelines, built once.
@@ -844,10 +844,6 @@ recordOrbShadows cb pls scene orbShadow t = liftIO do
       Shadow.pushShadow cb pls.shadow (Lights.orbLight orb t) (light * cubeFaces)
       Pipeline.bindSet cb pls.shadow 0 scene.static.shadowSet
       Vk.cmdDrawIndirect cb scene.static.indirect.buffer (Objects.orbOccDrawOffset i) Objects.occluderDrawCount Objects.drawStride
-  -- Producer-side hand-off to the (possibly async-compute) resolve, like the
-  -- geometry pass's: the COLOR_ATTACHMENT_OUTPUT source scope stays on a queue
-  -- that supports it, and the resolve's declared read finds the state matching.
-  transitionImageTo cb orbShadow.moments (Sampled shadeStage)
 
 -- | Multiview rendering info for one light's shadow cube (all six faces, viewMask 0x3F).
 shadowRenderingInfo :: Vk.ImageView -> Vk.ImageView -> Vk.RenderingInfo '[]
@@ -910,14 +906,14 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   -- 'allocateTargets' (nothing built the pyramid yet; a resize resets this).
   -- Kept alive by the draws' declared reads, no side effect needed.
   indirectReset <-
-    FG.addPass graph "cull.reset" (FG.writeWith indirectH (Buf.usageFlags Buf.TransferDst)) \_ -> do
+    FG.addPass graph "cull.reset" (FG.writeWith indirectH Buf.TransferDst) \_ -> do
       cb <- recordingCommandBuffer
       Cull.reset cb scene.static.indirect.buffer scene.static.objLayout.caveBase
   let cullSetup = do
-        V.forM_ hizHs \mipH -> FG.readWith mipH (usageFlags (StorageRead shadeStage))
-        indirectCulled <- FG.writeWith indirectReset (Buf.usageFlags (Buf.StorageReadWrite shadeStage))
-        visMainCulled <- FG.writeWith visMainH (Buf.usageFlags (Buf.StorageWrite shadeStage))
-        visOccCulled <- FG.writeWith visOccH (Buf.usageFlags (Buf.StorageWrite shadeStage))
+        V.forM_ hizHs \mipH -> FG.readWith mipH (StorageRead shadeStage)
+        indirectCulled <- FG.writeWith indirectReset (Buf.StorageReadWrite shadeStage)
+        visMainCulled <- FG.writeWith visMainH (Buf.StorageWrite shadeStage)
+        visOccCulled <- FG.writeWith visOccH (Buf.StorageWrite shadeStage)
         pure (indirectCulled, visMainCulled, visOccCulled)
   (indirectCulled, visMainCulled, visOccCulled) <-
     FG.addPass graph "cull" cullSetup \_ -> do
@@ -934,10 +930,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     momentsH <- importScratchImage graph "shadow.orbMoments" orb.moments
     orbDepthH <- importScratchImage graph "shadow.orbDepth" orb.depth
     let orbSetup = do
-          FG.readWith indirectCulled (Buf.usageFlags Buf.IndirectRead)
-          FG.readWith visOccCulled (Buf.usageFlags (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT))
-          FG.writeWith_ orbDepthH (usageFlags DepthAttachment)
-          FG.writeWith momentsH (usageFlags ColorAttachment)
+          FG.readWith indirectCulled Buf.IndirectRead
+          FG.readWith visOccCulled (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT)
+          FG.writeWith_ orbDepthH DepthAttachment
+          FG.writeWith momentsH ColorAttachment
     FG.addPass graph "shadow.orbs" orbSetup \_ -> do
       cb <- recordingCommandBuffer
       recordOrbShadows cb pls scene orb t
@@ -956,11 +952,6 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
         pushCamera cb pls.mesh viewProj
         Pipeline.bindSet cb pls.mesh 0 scene.static.meshSet
         Vk.cmdDrawIndirect cb scene.static.indirect.buffer Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
-      -- Producer-side transition for the (possibly async-compute) shade pass:
-      -- done here so the COLOR_ATTACHMENT_OUTPUT source stage stays on a queue
-      -- that supports it. The driver's semaphore wait must then cover
-      -- 'shadeStage' (see the Headless submit) for the hand-off to be ordered.
-      transitionImageTo cb vis (StorageRead shadeStage)
 
   -- Depth pyramid ("Pipeline.HiZ"): min-reduce the depth buffer right after the
   -- raster, on the default (graphics) queue — depth stays EXCLUSIVE to the family
@@ -1128,62 +1119,62 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
         , Cull.orbOccCap = Objects.orbOccCap scene.static.objLayout
         }
     geometrySetup indirectCulled visMainCulled visH depthH = do
-      FG.readWith indirectCulled (Buf.usageFlags Buf.IndirectRead)
-      FG.readWith visMainCulled (Buf.usageFlags (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT))
-      depthWritten <- FG.writeWith depthH (usageFlags DepthAttachment)
-      visWritten <- FG.writeWith visH (usageFlags ColorAttachment)
+      FG.readWith indirectCulled Buf.IndirectRead
+      FG.readWith visMainCulled (Buf.StorageRead Vk.PIPELINE_STAGE_VERTEX_SHADER_BIT)
+      depthWritten <- FG.writeWith depthH DepthAttachment
+      visWritten <- FG.writeWith visH ColorAttachment
       pure (visWritten, depthWritten)
     shadeSetup visWritten aoWritten orbMoments colorH = do
       FG.setQueue computeQueue
-      FG.readWith visWritten (usageFlags (StorageRead shadeStage))
-      FG.readWith aoWritten (usageFlags (StorageRead shadeStage))
-      forM_ orbMoments \momentsH -> FG.readWith momentsH (usageFlags (Sampled shadeStage))
-      FG.writeWith colorH (usageFlags (StorageWrite shadeStage))
+      FG.readWith visWritten (StorageRead shadeStage)
+      FG.readWith aoWritten (StorageRead shadeStage)
+      forM_ orbMoments \momentsH -> FG.readWith momentsH (Sampled shadeStage)
+      FG.writeWith colorH (StorageWrite shadeStage)
     -- The SSAO passes' shared shape: storage reads in, one storage write out,
     -- on the pass's default (graphics) queue.
-    computeSetup (srcs :: [FG.Handle]) dstH = do
-      mapM_ (\r -> FG.readWith r (usageFlags (StorageRead shadeStage))) srcs
-      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
+    computeSetup (srcs :: [FG.Handle ManagedImage]) dstH = do
+      mapM_ (\r -> FG.readWith r (StorageRead shadeStage)) srcs
+      FG.writeWith dstH (StorageWrite shadeStage)
     luminanceSetup srcH = do
       FG.setQueue computeQueue
       FG.setSideEffect
-      FG.readWith srcH (usageFlags (StorageRead shadeStage))
+      FG.readWith srcH (StorageRead shadeStage)
     -- Probe snapshot: transfer-copy the metered mip into its own image.
     probeSetup srcH probeH = do
       FG.setQueue computeQueue
       FG.setSideEffect
-      FG.readWith srcH (usageFlags TransferSrc)
-      FG.writeWith_ probeH (usageFlags TransferDst)
+      FG.readWith srcH TransferSrc
+      FG.writeWith_ probeH TransferDst
     -- Downsample: read the source mip, write the target mip.
     bloomSetup src dstH = do
       FG.setQueue computeQueue
-      FG.readWith src (usageFlags (StorageRead shadeStage))
-      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
+      FG.readWith src (StorageRead shadeStage)
+      FG.writeWith dstH (StorageWrite shadeStage)
     -- Upsample: read the blur source (next-smaller mip) and read+write the
     -- destination mip in place (the read+write is the intra-image barrier).
     upSetup blur destH = do
       FG.setQueue computeQueue
-      FG.readWith blur (usageFlags (StorageRead shadeStage))
-      FG.readWith destH (usageFlags (StorageRead shadeStage))
-      FG.writeWith destH (usageFlags (StorageWrite shadeStage))
+      FG.readWith blur (StorageRead shadeStage)
+      FG.readWith destH (StorageRead shadeStage)
+      FG.writeWith destH (StorageWrite shadeStage)
     tonemapSetup colorWritten bloom0 toneH = do
       FG.setQueue computeQueue
-      FG.readWith colorWritten (usageFlags (StorageRead shadeStage))
-      FG.readWith bloom0 (usageFlags (StorageRead shadeStage))
-      FG.writeWith toneH (usageFlags (StorageWrite shadeStage))
+      FG.readWith colorWritten (StorageRead shadeStage)
+      FG.readWith bloom0 (StorageRead shadeStage)
+      FG.writeWith toneH (StorageWrite shadeStage)
     gammaSetup srcH displayH = do
       FG.setQueue computeQueue
-      FG.readWith srcH (usageFlags (StorageRead shadeStage))
-      FG.writeWith displayH (usageFlags (StorageWrite shadeStage))
+      FG.readWith srcH (StorageRead shadeStage)
+      FG.writeWith displayH (StorageWrite shadeStage)
     hizSetup src dstH = do
       FG.setSideEffect
-      FG.readWith src (usageFlags (StorageRead shadeStage))
-      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
+      FG.readWith src (StorageRead shadeStage)
+      FG.writeWith dstH (StorageWrite shadeStage)
     hizTailSetup src dstHs = do
       FG.setSideEffect
-      FG.readWith src (usageFlags (StorageRead shadeStage))
+      FG.readWith src (StorageRead shadeStage)
       forM (V.toList dstHs) \h ->
-        FG.writeWith h (usageFlags (StorageWrite shadeStage))
+        FG.writeWith h (StorageWrite shadeStage)
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3

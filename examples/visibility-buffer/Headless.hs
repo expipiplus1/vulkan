@@ -22,6 +22,7 @@ import Control.Monad (foldM, forM, forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import qualified Data.ByteString.Lazy as BSL
+import Data.IORef (newIORef, readIORef, writeIORef)
 import qualified Data.IntSet as IntSet
 import qualified Data.Text.IO as TIO
 import qualified Data.Vector as V
@@ -37,7 +38,7 @@ import System.Exit (exitFailure)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.FrameGraph.Driver (allocateCommandPool, noExtras, submitGraphQueued, waitSubmitted)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), copyManagedImageToHost, newManagedImage, sliceLayers, transitionImageTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, sliceLayers, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -149,15 +150,31 @@ render opts allocator dev queues async = do
       runMode exposure debugMode = do
         graph <- FG.newFrameGraph
         outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 exposure debugMode
-        FG.addPass_ graph "readback" (readbackSetup outs.displayOut) do
+        cpuH <- importScratchImage graph "cpu" cpuManaged
+        cpuWritten <- FG.addPass graph "readback" (readbackSetup outs.displayOut cpuH) \_ -> do
+          -- The declared accesses moved display to TRANSFER_SRC and the cpu
+          -- image to TRANSFER_DST; only the copy itself is left to record.
           cb <- recordingCommandBuffer
-          -- The declared read already moved display to TRANSFER_SRC; the copy's
-          -- own transitions then only touch the destination.
-          copyManagedImageToHost cb extent scene.targets.display cpuManaged
+          let Vk.Extent2D w h = extent
+          Vk.cmdCopyImage
+            cb
+            scene.targets.display.image
+            Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+            cpuManaged.image
+            Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+            [Vk.ImageCopy (sliceLayers scene.targets.display) (Vk.Offset3D 0 0 0) (sliceLayers cpuManaged) (Vk.Offset3D 0 0 0) (Vk.Extent3D w h 1)]
+        -- The PNG peek is a graph pass on the host queue: its wait on the copy
+        -- is the compiled schedule's (a timeline wait the driver performs), the
+        -- cpu image's GENERAL/HOST transition lands producer-side, and the body
+        -- runs after the submits.
+        result <- liftIO (newIORef Nothing)
+        FG.addPass_ graph "host.readback" (hostSetup cpuWritten) do
+          img <- liftIO readback
+          liftIO (writeIORef result (Just img))
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
         runGraph dev queues async graph
-        readback
+        liftIO (readIORef result) >>= maybe (error "headless: the host readback pass did not run") pure
 
   -- Meter, then re-render at the exposure the viewer would settle on. The luminance
   -- pass reads the pre-exposure HDR, so the metering pass's own exposure is moot.
@@ -179,12 +196,16 @@ render opts allocator dev queues async = do
   let (visImage, depthImage) = Scene.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where
-    -- The queue must match the scene passes': on single-queue hardware there
-    -- is no semaphore for a cross-queue transition to lean on.
-    readbackSetup displayOut = do
+    -- The copy queue must match the scene passes': on single-queue hardware
+    -- there is no semaphore for a cross-queue transition to lean on.
+    readbackSetup displayOut cpuH = do
       FG.setQueue (computeQueueId async)
+      FG.readWith displayOut TransferSrc
+      FG.writeWith cpuH TransferDst
+    hostSetup cpuWritten = do
+      FG.setQueue hostQueue
       FG.setSideEffect
-      FG.readWith displayOut (usageFlags TransferSrc)
+      FG.readWith cpuWritten HostRead
 
 {- | Exposure for the metering and debug passes.
 
@@ -197,6 +218,10 @@ meterExposure = 1
 -- | The compute-and-readback queue (async family, or the graphics queue).
 computeQueue :: FG.QueueId
 computeQueue = FG.QueueId 1
+
+-- | The host queue: its passes run on the CPU, after the submits.
+hostQueue :: FG.QueueId
+hostQueue = FG.QueueId 2
 
 -- | The queue the shade/readback passes run on (async family, or graphics).
 computeQueueId :: Maybe Word32 -> FG.QueueId
@@ -223,7 +248,7 @@ runGraph dev queues async graph = do
   let queueTable q = case computeSlot of
         Just slot | q == computeQueue -> slot
         _ -> (graphicsQueue, graphicsPool)
-  submitted <- submitGraphQueued dev queueTable (const noExtras) graph
+  submitted <- submitGraphQueued dev (Just hostQueue) queueTable (const noExtras) graph
   _ <- waitSubmitted dev maxBound submitted
   pure ()
 

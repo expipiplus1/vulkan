@@ -22,7 +22,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.Core10 qualified as Vk
 import Vulkan.Extensions.VK_KHR_surface qualified
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (Present), describedImage, importManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (Present), describedImage, importManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 
@@ -44,7 +44,7 @@ newSwapchainImages sc =
 Returns the handle for the graph's writes alongside the wrapper, whose
 @.image@ the writing pass records into.
 -}
-importSwapchain :: (MonadIO m) => FG.FrameGraph Recorder () -> Vector ManagedImage -> Word32 -> m (FG.Handle, ManagedImage)
+importSwapchain :: (MonadIO m) => FG.FrameGraph Recorder () -> Vector ManagedImage -> Word32 -> m (FG.Handle ManagedImage, ManagedImage)
 importSwapchain graph swapImages imageIndex = do
   let mi = swapImages V.! fromIntegral imageIndex
   h <- importManagedImage graph "swapchain" mi
@@ -56,5 +56,5 @@ importSwapchain graph swapImages imageIndex = do
 chain survives demand culling and the write hook brings the image to
 @PRESENT_SRC@ — a no-op barrier when it is already there (an idle re-present).
 -}
-presentSwapchain :: (MonadIO m) => FG.FrameGraph Recorder () -> FG.Handle -> m ()
-presentSwapchain graph h = FG.finalize graph h (usageFlags Present)
+presentSwapchain :: (MonadIO m) => FG.FrameGraph Recorder () -> FG.Handle ManagedImage -> m ()
+presentSwapchain graph h = FG.finalize graph h Present

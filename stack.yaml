@@ -10,6 +10,8 @@ packages:
 - VulkanMemoryAllocator
 - openxr
 - generate-new
+# Local while typed-handles-flags is unpushed (see project memory).
+- ../fragr
 
 extra-deps:
 - unification-fd-0.12.0.2
@@ -22,8 +24,6 @@ extra-deps:
 - spirv-reflect-ffi-0.4
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
-- git: https://gitlab.com/dpwiz/fragr
-  commit: f49f9ca286af0640cf51d9128ed06a09a059fe90
 
 # use ghcup, nix, setup actions
 system-ghc: true

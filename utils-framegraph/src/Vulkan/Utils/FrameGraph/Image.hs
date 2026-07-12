@@ -2,8 +2,8 @@
 automatically.
 
 A 'ManagedImage' carries the image plus its tracked 'ImageState' (layout,
-stage, access). A pass declares an access with a 'Usage' (encoded into
-'FG.Flags' by 'usageFlags'); the 'FG.preRead' / 'FG.preWrite' hooks diff the
+stage, access). A pass declares an access with a 'Usage' (the instance's
+'FG.Flags' type); the 'FG.preRead' / 'FG.preWrite' hooks diff the
 tracked state against the usage's target and queue the barrier into the
 'Recorder''s per-pass batch, one @vkCmdPipelineBarrier@ per pass — the
 'transitionImageTo' rules, plus semaphore chaining when the access hops
@@ -30,8 +30,6 @@ module Vulkan.Utils.FrameGraph.Image
   , undefinedState
   , Usage (..)
   , usageState
-  , usageFlags
-  , flagsUsage
   , transitionImageTo
   , transitionImagesTo
   , sliceLayers
@@ -40,19 +38,17 @@ module Vulkan.Utils.FrameGraph.Image
 
 import Control.Monad (foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.&.), (.|.))
-import Data.Coerce (coerce)
+import Data.Bits ((.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
 import Data.Text qualified as Text
 import Data.Vector qualified as V
-import Data.Word (Word32, Word64)
+import Data.Word (Word32)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer (isBufferFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, queueBarrier, recorderQueue)
 import Vulkan.Zero (zero)
 
@@ -135,14 +131,19 @@ instance FG.Resource ManagedImage where
   type Desc ManagedImage = ImageDesc
   type Alloc ManagedImage = ()
   type Ctx ManagedImage = Recorder
+  type Flags ManagedImage = Usage
 
   createResource _ _ =
     error "ManagedImage is import-only: allocate the image and use importResource"
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ flags rec mi = queueTransition rec mi (flagsUsage flags)
-  preWrite _ flags rec mi = queueTransition rec mi (flagsUsage flags)
+  preRead _ usage rec mi = queueTransition rec mi usage
+  preWrite _ usage rec mi = queueTransition rec mi usage
+
+  -- Producer-side handoff: transition into the consuming access's state in
+  -- the producing queue's buffer (fired only for cross-queue data edges).
+  preRelease _ usage rec mi = queueTransition rec mi usage
 
   describeDesc d = d.info
 
@@ -164,7 +165,7 @@ undefinedState =
     }
 
 {- | How a pass uses an image, i.e. the 'ImageState' it must be in for that
-access. Encodes into 'FG.Flags' with 'usageFlags'.
+access. The per-access payload of 'FG.readWith' / 'FG.writeWith'.
 -}
 data Usage
   = ColorAttachment
@@ -219,52 +220,6 @@ usageState = \case
     ImageState Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL stage Vk.ACCESS_SHADER_READ_BIT
   HostRead ->
     ImageState Vk.IMAGE_LAYOUT_GENERAL Vk.PIPELINE_STAGE_HOST_BIT Vk.ACCESS_HOST_READ_BIT
-
-{- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
-The fixed usages are small tags; the storage and sampled usages set a
-marker bit and pack their read/write bit and shader stage into the low half.
--}
-usageFlags :: Usage -> FG.Flags
-usageFlags = \case
-  ColorAttachment -> FG.Flags 0
-  DepthAttachment -> FG.Flags 1
-  TransferSrc -> FG.Flags 2
-  TransferDst -> FG.Flags 3
-  Present -> FG.Flags 4
-  HostRead -> FG.Flags 5
-  StorageRead stage -> FG.Flags (storageMarker .|. stageBits stage)
-  StorageWrite stage -> FG.Flags (storageMarker .|. writeBit .|. stageBits stage)
-  Sampled stage -> FG.Flags (sampledMarker .|. stageBits stage)
-
--- | Decode 'FG.Flags' produced by 'usageFlags'; anything else is an error.
-flagsUsage :: FG.Flags -> Usage
-flagsUsage flags@(FG.Flags w)
-  -- Loud failure over a silently wrong barrier: the buffer codec shares the
-  -- storage marker bits, so a cross-fed value must not decode.
-  | Buffer.isBufferFlags flags =
-      error ("Vulkan.Utils.FrameGraph.Image.flagsUsage: not an image usage: " <> show w)
-  | w .&. storageMarker /= 0 =
-      let stage = coerce (fromIntegral (w .&. stageMask) :: Word32)
-      in if w .&. writeBit /= 0 then StorageWrite stage else StorageRead stage
-  | w .&. sampledMarker /= 0 = Sampled (coerce (fromIntegral (w .&. stageMask) :: Word32))
-  | otherwise = case w of
-      0 -> ColorAttachment
-      1 -> DepthAttachment
-      2 -> TransferSrc
-      3 -> TransferDst
-      4 -> Present
-      5 -> HostRead
-      _ -> error ("Vulkan.Utils.FrameGraph.Image.flagsUsage: not an image usage: " <> show w)
-
--- Bit layout packing a storage/sampled usage's stage into the 64-bit 'FG.Flags'.
-storageMarker, sampledMarker, writeBit, stageMask :: Word64
-storageMarker = 0x8000000000000000
-sampledMarker = 0x2000000000000000
-writeBit = 0x4000000000000000
-stageMask = 0x00000000FFFFFFFF
-
-stageBits :: Vk.PipelineStageFlags -> Word64
-stageBits stage = fromIntegral (coerce stage :: Word32)
 
 {- | Whether the 'Usage' writes the image (and so needs a barrier even when the
 state is unchanged — only read-after-read can skip it).
@@ -415,7 +370,7 @@ presentables and anything read outside the graph (readbacks, a next-frame
 sampler). For targets only this graph's passes consume, use
 'importScratchImage' so demand culling applies.
 -}
-importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
+importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m (FG.Handle ManagedImage)
 importManagedImage graph name mi = do
   FG.addPreExec graph flushBarriers
   FG.importResource graph name (ImageDesc mi.info) mi
@@ -426,7 +381,7 @@ The image (and its layout tracking) persists between graphs, but its contents
 are only ever consumed through this graph. Passes that feed a between-graphs
 consumer must say 'FG.setSideEffect' themselves.
 -}
-importScratchImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
+importScratchImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m (FG.Handle ManagedImage)
 importScratchImage graph name mi = do
   FG.addPreExec graph flushBarriers
   FG.importScratch graph name (ImageDesc mi.info) mi

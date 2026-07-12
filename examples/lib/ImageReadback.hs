@@ -31,8 +31,8 @@ import qualified VulkanMemoryAllocator as VMA
 
 {- | Allocate a CPU-visible, mapped, linear @TRANSFER_DST@ image of the given
 colour format and extent (the destination for 'copyImageToHost'), and return it
-alongside a readback action that materializes its current contents as a
-'JP.Image'. The image lives until the enclosing 'Control.Monad.Trans.Resource.ResourceT'
+alongside a readback action (plain 'IO', so a frame-graph host pass can run
+it) that materializes its current contents as a 'JP.Image'. The image lives until the enclosing 'Control.Monad.Trans.Resource.ResourceT'
 releases it.
 -}
 makeReadbackImage
@@ -41,7 +41,7 @@ makeReadbackImage
   -> Vk.Device
   -> Vk.Format
   -> Vk.Extent2D
-  -> m (Vk.Image, m (JP.Image JP.PixelRGBA8))
+  -> m (Vk.Image, IO (JP.Image JP.PixelRGBA8))
 makeReadbackImage allocator dev format (Vk.Extent2D w h) = do
   (_, (cpuImage, allocation, allocationInfo)) <-
     VMA.withImage allocator cpuImageCreateInfo cpuAlloc allocate

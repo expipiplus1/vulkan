@@ -44,7 +44,7 @@ import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import Vulkan.Utils.FrameGraph.Driver (allocatePrimary)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
 import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
@@ -274,5 +274,5 @@ renderScene opts vc pls window controls startTime bindings f = do
   presentFrameImage vc f acquireResult imageIndex
   where
     blitSetup srcH swapchainH = do
-      FG.readWith srcH (usageFlags TransferSrc)
-      FG.writeWith swapchainH (usageFlags TransferDst)
+      FG.readWith srcH TransferSrc
+      FG.writeWith swapchainH TransferDst

@@ -3,12 +3,19 @@
 {-| Package-level multi-queue submit driver.
 
 'submitGraphQueued' turns a compiled graph into one submit per executing
-queue: a one-time primary begun from each queue's pool, recorded through
-'recordGraphSyncs', and cross-queue ordering realised with per-run timeline
-semaphores straight off the schedule — each wait's value from 'FG.Wait' and
-its @waitDstStageMask@ decoded from the accesses it protects ('waitStage',
-widened by the pass's 'FG.Transfer' acquires), the same stages the resource
-adapters chain their cross-queue barriers to.
+device queue: a one-time primary begun from each queue's pool, cross-queue
+ordering realised with per-run timeline semaphores straight off the
+schedule — each wait's value from 'FG.Wait' and its @waitDstStageMask@
+decoded from the accesses it protects ('waitStage', widened by the pass's
+'FG.Transfer' acquires), the same stages the resource adapters chain their
+cross-queue barriers to.
+
+The host is just another queue: passes assigned to the designated host
+'FG.QueueId' execute on the CPU after the submits, each waiting its
+schedule waits on the real timelines and signalling its own — so readbacks
+and mapped uploads take part in the same dependency graph, with the
+device-side transitions landing producer-side ('FG.preRelease') and the
+host-side hooks tracking state without recording ('setRecorderHost').
 
 Frame-level synchronization is the caller's and arrives as 'SubmitExtras':
 swapchain acquire/present semaphores, frames-in-flight timelines, and any
@@ -37,11 +44,13 @@ module Vulkan.Utils.FrameGraph.Driver
   , accessStage
   ) where
 
-import Control.Monad (when)
+import Control.Monad (unless, void, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.&.), (.|.))
-import Data.Foldable (foldl')
+import Data.Foldable (foldl', for_, traverse_)
+import Data.IORef (modifyIORef', newIORef, readIORef)
+import Data.List (partition)
 import Data.List.NonEmpty qualified as NE
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
@@ -50,18 +59,20 @@ import Data.Set qualified as Set
 import Data.Traversable (for)
 import Data.Vector qualified as V
 import Data.Word (Word32, Word64)
+import Type.Reflection (eqTypeRep, typeRep, type (:~~:) (HRefl))
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import Vulkan.Core10 qualified as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import Vulkan.Core10 qualified as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..), waitSemaphoresSafe)
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..), signalSemaphore, waitSemaphoresSafe)
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreSignalInfo (SemaphoreSignalInfo (..))
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreWaitInfo (SemaphoreWaitInfo (..))
 import Vulkan.Utils.Frame (allocateTimelineSemaphore)
 import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
 import Vulkan.Utils.FrameGraph.Image qualified as Image
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraphSyncs)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setRecorder, setRecorderHost)
 import Vulkan.Zero (zero)
 
 {- | Frame-level waits and signals spliced into one queue's submit.
@@ -89,45 +100,86 @@ data Submitted = Submitted
   , value :: Word64
   }
 
-{- | Record a compiled graph and submit it, one submit per executing queue.
+{- | Record a compiled graph and submit it, one submit per executing device
+queue, then execute the host queue's passes.
 
 The queue table maps the graph's 'FG.QueueId's to real queues and the pools
 to take this run's one-time command buffers from (reset the pool to reclaim
 them, e.g. per frame in flight). Cross-queue waits come from the schedule;
-@extras@ adds the frame-level ones. The per-run timelines live in the
+@extras@ adds the frame-level ones (ignored for the host queue — a host
+pass has no submit to splice into). The per-run timelines live in the
 current 'MonadResource' scope, so keep it open until the returned
 'Submitted' values are waited on.
+
+Passes on the designated host queue record nothing: after the device
+submits go out, each runs on the calling thread — its schedule waits
+realised as a host timeline wait, its body as plain IO (peek a readback
+mapping, write an upload one), its signal as 'signalSemaphore', which
+already-submitted device work may be waiting on. The graph must have at
+least one device pass.
 -}
 submitGraphQueued
   :: (MonadResource m)
   => Vk.Device
+  -> Maybe FG.QueueId
+  -- ^ the host queue: its passes execute on the CPU after the submits
   -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
   -> (FG.QueueId -> SubmitExtras)
   -> FG.FrameGraph Recorder ()
   -> m [Submitted]
-submitGraphQueued dev queueTable extras graph =
+submitGraphQueued dev hostQueue queueTable extras graph =
   FG.executingQueues graph >>= \case
     [] -> pure []
     qids -> do
-      slots <- for qids \qid -> do
+      let (hostQids, deviceQids) = partition (\q -> Just q == hostQueue) qids
+      deviceSlots <- for deviceQids \qid -> do
         let (vkQueue, pool) = queueTable qid
         cb <- allocatePrimary dev pool
         (_, timeline) <- allocateTimelineSemaphore dev 0
         pure (qid, (vkQueue, cb, timeline))
+      hostSlots <- for hostQids \qid -> do
+        (_, timeline) <- allocateTimelineSemaphore dev 0
+        pure (qid, timeline)
+      buffers <- case NE.nonEmpty [cb | (_, (_, cb, _)) <- deviceSlots] of
+        Nothing -> error "submitGraphQueued: a host-only graph has nothing to submit"
+        Just ne -> pure ne
       let
-        table = Map.fromList slots
-        slotOf qid =
-          Map.findWithDefault
-            (error "submitGraphQueued: queue outside the compiled schedule")
-            qid
-            table
-        cbFor qid = let (_, cb, _) = slotOf qid in cb
-        timelineOf qid = let (_, _, timeline) = slotOf qid in timeline
-      syncs <- recordGraphSyncs cbFor (NE.fromList [cb | (_, (_, cb, _)) <- slots]) graph
+        cbTable = Map.fromList [(qid, cb) | (qid, (_, cb, _)) <- deviceSlots]
+        timelines = Map.fromList ([(qid, t) | (qid, (_, _, t)) <- deviceSlots] <> hostSlots)
+        timelineOf qid =
+          Map.findWithDefault (error "submitGraphQueued: wait on a queue with no executing pass") qid timelines
+        cbFor qid =
+          Map.findWithDefault (error "submitGraphQueued: queue outside the compiled schedule") qid cbTable
+
+      recorder <- newRecorder (NE.head buffers)
+      syncsRef <- liftIO (newIORef [])
+      deferredRef <- liftIO (newIORef [])
+      FG.addPreExec graph flushBarriers
+      -- The release hooks queue producer-side barriers after the pass body.
+      FG.addPostExec graph flushBarriers
+      let backend =
+            FG.QueueBackend
+              { FG.beforePass = \psync ->
+                  if Just psync.queue == hostQueue
+                    then setRecorderHost recorder psync.queue
+                    else setRecorder recorder psync.queue (cbFor psync.queue)
+              , FG.afterPass = \_ -> pure ()
+              , FG.invoke = \psync body -> do
+                  modifyIORef' syncsRef (psync :)
+                  if Just psync.queue == hostQueue
+                    then modifyIORef' deferredRef ((psync, body) :)
+                    else body
+              , FG.completed = pure []
+              }
+      FG.executeQueued graph backend Nothing recorder ()
+      traverse_ Vk.endCommandBuffer buffers
+
+      syncs <- liftIO (reverse <$> readIORef syncsRef)
       let plan = submitPlan syncs
       when (hoistCyclic plan) $
         error "submitGraphQueued: cross-queue waits form a cycle at submit granularity"
-      liftIO $ for slots \(qid, (vkQueue, cb, timeline)) -> do
+
+      submitted <- liftIO $ for deviceSlots \(qid, (vkQueue, cb, timeline)) -> do
         let
           (signalValue, foreignWaits) = plan Map.! qid
           ex = extras qid
@@ -148,6 +200,25 @@ submitGraphQueued dev queueTable extras graph =
                 :& ()
         Vk.queueSubmit vkQueue [SomeStruct submit] Vk.NULL_HANDLE
         pure Submitted{queue = qid, semaphore = timeline, value = signalValue}
+
+      -- The host passes, in schedule order: wait, run, signal.
+      liftIO do
+        deferred <- reverse <$> readIORef deferredRef
+        for_ deferred \(psync, body) -> do
+          unless (null psync.waits) $
+            void $
+              waitSemaphoresSafe
+                dev
+                zero
+                  { SemaphoreWaitInfo.semaphores = V.fromList [timelineOf w.queue | w <- psync.waits]
+                  , SemaphoreWaitInfo.values = V.fromList [w.value | w <- psync.waits]
+                  }
+                maxBound
+          body
+          for_ (lookup psync.queue hostSlots) \timeline ->
+            signalSemaphore dev zero{SemaphoreSignalInfo.semaphore = timeline, SemaphoreSignalInfo.value = psync.signal}
+      let hostDone = [Submitted{queue = qid, semaphore = timeline, value = fst (plan Map.! qid)} | (qid, timeline) <- hostSlots]
+      pure (submitted <> hostDone)
 
 {- | The per-queue submit plan derived from the schedule.
 
@@ -178,7 +249,7 @@ submitPlan syncs =
             -- Value 0 never raises the kept waits' max; acquires only widen the
             -- stage scope (an acquire's peer always has a kept wait — the first
             -- cross-queue edge is never above the watermark).
-            <> [(t.peer, (0, flagsStage t.flags)) | t <- s.acquires]
+            <> [(peer, (0, transferStage t)) | t@(FG.Transfer _ peer _) <- s.acquires]
         )
     mergeWait (v1, s1) (v2, s2) = (max v1 v2, s1 .|. s2)
 
@@ -222,19 +293,25 @@ waitStage w
 
 {- | The pipeline stage an access's flags decode to.
 
-Routed to the image or buffer codec by 'Buffer.isBufferFlags'.
+Dispatched on the access's resource type; an adapter this module does not
+know about carries no decodable scope and over-synchronizes.
 -}
 accessStage :: FG.Access -> Vk.PipelineStageFlags
-accessStage access = flagsStage access.flags
+accessStage (FG.Access h flags) = resourceStage h flags
 
-{- | 'accessStage' over bare flags, sanitized for a submit's wait mask.
+-- | 'accessStage' for a transfer's consuming flags.
+transferStage :: FG.Transfer -> Vk.PipelineStageFlags
+transferStage (FG.Transfer h _peer flags) = resourceStage h flags
+
+{- | The stage a resource's typed flags decode to, sanitized for a wait mask.
 
 @HOST@ (forbidden in @pWaitDstStageMask@ — host reads order via the
-host-side timeline wait, so the device scope may be anything) and an empty
-stage (no scope information) both widen to @ALL_COMMANDS@.
+host-side timeline wait, so the device scope may be anything), an empty
+stage, and an unknown resource type (no scope information) all widen to
+@ALL_COMMANDS@.
 -}
-flagsStage :: Maybe FG.Flags -> Vk.PipelineStageFlags
-flagsStage = \case
+resourceStage :: forall r. (FG.Resource r) => FG.Handle r -> Maybe (FG.Flags r) -> Vk.PipelineStageFlags
+resourceStage _handle = \case
   Nothing -> Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
   Just flags
     | stage == zero || stage .&. Vk.PIPELINE_STAGE_HOST_BIT /= zero ->
@@ -242,8 +319,9 @@ flagsStage = \case
     | otherwise -> stage
     where
       stage
-        | Buffer.isBufferFlags flags = (Buffer.usageState (Buffer.flagsUsage flags)).stage
-        | otherwise = (Image.usageState (Image.flagsUsage flags)).stage
+        | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Image.ManagedImage) = (Image.usageState flags).stage
+        | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Buffer.ManagedBuffer) = (Buffer.usageState flags).stage
+        | otherwise = Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
 
 -- | Allocate a command pool for the family, released with the scope.
 allocateCommandPool :: (MonadResource m) => Vk.Device -> Word32 -> m Vk.CommandPool

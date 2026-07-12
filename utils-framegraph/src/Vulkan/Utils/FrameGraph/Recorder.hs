@@ -16,6 +16,7 @@ module Vulkan.Utils.FrameGraph.Recorder
   ( Recorder
   , newRecorder
   , setRecorder
+  , setRecorderHost
   , recorderCommandBuffer
   , recorderQueue
   , queueBarrier
@@ -27,7 +28,7 @@ module Vulkan.Utils.FrameGraph.Recorder
   , recordGraphSyncs
   ) where
 
-import Control.Monad (void, when)
+import Control.Monad (unless, void, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
@@ -51,6 +52,8 @@ queue's buffer.
 data Recorder = Recorder
   { slot :: IORef (FG.QueueId, Vk.CommandBuffer)
   , pending :: IORef Barriers
+  , host :: IORef Bool
+  -- ^ Host mode: the current pass has no command buffer ('setRecorderHost').
   }
 
 -- | The barriers queued for the current pass, OR-ing the stage scopes.
@@ -66,11 +69,27 @@ noBarriers = Barriers zero zero [] []
 
 -- | A recorder pointed at an initial buffer on queue 0; swap it with 'setRecorder'.
 newRecorder :: (MonadIO m) => Vk.CommandBuffer -> m Recorder
-newRecorder cb = liftIO $ Recorder <$> newIORef (FG.QueueId 0, cb) <*> newIORef noBarriers
+newRecorder cb = liftIO $ Recorder <$> newIORef (FG.QueueId 0, cb) <*> newIORef noBarriers <*> newIORef False
 
 -- | Point the recorder at the queue's command buffer the next passes record into.
 setRecorder :: (MonadIO m) => Recorder -> FG.QueueId -> Vk.CommandBuffer -> m ()
-setRecorder rec queue cb = liftIO (writeIORef rec.slot (queue, cb))
+setRecorder rec queue cb = liftIO do
+  writeIORef rec.slot (queue, cb)
+  writeIORef rec.host False
+
+{- | Point the recorder at a host-executed pass.
+
+Host work records no commands: the hooks still fire — advancing each
+resource's tracked state so later device accesses diff correctly — but the
+barriers they queue are dropped. The device-side half of a host access is
+the producer's ('FG.preRelease' transitions the resource into the host
+state in the producing queue's buffer), and its ordering is the schedule's
+timeline wait, realised by the driver executing the pass.
+-}
+setRecorderHost :: (MonadIO m) => Recorder -> FG.QueueId -> m ()
+setRecorderHost rec queue = liftIO do
+  modifyIORef' rec.slot (\(_, cb) -> (queue, cb))
+  writeIORef rec.host True
 
 -- | The command buffer currently selected.
 recorderCommandBuffer :: (MonadIO m) => Recorder -> m Vk.CommandBuffer
@@ -103,10 +122,12 @@ queueBarrier
   -> SomeStruct Vk.ImageMemoryBarrier
   -> m ()
 queueBarrier rec src dst barrier = do
-  Barriers{images} <- liftIO (readIORef rec.pending)
-  when (any (overlapping barrier) images) (flushBarriers rec)
-  liftIO $ modifyIORef' rec.pending \b ->
-    b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, images = barrier : b.images}
+  hosted <- liftIO (readIORef rec.host)
+  unless hosted do
+    Barriers{images} <- liftIO (readIORef rec.pending)
+    when (any (overlapping barrier) images) (flushBarriers rec)
+    liftIO $ modifyIORef' rec.pending \b ->
+      b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, images = barrier : b.images}
 
 -- | 'queueBarrier' for the buffer lane; overlap is per whole buffer.
 queueBufferBarrier
@@ -117,10 +138,12 @@ queueBufferBarrier
   -> SomeStruct Vk.BufferMemoryBarrier
   -> m ()
 queueBufferBarrier rec src dst barrier@(SomeStruct new) = do
-  Barriers{buffers} <- liftIO (readIORef rec.pending)
-  when (any (\(SomeStruct b) -> b.buffer == new.buffer) buffers) (flushBarriers rec)
-  liftIO $ modifyIORef' rec.pending \b ->
-    b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, buffers = barrier : b.buffers}
+  hosted <- liftIO (readIORef rec.host)
+  unless hosted do
+    Barriers{buffers} <- liftIO (readIORef rec.pending)
+    when (any (\(SomeStruct b) -> b.buffer == new.buffer) buffers) (flushBarriers rec)
+    liftIO $ modifyIORef' rec.pending \b ->
+      b{srcStage = b.srcStage .|. src, dstStage = b.dstStage .|. dst, buffers = barrier : b.buffers}
 
 -- | Whether two image barriers touch overlapping subresources.
 overlapping :: SomeStruct Vk.ImageMemoryBarrier -> SomeStruct Vk.ImageMemoryBarrier -> Bool
@@ -172,6 +195,7 @@ recordingBackend recorder cbFor =
   FG.QueueBackend
     { FG.beforePass = \psync -> setRecorder recorder psync.queue (cbFor psync.queue)
     , FG.afterPass = \_ -> pure ()
+    , FG.invoke = \_ body -> body
     , FG.completed = pure []
     }
 
@@ -208,6 +232,8 @@ recordGraphSyncs cbFor buffers graph = do
   recorder <- newRecorder (NE.head buffers)
   syncs <- liftIO (newIORef [])
   FG.addPreExec graph flushBarriers
+  -- The release hooks queue producer-side barriers after the pass body.
+  FG.addPostExec graph flushBarriers
   let
     routing = recordingBackend recorder cbFor
     collecting =

@@ -193,7 +193,7 @@ render allocator dev graphicsQueueFamilyIndex = do
       $ bindCommon allDynamicStates cb2 pipelines.depthColor
     copyImageToHost cb2 extent image cpuImage
   submitAndWait dev graphicsQueue cb2 "Timed out in the colour pass"
-  colorImage <- readback
+  colorImage <- liftIO readback
 
   pure (depthCentre, depthCorner, colorImage)
 

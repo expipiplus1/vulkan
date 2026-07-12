@@ -57,7 +57,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (SubmitExtras (..), Submitted (..), allocateCommandPool, noExtras, submitGraphQueued)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -345,10 +345,10 @@ renderJulia vc jp topology colorRef bindings f = do
     sc = fSwapchain f
     juliaSetup offscreenH = do
       FG.setQueue (computeQueueId topology)
-      FG.writeWith offscreenH (usageFlags (StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT))
+      FG.writeWith offscreenH (StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
     blitSetup offscreenReady swapchainH = do
-      FG.readWith offscreenReady (usageFlags TransferSrc)
-      FG.writeWith swapchainH (usageFlags TransferDst)
+      FG.readWith offscreenReady TransferSrc
+      FG.writeWith swapchainH TransferDst
 
 ----------------------------------------------------------------
 -- Frame-level submit policy (Layer 3)
@@ -408,7 +408,7 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
             }
 
   mask_ do
-    submitted <- submitGraphQueued dev queueTable extrasFor graph
+    submitted <- submitGraphQueued dev Nothing queueTable extrasFor graph
     liftIO do
       -- The recycler waits every queue's completion before reusing the frame.
       for_ submitted \s ->

@@ -23,22 +23,17 @@ module Vulkan.Utils.FrameGraph.Buffer
   , freshState
   , Usage (..)
   , usageState
-  , usageFlags
-  , flagsUsage
-  , isBufferFlags
   , transitionBufferTo
   , transitionBuffersTo
   ) where
 
 import Control.Monad (foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.&.), (.|.))
-import Data.Coerce (coerce)
+import Data.Bits ((.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
 import Data.Vector qualified as V
-import Data.Word (Word32, Word64)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
@@ -71,14 +66,18 @@ instance FG.Resource ManagedBuffer where
   type Desc ManagedBuffer = BufferDesc
   type Alloc ManagedBuffer = ()
   type Ctx ManagedBuffer = Recorder
+  type Flags ManagedBuffer = Usage
 
   createResource _ _ =
     error "ManagedBuffer is import-only: allocate the buffer and use importResource"
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ flags rec mb = queueTransition rec mb (flagsUsage flags)
-  preWrite _ flags rec mb = queueTransition rec mb (flagsUsage flags)
+  preRead _ usage rec mb = queueTransition rec mb usage
+  preWrite _ usage rec mb = queueTransition rec mb usage
+
+  -- Producer-side handoff, as in the image adapter.
+  preRelease _ usage rec mb = queueTransition rec mb usage
 
   describeDesc d = d.info
 
@@ -106,6 +105,10 @@ data Usage
   | StorageWrite Vk.PipelineStageFlags
   | -- | Read-modify-write storage access (atomics).
     StorageReadWrite Vk.PipelineStageFlags
+  | -- | Read by the host, after the schedule's timeline wait reaches it.
+    HostRead
+  | -- | Written by the host (a mapped upload) before device consumers.
+    HostWrite
   deriving stock (Eq, Ord, Show)
 
 -- | The target state each 'Usage' requires.
@@ -117,61 +120,8 @@ usageState = \case
   StorageRead stage -> BufferState stage Vk.ACCESS_SHADER_READ_BIT
   StorageWrite stage -> BufferState stage Vk.ACCESS_SHADER_WRITE_BIT
   StorageReadWrite stage -> BufferState stage (Vk.ACCESS_SHADER_READ_BIT .|. Vk.ACCESS_SHADER_WRITE_BIT)
-
-{- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
-The fixed usages are small tags; the storage usages set the high marker bit and
-pack their read/write bits and shader stage into the low half. Every encoding
-carries 'bufferMarker'.
--}
-usageFlags :: Usage -> FG.Flags
-usageFlags = \case
-  IndirectRead -> FG.Flags (bufferMarker .|. 0)
-  TransferSrc -> FG.Flags (bufferMarker .|. 1)
-  TransferDst -> FG.Flags (bufferMarker .|. 2)
-  StorageRead stage -> FG.Flags (bufferMarker .|. storageMarker .|. readBit .|. stageBits stage)
-  StorageWrite stage -> FG.Flags (bufferMarker .|. storageMarker .|. writeBit .|. stageBits stage)
-  StorageReadWrite stage -> FG.Flags (bufferMarker .|. storageMarker .|. readBit .|. writeBit .|. stageBits stage)
-
--- | Decode 'FG.Flags' produced by 'usageFlags'; anything else is an error.
-flagsUsage :: FG.Flags -> Usage
-flagsUsage flags@(FG.Flags w)
-  -- Loud failure over a silently wrong barrier: the image adapter's codec
-  -- shares 'FG.Flags' with different meanings, so a cross-fed value must
-  -- not decode.
-  | not (isBufferFlags flags) =
-      error ("Vulkan.Utils.FrameGraph.Buffer.flagsUsage: not a buffer usage: " <> show w)
-  | w .&. storageMarker /= 0 =
-      let stage = coerce (fromIntegral (w .&. stageMask) :: Word32)
-      in case (w .&. readBit /= 0, w .&. writeBit /= 0) of
-           (True, True) -> StorageReadWrite stage
-           (_, True) -> StorageWrite stage
-           _ -> StorageRead stage
-  | otherwise = case w .&. stageMask of
-      0 -> IndirectRead
-      1 -> TransferSrc
-      2 -> TransferDst
-      _ -> error ("Vulkan.Utils.FrameGraph.Buffer.flagsUsage: not a buffer usage: " <> show w)
-
-{- | Whether the 'FG.Flags' came from this module's codec.
-
-The image codec never sets 'bufferMarker', so a schedule's mixed accesses
-route on it (see 'Vulkan.Utils.FrameGraph.Driver.accessStage').
--}
-isBufferFlags :: FG.Flags -> Bool
-isBufferFlags (FG.Flags w) = w .&. bufferMarker /= 0
-
--- Bit layout packing a storage usage's stage into the 64-bit 'FG.Flags'.
--- 'bufferMarker' keeps the codec disjoint from the image one, whose markers
--- these otherwise deliberately avoid colliding with.
-bufferMarker, storageMarker, readBit, writeBit, stageMask :: Word64
-bufferMarker = 0x0800000000000000
-storageMarker = 0x8000000000000000
-readBit = 0x1000000000000000
-writeBit = 0x4000000000000000
-stageMask = 0x00000000FFFFFFFF
-
-stageBits :: Vk.PipelineStageFlags -> Word64
-stageBits stage = fromIntegral (coerce stage :: Word32)
+  HostRead -> BufferState Vk.PIPELINE_STAGE_HOST_BIT Vk.ACCESS_HOST_READ_BIT
+  HostWrite -> BufferState Vk.PIPELINE_STAGE_HOST_BIT Vk.ACCESS_HOST_WRITE_BIT
 
 {- | Whether the 'Usage' writes the buffer (and so needs a barrier even when the
 state is unchanged — only read-after-read can skip it).
@@ -181,9 +131,11 @@ usageWrites = \case
   TransferDst -> True
   StorageWrite _ -> True
   StorageReadWrite _ -> True
+  HostWrite -> True
   IndirectRead -> False
   TransferSrc -> False
   StorageRead _ -> False
+  HostRead -> False
 
 {- | Record the barrier bringing the buffer into the 'Usage''s state and update
 the tracked state. Standalone counterpart to the hook path, for barriers
@@ -277,13 +229,13 @@ Claims the graph's 'FG.addPreExec slot for 'flushBarriers' like the image
 imports do — the adapters share that slot; wrap the flush rather than
 replacing it.
 -}
-importManagedBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m FG.Handle
+importManagedBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m (FG.Handle ManagedBuffer)
 importManagedBuffer graph name mb = do
   FG.addPreExec graph flushBarriers
   FG.importResource graph name (BufferDesc mb.info) mb
 
 -- | 'importManagedBuffer' via 'FG.importScratch', keeping writers subject to demand culling.
-importScratchBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m FG.Handle
+importScratchBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m (FG.Handle ManagedBuffer)
 importScratchBuffer graph name mb = do
   FG.addPreExec graph flushBarriers
   FG.importScratch graph name (BufferDesc mb.info) mb

@@ -7,7 +7,7 @@
 top-level function that creates its own targets and pipeline right next to its
 'FG.addPass': 'offscreenTrianglePass' draws the RGB triangle into an offscreen
 colour image, 'cubePass' draws the cube sampling it. The images are imported as
-'ManagedImage's; each pass declares how it uses them (via 'usageFlags') and the
+'ManagedImage's; each pass declares how it uses them (a typed 'Usage') and the
 graph's 'FG.preRead' / 'FG.preWrite' hooks place every layout-transition barrier
 — including the offscreen colour→sampled one that used to be hand-written.
 
@@ -44,7 +44,7 @@ import qualified Vulkan.Core13 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (..), copyManagedImageToHost, importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (..), copyManagedImageToHost, importManagedImage, newManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
@@ -130,7 +130,7 @@ render allocator device graphicsQueueFamilyIndex = do
     -- in COLOR_ATTACHMENT_OPTIMAL) — no assumed layouts.
     copyManagedImageToHost cb extent scene cpuManaged
   submitAndWait device graphicsQueue cb "Timed out in the render-to-texture passes"
-  readback
+  liftIO readback
 
 {- | Offscreen pass: create the sampled colour target, draw the RGB triangle
 into it, and hand back its view (for the cube to sample) and the graph handle
@@ -138,12 +138,12 @@ naming the drawn image. Writing the imported target declares COLOR_ATTACHMENT
 usage, so the hook transitions it UNDEFINED->attachment before the draw. Binds
 the shared Globals set 0 once, under the (compatible) triangle layout.
 -}
-offscreenTrianglePass :: Shared -> Vk.DescriptorSet -> ResourceT IO (Vk.ImageView, FG.Handle)
+offscreenTrianglePass :: Shared -> Vk.DescriptorSet -> ResourceT IO (Vk.ImageView, FG.Handle ManagedImage)
 offscreenTrianglePass shared globalsSet = do
   (offscreenImage, offscreenView) <- createSampledColorTarget shared.allocator shared.device colorFormat extent
 
   (_, offscreenH) <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
-  let mkHandle = FG.writeWith offscreenH (usageFlags ColorAttachment)
+  let mkHandle = FG.writeWith offscreenH ColorAttachment
 
   tri <- Tri.allocatePipeline shared.device colorFormat shared.set0
 
@@ -166,7 +166,7 @@ barrier (formerly the hand-written @colorToSampled@); the scene/depth writes
 transition those attachments. Set 0 (Globals) is still bound from the
 offscreen pass — only set 1 is bound here.
 -}
-cubePass :: Shared -> Vk.ImageView -> FG.Handle -> ResourceT IO ManagedImage
+cubePass :: Shared -> Vk.ImageView -> FG.Handle ManagedImage -> ResourceT IO ManagedImage
 cubePass shared offscreenView offscreenColored = do
   (_, (sceneImage, sceneView)) <- createColorTarget shared.allocator shared.device colorFormat extent
   (_, (depthImage, depthView)) <- createDepthTarget shared.allocator shared.device depthFormat extent
@@ -174,9 +174,9 @@ cubePass shared offscreenView offscreenColored = do
   (sceneManaged, sceneH) <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
   (_, depthH) <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   let cubeSetup = do
-        FG.readWith offscreenColored (usageFlags (Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT))
-        FG.writeWith_ sceneH (usageFlags ColorAttachment)
-        FG.writeWith_ depthH (usageFlags DepthAttachment)
+        FG.readWith offscreenColored (Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
+        FG.writeWith_ sceneH ColorAttachment
+        FG.writeWith_ depthH DepthAttachment
 
   cube <- Cube.allocatePipeline shared.device colorFormat depthFormat shared.set0 shared.set1
   (_, sampler) <- Vk.withSampler shared.device samplerInfo Nothing allocate
@@ -199,7 +199,7 @@ cubePass shared offscreenView offscreenColored = do
   pure sceneManaged
 
 -- | Import a raw image into the graph as a layout-tracked 'ManagedImage'.
-importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO (ManagedImage, FG.Handle)
+importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO (ManagedImage, FG.Handle ManagedImage)
 importImage graph name image aspect = do
   managed <- newManagedImage image aspect
   handle <- importManagedImage graph name managed
