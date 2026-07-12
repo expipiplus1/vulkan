@@ -235,8 +235,10 @@ submitGraphQueued config graph = do
       let
         timelineOf qid =
           Map.findWithDefault (error "submitGraphQueued: wait on a queue with no executing pass") qid timelines
+        -- Indexed: 'cbFor' runs per pass, and the segment list is a list.
+        slotsV = V.fromList segmentSlots
         cbFor pid = case Map.lookup pid routes of
-          Just ix -> let (_, _, cb) = segmentSlots !! ix in cb
+          Just ix -> let (_, _, cb) = slotsV V.! ix in cb
           Nothing -> error "submitGraphQueued: pass outside the planned schedule"
 
       -- Split-barrier events: one per-run VkEvent per schedule event, its

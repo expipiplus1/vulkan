@@ -30,7 +30,7 @@ module Vulkan.Utils.FrameGraph.Buffer
 
 import Control.Monad (foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.|.))
+import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Maybe (fromMaybe)
@@ -213,6 +213,11 @@ semaphore alone orders the two sides and both halves are no-ops; on an
 @EXCLUSIVE@ one they are a real queue-family ownership transfer, the same
 barrier recorded in each queue's buffer with both family indices named.
 The acquire advances the tracked state and marks the node chained.
+
+A hand-off to the host is neither: the release carries the full dependency
+(a semaphore signal makes device writes available to the device domain
+only, so the host half needs a real @HOST@ destination scope), and the
+acquire is bookkeeping.
 -}
 transferOwnership :: (MonadIO m) => TransferSide -> Recorder -> Int -> FG.QueueId -> ManagedBuffer -> Usage -> m ()
 transferOwnership side rec node peer mb usage = do
@@ -235,6 +240,9 @@ transferOwnership side rec node peer mb usage = do
         && srcFamily /= dstFamily
         && srcFamily /= Vk.QUEUE_FAMILY_IGNORED
         && dstFamily /= Vk.QUEUE_FAMILY_IGNORED
+    -- The consumer is the host: only the release's barrier can make the
+    -- device's writes visible to it (the schedule's timeline wait cannot).
+    toHost = next.stage .&. Vk.PIPELINE_STAGE_HOST_BIT /= zero
     from = case side of
       Release -> cur
       Acquire -> fromMaybe cur released
@@ -245,26 +253,28 @@ transferOwnership side rec node peer mb usage = do
               Release -> from.access
               Acquire -> zero
           , Vk.dstAccessMask = case side of
-              Release -> zero
+              Release -> if toHost then next.access else zero
               Acquire -> next.access
-          , Vk.srcQueueFamilyIndex = srcFamily
-          , Vk.dstQueueFamilyIndex = dstFamily
+          , Vk.srcQueueFamilyIndex = if owned then srcFamily else Vk.QUEUE_FAMILY_IGNORED
+          , Vk.dstQueueFamilyIndex = if owned then dstFamily else Vk.QUEUE_FAMILY_IGNORED
           , Vk.buffer = mb.buffer
           , Vk.offset = 0
           , Vk.size = Vk.WHOLE_SIZE
           }
     (srcStage, dstStage) = case side of
-      Release -> (from.stage, Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
+      Release -> (from.stage, if toHost then next.stage else Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
       Acquire -> (Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, next.stage)
   case side of
     Release -> do
-      when owned $ queueBufferBarrier rec srcStage dstStage barrier
+      when (owned || toHost) $ queueBufferBarrier rec srcStage dstStage barrier
       liftIO (writeIORef mb.releasedRef (Just cur))
     Acquire -> do
       when owned $ queueBufferBarrier rec srcStage dstStage barrier
       liftIO do
         writeIORef mb.stateRef next
-        writeIORef mb.queueRef (Just queue)
+        -- The host is not a device queue: recording it as the last one would
+        -- make the next device access look cross-queue (cf. 'nextTransition').
+        unless hosted $ writeIORef mb.queueRef (Just queue)
         writeIORef mb.releasedRef Nothing
       markChained rec node
 
@@ -294,10 +304,6 @@ nextTransition accessor evented mb usage = liftIO do
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
     chained = cross || evented
-    -- Crossing to a new family without a transfer: the contents are undefined
-    -- there, so the access acquires by discarding them (it writes — the guard
-    -- below rejects a read).
-    discards = cross && not mb.shared
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
@@ -306,7 +312,7 @@ nextTransition accessor evented mb usage = liftIO do
   -- An unshared (EXCLUSIVE) resource reaching another family without an
   -- ownership transfer ('transferOwnership') has undefined contents there. A
   -- write that does not read them is still fine — it acquires by discarding
-  -- (see 'discards') — but a read would see garbage, so it is fatal.
+  -- them — but a read would see garbage, so it is fatal.
   when (cross && not mb.shared && not (usageWrites usage)) $
     error
       ( "Vulkan.Utils.FrameGraph: cross-queue read of an unshared resource ("

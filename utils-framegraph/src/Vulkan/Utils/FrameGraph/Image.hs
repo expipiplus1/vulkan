@@ -39,7 +39,7 @@ module Vulkan.Utils.FrameGraph.Image
 
 import Control.Monad (foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.|.))
+import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Maybe (fromMaybe)
@@ -355,6 +355,11 @@ does not place a second barrier on top of it.
 
 Same-family queues own nothing to transfer: the release still moves the
 layout, the acquire still just advances the tracking.
+
+A hand-off to the host is neither: the release carries the full dependency
+(a semaphore signal makes device writes available to the device domain
+only, so the host half needs a real @HOST@ destination scope), and the
+acquire is bookkeeping.
 -}
 transferOwnership :: (MonadIO m) => TransferSide -> Recorder -> Int -> FG.QueueId -> ManagedImage -> Usage -> m ()
 transferOwnership side rec node peer mi usage = do
@@ -378,6 +383,9 @@ transferOwnership side rec node peer mi usage = do
         && srcFamily /= dstFamily
         && srcFamily /= Vk.QUEUE_FAMILY_IGNORED
         && dstFamily /= Vk.QUEUE_FAMILY_IGNORED
+    -- The consumer is the host: only the release's barrier can make the
+    -- device's writes visible to it (the schedule's timeline wait cannot).
+    toHost = next.stage .&. Vk.PIPELINE_STAGE_HOST_BIT /= zero
     -- Both halves describe the same barrier, so the acquire builds its own
     -- from the state the release saw.
     from = case side of
@@ -390,7 +398,7 @@ transferOwnership side rec node peer mi usage = do
               Release -> from.access
               Acquire -> zero
           , Vk.dstAccessMask = case side of
-              Release -> zero
+              Release -> if toHost then next.access else zero
               Acquire -> next.access
           , Vk.oldLayout = from.layout
           , Vk.newLayout = next.layout
@@ -402,13 +410,13 @@ transferOwnership side rec node peer mi usage = do
     -- A release's destination scope and an acquire's source scope are ignored
     -- by the spec; the halves must otherwise be identical.
     (srcStage, dstStage) = case side of
-      Release -> (from.stage, Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
+      Release -> (from.stage, if toHost then next.stage else Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
       Acquire -> (Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, next.stage)
   case side of
     Release -> do
       -- The release performs the layout transition (its barrier executes on
       -- the producer's queue), so the tracked state advances with it.
-      when (owned || cur /= next) do
+      when (owned || toHost || cur /= next) do
         queueBarrier rec srcStage dstStage barrier
         liftIO (writeIORef mi.stateRef next)
       liftIO (writeIORef mi.releasedRef (Just cur))
@@ -416,7 +424,9 @@ transferOwnership side rec node peer mi usage = do
       when owned $ queueBarrier rec srcStage dstStage barrier
       liftIO do
         writeIORef mi.stateRef next
-        writeIORef mi.queueRef (Just queue)
+        -- The host is not a device queue: recording it as the last one would
+        -- make the next device access look cross-queue (cf. 'nextTransition').
+        unless hosted $ writeIORef mi.queueRef (Just queue)
         writeIORef mi.releasedRef Nothing
       markChained rec node
 

@@ -28,11 +28,9 @@ import Control.Exception (handle)
 import Control.Monad (forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, closeInternalState, createInternalState, register, runInternalState, runResourceT)
-import Data.Foldable (for_)
-import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import qualified Data.Text.IO as TIO
 import Data.Vector (Vector)
-import qualified Data.Vector as V
 import Data.Word (Word32)
 import qualified Fragr as FG
 import qualified Fragr.Dot as Dot

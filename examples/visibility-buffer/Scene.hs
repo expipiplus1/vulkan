@@ -45,7 +45,7 @@ module Scene
   ) where
 
 import Control.Applicative ((<|>))
-import Control.Monad (foldM, forM, forM_, unless, when)
+import Control.Monad (foldM, forM, forM_, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT)
 import Data.Bits (shiftR, (.|.))
@@ -55,7 +55,6 @@ import Data.Maybe (catMaybes, isNothing)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
-import qualified Exposure
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (peek, poke, sizeOf)
 import qualified Fragr as FG
@@ -287,14 +286,15 @@ data SceneStatic = SceneStatic
   , shadowDepthView :: Vk.ImageView
   -- ^ Shared 6-layer depth cube for the shadow render's depth test.
   , lightsBuffer :: Vk.Buffer
+  -- ^ The shared lights SSBO (glowstone draw, orb draw, shadow render, resolve).
   , lightsTable :: ManagedBuffer
-  {- ^ 'lightsBuffer', tracked: the orb refresh writes it, the graph reads it.
-  ^ The shared lights SSBO (glowstone draw, orb draw, shadow render, resolve).
-  -}
+  -- ^ 'lightsBuffer', tracked: the orb refresh writes it, the graph reads it.
   , viewProjBuffer :: Vk.Buffer
-  , viewProjTable :: ManagedBuffer
-  , objectsTable :: ManagedBuffer
   -- ^ Shadow view-projections SSBO (one @mat4@ per @(light, face)@).
+  , viewProjTable :: ManagedBuffer
+  -- ^ 'viewProjBuffer', tracked.
+  , objectsTable :: ManagedBuffer
+  -- ^ 'objectsBuffer', tracked.
   , shadowSet :: Vk.DescriptorSet
   -- ^ Occluder set for the shadow render (shared vertex/mesh/object tables + view-projs).
   , visMain :: ManagedBuffer
@@ -820,16 +820,6 @@ recordShadows cb pls shadowSet bakedMoments orbMoments depth renderViews depthVi
       Pipeline.bindSet cb pls.shadow 0 shadowSet
       Vk.cmdDrawIndirect cb indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
   transitionImagesTo cb [(m, Sampled shadeStage) | m <- momentsSlices]
-
-{- | Upload the orbs' per-frame state for time @t@.
-
-Light positions, shadow view-projections and the orb object rows, recorded
-into the frame's graphics buffer ahead of the graph; the shadow slices
-themselves are refreshed in-graph (the @shadow.orbs@ pass). Still a
-hand-rolled sync site: the trailing barrier must cover every stage that reads
-these tables inside the graph, and the leading one every access the previous,
-possibly still in-flight, frame made to them — its reads and its own uploads.
--}
 
 {- | The @orbs.upload@ pass body: refresh the three per-frame tables.
 
