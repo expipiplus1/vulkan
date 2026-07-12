@@ -37,6 +37,7 @@ module Scene
   , addScenePasses
   , recordOrbUploads
   , readLuminance
+  , setExposure
   , debugImages
   , lumProbe
   , shadowImage
@@ -50,12 +51,13 @@ import Control.Monad.Trans.Resource (ResourceT)
 import Data.Bits (shiftR, (.|.))
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Int (Int32)
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, isNothing)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
+import qualified Exposure
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
-import Foreign.Storable (peek, sizeOf)
+import Foreign.Storable (peek, poke, sizeOf)
 import qualified Fragr as FG
 import Geomancy (Vec3, vec3, vec4, withVec3)
 import qualified Geomancy.Mat4 as Mat4
@@ -266,8 +268,14 @@ data SceneStatic = SceneStatic
   , lumBuffer :: Vk.Buffer
   , lumAllocation :: VMA.Allocation
   , lumMapped :: Ptr ()
+  , lumManaged :: ManagedBuffer
+  , exposureBuffer :: Vk.Buffer
+  , exposureAllocation :: VMA.Allocation
+  , exposureMapped :: Ptr ()
+  , exposureManaged :: ManagedBuffer
+  -- ^ The tonemap exposure, written by the host ('setExposure' or the meter pass).
   , allocator :: VMA.Allocator
-  -- ^ For host-cache invalidation before the luminance readback.
+  -- ^ For host-cache maintenance around the mapped buffers.
   , bakedMoments :: Maybe ManagedImage
   {- ^ The static lights' slice of the EVSM moments cube array, baked once
   ('recordShadows'); 'Nothing' when every slot belongs to an orb.
@@ -432,6 +440,13 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   (_, materialsBuf) <- deviceBuffer allocator Materials.bufferBytes (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   -- Auto-exposure readback: the luminance pass writes it, the host reads it.
   (_, (lumBuffer, lumAllocation, lumMapped)) <- storageBuffer allocator Luminance.bufferBytes
+  lumManaged <- Buf.newManagedBuffer lumBuffer
+  -- The host writes it (the meter pass, or the caller per frame), tonemap reads it.
+  (_, (exposureBuffer, exposureAllocation, exposureMapped)) <- storageBuffer allocator 4
+  exposureManaged <- Buf.newManagedBuffer exposureBuffer
+  liftIO do
+    poke (castPtr exposureMapped) (1.0 :: Float)
+    VMA.flushAllocation allocator exposureAllocation 0 Vk.WHOLE_SIZE
   -- Staging for the bulk CPU meshes (cube + sphere), copied into the vertex buffer.
   (_, (staging, stagingPtr)) <- stagingBuffer allocator Meshes.cpuVertexBytes
 
@@ -529,6 +544,11 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , lumBuffer
       , lumAllocation
       , lumMapped
+      , lumManaged
+      , exposureBuffer
+      , exposureAllocation
+      , exposureMapped
+      , exposureManaged
       , allocator
       , bakedMoments
       , shadowCubeView
@@ -676,7 +696,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
 
   shadeSet <- Shade.allocateDescriptorSet dev pls.shade visView colorHDRView static.vertexBuffer static.lightsBuffer static.sampler static.shadowCubeView static.objectsBuffer static.materialsBuffer static.meshTableBuffer aoView
   lumSet <- Luminance.allocateSet dev pls.luminance (bloomViews V.! lumMip) static.lumBuffer
-  toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0)
+  toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0) static.exposureBuffer
   gammaSet <- Gamma.allocateSet dev pls.gamma toneView displayView
   gammaDebugSet <- Gamma.allocateSet dev pls.gamma colorHDRView displayView
 
@@ -858,9 +878,11 @@ shadowRenderingInfo colorView depthView =
 slices) → @geometry@ (raster → vis + depth) → @shade@ (resolve → HDR) →
 @luminance@ (auto-exposure readback) → @tonemap@ (exposure + curve) → @gamma@
 (sRGB encode). @computeQueue@ is the queue the compute passes run on
-('FG.defaultQueue' to keep it single-queue); @t@ places the orbs; @exposure@
-scales the tonemap. Returns the 'PassOutputs'; a driver reads whichever it
-presents.
+('FG.defaultQueue' to keep it single-queue); @t@ places the orbs. The tonemap
+exposure comes from the metering buffer: with a host meter, a host pass
+between @luminance@ and @tonemap@ writes it from this frame's own luminance;
+without one the caller pre-writes it ('setExposure', e.g. a lagged windowed
+EMA). Returns the 'PassOutputs'; a driver reads whichever it presents.
 -}
 addScenePasses
   :: FG.FrameGraph Recorder ()
@@ -873,11 +895,12 @@ addScenePasses
   -- ^ camera eye position
   -> Float
   -- ^ scene time (orb positions, and the reach the cull filters occluders by)
-  -> Float
+  -> Maybe (Exposure.Meter, FG.QueueId)
+  -- ^ meter the exposure in-graph: a host pass on the given queue
   -> Word32
   -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao)
   -> ResourceT IO PassOutputs
-addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMode = do
+addScenePasses graph pls tweaks scene computeQueue extent eye t hostMeter debugMode = do
   let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display, normals, ao, aoBlur} = scene.targets
   -- vis + depth are read outside the graph (the headless debug dumps), so their
   -- writers must survive; everything else is scratch — consumed only through the
@@ -1048,14 +1071,30 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   -- debug views: the HDR target carries the debug channel then, so metering it would
   -- pin the downsample chain (the pass is a side effect) only to poison the readback.
   let lumMip = lumMipFor mipCount
-  when (debugMode == 0) $
-    FG.addPass_ graph "luminance" (luminanceSetup (downHs !! lumMip)) do
-      cb <- recordingCommandBuffer
-      Pipeline.bind cb pls.luminance
-      Pipeline.bindSet cb pls.luminance 0 scene.lumSet
-      Vk.cmdDispatch cb 1 1 1
-      -- Make the write host-visible for the CPU readback.
-      Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
+  exposureH <- Buf.importManagedBuffer graph "exposure" scene.static.exposureManaged
+  exposureRef <-
+    if debugMode /= 0
+      then pure exposureH
+      else do
+        lumH <- Buf.importManagedBuffer graph "lum" scene.static.lumManaged
+        lumWritten <- FG.addPass graph "luminance" (luminanceSetup (downHs !! lumMip) lumH) \_ -> do
+          cb <- recordingCommandBuffer
+          Pipeline.bind cb pls.luminance
+          Pipeline.bindSet cb pls.luminance 0 scene.lumSet
+          Vk.cmdDispatch cb 1 1 1
+          -- Without a meter pass the host polls the mapped value across frames
+          -- (no wait to lean on), so make the write host-visible here; with one,
+          -- the hand-off to the host queue is the schedule's.
+          when (isNothing hostMeter) $
+            Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
+        case hostMeter of
+          Nothing -> pure exposureH
+          Just (meter, hostQ) ->
+            -- The device→host→device sandwich: this frame's own luminance
+            -- meters this frame's tonemap.
+            FG.addPass graph "host.meter" (meterSetup hostQ lumWritten exposureH) \_ -> liftIO do
+              lum <- readLuminance scene
+              setExposure scene (Exposure.target meter lum)
 
   forM_ scene.probe \probe -> do
     probeH <- importManagedImage graph "bloom.probe" probe
@@ -1079,10 +1118,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   bloom0 <- chainUp (downHs !! (mipCount - 1)) (mipCount - 2)
 
   toneWritten <-
-    FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ -> do
+    FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 exposureRef toneH) \_ -> do
       cb <- recordingCommandBuffer
       Pipeline.bind cb pls.tonemap
-      pushTonemap cb pls.tonemap exposure tweaks.bloomStrength
+      pushTonemap cb pls.tonemap tweaks.bloomStrength
       Pipeline.bindSet cb pls.tonemap 0 scene.toneSet
       Vk.cmdDispatch cb (groups width) (groups height) 1
 
@@ -1135,10 +1174,16 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     computeSetup (srcs :: [FG.Handle ManagedImage]) dstH = do
       mapM_ (\r -> FG.readWith r (StorageRead shadeStage)) srcs
       FG.writeWith dstH (StorageWrite shadeStage)
-    luminanceSetup srcH = do
+    luminanceSetup srcH lumH = do
       FG.setQueue computeQueue
       FG.setSideEffect
       FG.readWith srcH (StorageRead shadeStage)
+      FG.writeWith lumH (Buf.StorageWrite shadeStage)
+    -- The host meter: read this frame's luminance, write the exposure.
+    meterSetup hostQ lumWritten exposureH = do
+      FG.setQueue hostQ
+      FG.readWith lumWritten Buf.HostRead
+      FG.writeWith exposureH Buf.HostWrite
     -- Probe snapshot: transfer-copy the metered mip into its own image.
     probeSetup srcH probeH = do
       FG.setQueue computeQueue
@@ -1157,10 +1202,11 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
       FG.readWith blur (StorageRead shadeStage)
       FG.readWith destH (StorageRead shadeStage)
       FG.writeWith destH (StorageWrite shadeStage)
-    tonemapSetup colorWritten bloom0 toneH = do
+    tonemapSetup colorWritten bloom0 exposureRef toneH = do
       FG.setQueue computeQueue
       FG.readWith colorWritten (StorageRead shadeStage)
       FG.readWith bloom0 (StorageRead shadeStage)
+      FG.readWith exposureRef (Buf.StorageRead shadeStage)
       FG.writeWith toneH (StorageWrite shadeStage)
     gammaSetup srcH displayH = do
       FG.setQueue computeQueue
@@ -1260,10 +1306,10 @@ pushBlur :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Tweaks -> (Int32, Int
 pushBlur cb pl tweaks (ax, ay) =
   Pipeline.push cb pl Ssao.Blur{Ssao.sharpness = tweaks.aoSharpness, Ssao.axisX = ax, Ssao.axisY = ay}
 
--- | Push the tonemap's exposure + bloom strength (COMPUTE stage).
-pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Float -> Float -> m ()
-pushTonemap cb pl exposure bloomStrength =
-  Pipeline.push cb pl Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength}
+-- | Push the tonemap's bloom strength (COMPUTE stage); exposure rides the metering buffer.
+pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Float -> m ()
+pushTonemap cb pl bloomStrength =
+  Pipeline.push cb pl Tonemap.PC{Tonemap.bloomStrength = bloomStrength}
 
 {- | The run-constant shading knobs, threaded from the command line.
 
@@ -1320,3 +1366,9 @@ readLuminance :: (MonadIO m) => Scene -> m Float
 readLuminance scene = liftIO do
   VMA.invalidateAllocation scene.static.allocator scene.static.lumAllocation 0 Vk.WHOLE_SIZE
   peek (castPtr (scene.static.lumMapped `plusPtr` 4))
+
+-- | Write the tonemap exposure (the meter host pass does, or the caller per frame).
+setExposure :: (MonadIO m) => Scene -> Float -> m ()
+setExposure scene e = liftIO do
+  poke (castPtr scene.static.exposureMapped) e
+  VMA.flushAllocation scene.static.allocator scene.static.exposureAllocation 0 Vk.WHOLE_SIZE

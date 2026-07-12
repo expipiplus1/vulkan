@@ -3,7 +3,7 @@
 {-| The tonemap compute shader.
 
 Exposure + Uchimura \"Gran Turismo\" curve applied per channel. Scales scene-linear
-HDR by the @exposure@ push constant and maps to display-linear
+HDR by the @exposure@ read from the metering buffer and maps to display-linear
 @[0,1]@. Per-channel (not luminance-only) so bright saturated emitters desaturate
 toward white as they clip — the filmic look. Gamma encoding is a separate pass
 ("Pipeline.Gamma").
@@ -24,8 +24,10 @@ code =
     layout(set = 0, binding = 0, rgba16f) uniform readonly image2D hdr;
     layout(set = 0, binding = 1, rgba16f) uniform writeonly image2D outTone;
     layout(set = 0, binding = 2) uniform sampler2D bloomTex;
+    // Written by the host meter pass (or the caller, pre-frame).
+    layout(set = 0, binding = 3, std430) readonly buffer Metering { float exposure; } metering;
 
-    layout(push_constant, std430) uniform PC { float exposure; float bloomStrength; } pc;
+    layout(push_constant, std430) uniform PC { float bloomStrength; } pc;
 
     // Uchimura (Gran Turismo) tone curve — piecewise toe/linear/shoulder.
     float uchimura(float x, float P, float a, float m, float l, float c, float b) {
@@ -57,7 +59,7 @@ code =
       vec3 hdrC = imageLoad(hdr, p).rgb;
       // Composite: mix the whole image toward the bloom pyramid, biased to source.
       vec3 bloomC = texture(bloomTex, uv).rgb;
-      vec3 c = mix(hdrC, bloomC, pc.bloomStrength) * pc.exposure;
+      vec3 c = mix(hdrC, bloomC, pc.bloomStrength) * metering.exposure;
       vec3 t = vec3(uchimura(c.r), uchimura(c.g), uchimura(c.b));
       imageStore(outTone, p, vec4(t, 1.0));
     }

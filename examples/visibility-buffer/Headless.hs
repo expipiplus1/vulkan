@@ -147,9 +147,9 @@ render opts allocator dev queues async = do
       -- The graph's cull pass runs the same compaction as the windowed frame —
       -- the second execution onwards is occlusion-culled against the previous
       -- one's pyramid (same camera), so the depth-void check covers the culling too.
-      runMode exposure debugMode = do
+      runMode debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 exposure debugMode
+        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 (Just (opts.meter, hostQueue)) debugMode
         cpuH <- importScratchImage graph "cpu" cpuManaged
         cpuWritten <- FG.addPass graph "readback" (readbackSetup outs.displayOut cpuH) \_ -> do
           -- The declared accesses moved display to TRANSFER_SRC and the cpu
@@ -176,20 +176,20 @@ render opts allocator dev queues async = do
         runGraph dev queues async graph
         liftIO (readIORef result) >>= maybe (error "headless: the host readback pass did not run") pure
 
-  -- Meter, then re-render at the exposure the viewer would settle on. The luminance
-  -- pass reads the pre-exposure HDR, so the metering pass's own exposure is moot.
-  _ <- runMode meterExposure 0
+  -- One run: the host meter pass sits between luminance and tonemap, so the
+  -- frame tonemaps at its own metered exposure (the old meter-then-re-render
+  -- double run is gone).
+  img <- runMode 0
   lum <- Scene.readLuminance scene
-  img <- runMode (Exposure.target opts.meter lum) 0
   -- Before the debug modes below overwrite the HDR target (and thus the probe).
   forM_ (Scene.lumProbe scene) $ uncurry (dumpLumProbe allocator dev (graphicsQueue, graphicsFamily))
   -- Material/geometry debug views (each re-runs the graph with a debug mode).
   forM_ (zip [1 :: Word32 ..] ["albedo", "metalness", "roughness", "normal"]) \(mode, name) -> do
-    dbg <- runMode meterExposure mode
+    dbg <- runMode mode
     liftIO $ savePng ("debug-mat-" <> name <> ".png") dbg
   -- The saved PNG honours @--debug-mode@, so a headless run can capture any
   -- channel; the checks and the probe stay on the beauty render above.
-  saved <- if opts.debugMode == 0 then pure img else runMode (Exposure.target opts.meter lum) opts.debugMode
+  saved <- if opts.debugMode == 0 then pure img else runMode opts.debugMode
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
   -- it after this).
   forM_ (Scene.shadowImage scene) $ dumpShadowFace allocator dev (graphicsQueue, graphicsFamily)
@@ -206,14 +206,6 @@ render opts allocator dev queues async = do
       FG.setQueue hostQueue
       FG.setSideEffect
       FG.readWith cpuWritten HostRead
-
-{- | Exposure for the metering and debug passes.
-
-Debug channels bypass exposure entirely, and the luminance pass reads the
-pre-exposure HDR, so this only scales an image nothing looks at.
--}
-meterExposure :: Float
-meterExposure = 1
 
 -- | The compute-and-readback queue (async family, or the graphics queue).
 computeQueue :: FG.QueueId

@@ -220,21 +220,21 @@ renderScene opts vc pls window controls startTime bindings f = do
     extent = sc.sExtent
 
   -- Auto-exposure over the previous frame's mean luminance (the readback lags a
-  -- frame; the adaptation hides it). Held while a debug view is up: the meter
+  -- frame; the adaptation hides it — an in-graph host meter would stall the
+  -- loop mid-frame instead). Held while a debug view is up: the luminance
   -- pass isn't even added then ("Scene"), so the readback would be stale.
-  exposure <- liftIO $ do
+  -- The smoothed value lands in the metering buffer the tonemap reads.
+  liftIO $ do
     e <- readIORef bindings.exposure
-    if mode /= 0
-      then pure e
-      else do
-        prevLum <- Scene.readLuminance bindings.scene
-        let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
-        writeIORef bindings.exposure e'
-        pure e'
+    when (mode == 0) do
+      prevLum <- Scene.readLuminance bindings.scene
+      let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
+      writeIORef bindings.exposure e'
+      Scene.setExposure bindings.scene e'
 
   graph <- FG.newFrameGraph
   -- Single-queue: the compute passes stay on the default (graphics) queue.
-  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t exposure mode
+  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t Nothing mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
