@@ -7,7 +7,7 @@ import Control.Monad.Trans.Resource (ResourceT)
 import Data.Word (Word32)
 import HeadlessBoot (submitAndWaitFor)
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.FrameGraph.Driver (allocateCommandPool, allocatePrimary)
+import Vulkan.Utils.Frame (allocateCommandPool, allocatePrimary)
 
 -- | Record @record@ into a fresh primary buffer and submit it, blocking until done.
 oneShot :: Vk.Device -> (Vk.Queue, Word32) -> (Vk.CommandBuffer -> ResourceT IO ()) -> ResourceT IO ()

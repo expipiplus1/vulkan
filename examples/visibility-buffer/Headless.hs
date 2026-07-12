@@ -37,7 +37,8 @@ import Numeric.Half (Half)
 import System.Exit (exitFailure)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), allocateCommandPool, submitConfig, submitGraphQueued, waitSubmitted)
+import Vulkan.Utils.Frame (allocateCommandPool)
+import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), submitConfig, submitGraphQueued, waitSubmitted)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, sliceLayers, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))

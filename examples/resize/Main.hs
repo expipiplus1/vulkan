@@ -55,8 +55,8 @@ import UnliftIO.Exception (displayException, mask_)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
-import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), SubmitExtras (..), Submitted (..), allocateCommandPool, noExtras, submitConfig, submitGraphQueued)
+import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, allocateCommandPool, noExtras, presentFrameImage)
+import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -393,7 +393,7 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
     queueTable q = case computeSlot of
       Just (queue, pool, _) | q == computeQueue -> (queue, pool)
       _ -> (snd (qGraphics (vcQueues vc)), rrCommandPool (fRecycled f))
-    renderFinished = sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex
+    base = frameSubmitConfig dev f imageIndex queueTable
     extrasFor q
       -- The cross-frame WAR wait: the offscreen image the julia pass overwrites
       -- may still feed a previous frame's in-flight blit — a hazard between
@@ -401,25 +401,13 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
       | Just (_, _, prevBlitDone) <- computeSlot
       , q == computeQueue =
           noExtras{waits = [(fHostTimeline f, Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT, prevBlitDone)]}
-      | otherwise =
-          SubmitExtras
-            { waits = [(rrImageAvailable (fRecycled f), Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
-            , signals = [(renderFinished, 0), (fHostTimeline f, fIndex f)]
-            }
+      | otherwise = base.extras q
 
   mask_ do
-    -- The driver registers every queue's completion into fGPUWork before it
-    -- submits anything, so the recycler waits the whole graph — even a
-    -- mid-way submit failure only costs it the wait timeout.
-    _ <-
-      submitGraphQueued
-        (submitConfig dev queueTable)
-          { extras = extrasFor
-          , register = \submitted ->
-              for_ submitted \s ->
-                atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
-          }
-        graph
+    -- The base config registers every queue's completion into fGPUWork before
+    -- anything submits, so the recycler waits the whole graph — even a mid-way
+    -- submit failure only costs it the wait timeout.
+    _ <- submitGraphQueued base{extras = extrasFor} graph
     liftIO do
       -- The WAR fence must see every blit, not just dirty frames': a clean frame
       -- re-blitting a stale swapchain image still reads the offscreen image, and

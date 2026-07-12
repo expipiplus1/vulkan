@@ -44,7 +44,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
-import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), SubmitExtras (..), Submitted (..), noExtras, submitConfig, submitGraphQueued)
+import Vulkan.Utils.FrameGraph.Driver (frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
 import Vulkan.Utils.FrameGraph.Recorder (recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -134,10 +134,6 @@ windowConfig =
           }
     }
 
--- | The host queue: the meter pass runs on the frame's recycle thread.
-hostQueue :: FG.QueueId
-hostQueue = FG.QueueId 1
-
 -- | Console name of a presented view (the digit key / @--debug-mode@ value).
 viewName :: Word32 -> String
 viewName n = maybe (show n) (\name -> show n <> " " <> name) (lookup n Options.debugViews)
@@ -224,15 +220,20 @@ renderScene opts vc pls window controls startTime bindings f = do
     sc = fSwapchain f
     extent = sc.sExtent
 
-  -- Auto-exposure: the host meter pass maps this frame's own mean luminance
-  -- through the EMA — same-frame metering, no readback lag. It runs on the
-  -- frame's recycle thread ('fDeferredWork'), so the render loop never
-  -- blocks; only the tonemap's segment waits on the GPU.
-  let meterFn lum = do
-        e <- readIORef bindings.exposure
-        let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter lum)
-        writeIORef bindings.exposure e'
-        pure e'
+  -- Auto-exposure over the previous frame's mean luminance, pre-written into
+  -- the metering buffer (the readback lags a frame; the adaptation hides it).
+  -- NOT an in-graph host meter: a deferred host pass would gate renderFinished
+  -- behind a host signal that is not yet submitted when we present, which WSI
+  -- forbids (VUID-vkQueuePresentKHR-pWaitSemaphores-03268) — and running the
+  -- tail inline would stall the loop mid-frame. Held on debug views: the
+  -- luminance pass isn't added then ("Scene"), so the readback would be stale.
+  liftIO $ do
+    e <- readIORef bindings.exposure
+    when (mode == 0) do
+      prevLum <- Scene.readLuminance bindings.scene
+      let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
+      writeIORef bindings.exposure e'
+      Scene.setExposure bindings.scene e'
 
   graph <- FG.newFrameGraph
   -- Move the orbs ahead of the scene passes; the cull and the shadow refresh
@@ -242,7 +243,7 @@ renderScene opts vc pls window controls startTime bindings f = do
     cb <- recordingCommandBuffer
     Scene.recordOrbUploads cb bindings.scene t
   -- Single-queue: the compute passes stay on the default (graphics) queue.
-  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t (Just (meterFn, hostQueue)) mode
+  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t Nothing mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
@@ -271,26 +272,10 @@ renderScene opts vc pls window controls startTime bindings f = do
     TIO.writeFile "visibility-buffer-live.dot" =<< Dot.dump graph
     sayErrString ("graph dumped to visibility-buffer-live.dot, presenting " <> viewName mode)
 
-  let
-    dev = vcDevice vc
-    renderFinished = sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex
+  let dev = vcDevice vc
   _ <-
     submitGraphQueued
-      (submitConfig dev (const (snd (qGraphics (vcQueues vc)), rrCommandPool f.fRecycled)))
-        { hostQueue = Just hostQueue
-        , extras = \q ->
-            if q == hostQueue
-              then noExtras
-              else
-                SubmitExtras
-                  { waits = [(rrImageAvailable f.fRecycled, Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
-                  , signals = [(renderFinished, 0), (fHostTimeline f, fIndex f)]
-                  }
-        , register = \submitted ->
-            for_ submitted \s ->
-              atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
-        , deferHost = Just (\hostTail -> modifyIORef' (fDeferredWork f) (hostTail :))
-        }
+      (frameSubmitConfig dev f imageIndex (const (snd (qGraphics (vcQueues vc)), rrCommandPool f.fRecycled)))
       graph
   presentFrameImage vc f acquireResult imageIndex
   where

@@ -28,6 +28,12 @@ module Vulkan.Utils.Frame
   , presentFrameImage
   , drainFrames
   , allocateTimelineSemaphore
+  , allocateCommandPool
+  , allocatePrimary
+  , SubmitExtras (..)
+  , noExtras
+  , frameSubmitExtras
+  , waitTwice
   , frameInstanceRequirements
   , frameDeviceRequirements
   ) where
@@ -392,16 +398,58 @@ mkRecycledResources vc = do
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
       Nothing
       allocate
-  (_, rrCommandPool) <-
-    Vk.withCommandPool
-      dev
-      zero{CommandPoolCreateInfo.queueFamilyIndex = qfi}
-      Nothing
-      allocate
+  rrCommandPool <- allocateCommandPool dev qfi
   pure RecycledResources{..}
   where
     dev = vcDevice vc
     (QueueFamilyIndex qfi, _) = qGraphics (vcQueues vc)
+
+-- | Allocate a command pool for the family, released with the scope.
+allocateCommandPool :: (MonadResource m) => Vk.Device -> Word32 -> m Vk.CommandPool
+allocateCommandPool dev family = do
+  (_, pool) <- Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = family} Nothing allocate
+  pure pool
+
+-- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
+allocatePrimary :: (MonadResource m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
+allocatePrimary dev pool = do
+  (_, cbs) <-
+    Vk.withCommandBuffers
+      dev
+      zero{Vk.commandPool = pool, Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY, Vk.commandBufferCount = 1}
+      allocate
+  let cb = V.head cbs
+  Vk.beginCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+  pure cb
+
+{- | Frame-level waits and signals spliced into one submit.
+
+Timeline semaphores carry their value; a binary semaphore's value is
+ignored (pass 0).
+-}
+data SubmitExtras = SubmitExtras
+  { waits :: [(Vk.Semaphore, Vk.PipelineStageFlags, Word64)]
+  , signals :: [(Vk.Semaphore, Word64)]
+  }
+
+noExtras :: SubmitExtras
+noExtras = SubmitExtras [] []
+
+{- | The canonical windowed frame extras.
+
+Wait image-available; signal this image's render-finished and the host
+timeline at the frame index — the shape 'queueSubmitFrame' hard-codes,
+for drivers that assemble their own submits.
+-}
+frameSubmitExtras :: Frame -> Word32 -> SubmitExtras
+frameSubmitExtras f imageIndex =
+  SubmitExtras
+    { waits = [(rrImageAvailable (fRecycled f), Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
+    , signals =
+        [ (sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex, 0)
+        , (fHostTimeline f, fIndex f)
+        ]
+    }
 
 {- | Wait for some semaphores; if the wait times out, give the device one
 more chance with a zero timeout. Catches the case where the host was

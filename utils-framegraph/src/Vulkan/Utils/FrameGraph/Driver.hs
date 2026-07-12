@@ -41,12 +41,9 @@ module Vulkan.Utils.FrameGraph.Driver
   ( submitGraphQueued
   , SubmitConfig (..)
   , submitConfig
-  , SubmitExtras (..)
-  , noExtras
+  , frameSubmitConfig
   , Submitted (..)
   , waitSubmitted
-  , allocateCommandPool
-  , allocatePrimary
   , waitStage
   , accessStage
   ) where
@@ -57,7 +54,7 @@ import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.&.), (.|.))
 import Data.Coerce (coerce)
 import Data.Foldable (foldl', for_, toList, traverse_)
-import Data.IORef (modifyIORef', newIORef, readIORef)
+import Data.IORef (atomicModifyIORef', modifyIORef', newIORef, readIORef)
 import Data.IntSet qualified as IntSet
 import Data.List (partition)
 import Data.List.NonEmpty qualified as NE
@@ -84,24 +81,11 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as Semaph
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2 (..), AccessFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..), PipelineStageFlags2)
 import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo (..), MemoryBarrier2 (..), cmdSetEvent2, cmdWaitEvents2)
-import Vulkan.Utils.Frame (allocateTimelineSemaphore)
+import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), allocatePrimary, allocateTimelineSemaphore, frameSubmitExtras, noExtras)
 import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
 import Vulkan.Utils.FrameGraph.Image qualified as Image
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setEventedNodes, setRecorder, setRecorderHost)
 import Vulkan.Zero (zero)
-
-{- | Frame-level waits and signals spliced into one queue's submit.
-
-They ride next to the schedule-derived ones. Timeline semaphores carry
-their value; a binary semaphore's value is ignored (pass 0).
--}
-data SubmitExtras = SubmitExtras
-  { waits :: [(Vk.Semaphore, Vk.PipelineStageFlags, Word64)]
-  , signals :: [(Vk.Semaphore, Word64)]
-  }
-
-noExtras :: SubmitExtras
-noExtras = SubmitExtras [] []
 
 {- | One queue's completion handle.
 
@@ -143,6 +127,12 @@ data SubmitConfig = SubmitConfig
   {- ^ Hand the ordered host-pass tail to this runner (e.g. the frame's
   deferred work, executed on the recycle thread) instead of executing it
   before returning; the caller's thread then never blocks on the GPU.
+
+  A deferred host pass must not gate a presented image: at
+  @vkQueuePresentKHR@ time every signal the present wait depends on must
+  already be submitted (VUID 03268), and the deferred signal is not.
+  Meter/readback sinks are fine; a host pass feeding the swapchain chain
+  must run inline.
   -}
   }
 
@@ -156,6 +146,25 @@ submitConfig device queues =
     , extras = const noExtras
     , register = const (pure ())
     , deferHost = Nothing
+    }
+
+{- | A 'SubmitConfig' wired to the frame.
+
+The canonical frame extras ('frameSubmitExtras') ride 'FG.defaultQueue',
+completions register into 'fGPUWork' before anything submits, and the host
+tail lands in 'fDeferredWork' — the frame's recycle thread runs it, so the
+render thread never blocks on the GPU (mind 'deferHost''s presentation
+caveat). Override 'extras' by wrapping the field (it is per-queue) rather
+than replacing it.
+-}
+frameSubmitConfig :: Vk.Device -> Frame -> Word32 -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool)) -> SubmitConfig
+frameSubmitConfig dev f imageIndex queues =
+  (submitConfig dev queues)
+    { extras = \q -> if q == FG.defaultQueue then frameSubmitExtras f imageIndex else noExtras
+    , register = \submitted ->
+        for_ submitted \s ->
+          atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
+    , deferHost = Just (\hostTail -> modifyIORef' (fDeferredWork f) (hostTail :))
     }
 
 {- | Record a compiled graph and submit it, one submit per segment, then
@@ -318,33 +327,26 @@ submitGraphQueued config graph = do
                 :& ()
         Vk.queueSubmit vkQueue [SomeStruct submit] Vk.NULL_HANDLE
 
-      -- The host passes, in schedule order: wait, run, signal.
+      -- The host passes, in schedule order: wait, run, signal — inline, or
+      -- handed whole to the 'deferHost' runner.
       liftIO do
         deferred <- reverse <$> readIORef deferredRef
-        for_ deferred \(psync, body) -> do
-          unless (null psync.waits) $
-            void $
-              waitSemaphoresSafe
-                dev
-                zero
-                  { SemaphoreWaitInfo.semaphores = V.fromList [timelineOf w.queue | w <- psync.waits]
-                  , SemaphoreWaitInfo.values = V.fromList [w.value | w <- psync.waits]
-                  }
-                maxBound
-          body
-          signalSemaphore dev zero{SemaphoreSignalInfo.semaphore = timelineOf psync.queue, SemaphoreSignalInfo.value = psync.signal}
-      let
-        deviceDone =
-          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
-          | qid <- deviceQids
-          , let v = maximum [seg.signal | seg <- segments, seg.queue == qid]
-          ]
-        hostDone =
-          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
-          | qid <- ordNub [s.queue | s <- hostSyncs]
-          , let v = maximum [s.signal | s <- hostSyncs, s.queue == qid]
-          ]
-      pure (deviceDone <> hostDone)
+        let hostTail = for_ deferred \(psync, body) -> do
+              unless (null psync.waits) $
+                void $
+                  waitSemaphoresSafe
+                    dev
+                    zero
+                      { SemaphoreWaitInfo.semaphores = V.fromList [timelineOf w.queue | w <- psync.waits]
+                      , SemaphoreWaitInfo.values = V.fromList [w.value | w <- psync.waits]
+                      }
+                    maxBound
+              body
+              signalSemaphore dev zero{SemaphoreSignalInfo.semaphore = timelineOf psync.queue, SemaphoreSignalInfo.value = psync.signal}
+        case config.deferHost of
+          Nothing -> hostTail
+          Just runner -> unless (null deferred) (runner hostTail)
+      pure done
 
 {- | One planned submit: a contiguous run of one queue's passes whose
 cross-queue waits all hoist to its front.
@@ -495,21 +497,3 @@ resourceStage _handle = \case
         | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Image.ManagedImage) = (Image.usageState flags).stage
         | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Buffer.ManagedBuffer) = (Buffer.usageState flags).stage
         | otherwise = Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
-
--- | Allocate a command pool for the family, released with the scope.
-allocateCommandPool :: (MonadResource m) => Vk.Device -> Word32 -> m Vk.CommandPool
-allocateCommandPool dev family = do
-  (_, pool) <- Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = family} Nothing allocate
-  pure pool
-
--- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
-allocatePrimary :: (MonadResource m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
-allocatePrimary dev pool = do
-  (_, cbs) <-
-    Vk.withCommandBuffers
-      dev
-      zero{Vk.commandPool = pool, Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY, Vk.commandBufferCount = 1}
-      allocate
-  let cb = V.head cbs
-  Vk.beginCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-  pure cb
