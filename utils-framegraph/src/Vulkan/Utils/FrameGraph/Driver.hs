@@ -169,7 +169,7 @@ render thread never blocks on the GPU (mind 'deferHost''s presentation
 caveat). Override 'extras' by wrapping the field (it is per-queue) rather
 than replacing it.
 -}
-frameSubmitConfig :: Vk.Device -> Frame -> Word32 -> (FG.QueueId -> QueueSlot) -> SubmitConfig
+frameSubmitConfig :: Vk.Device -> Frame rr -> Word32 -> (FG.QueueId -> QueueSlot) -> SubmitConfig
 frameSubmitConfig dev f imageIndex queues =
   (submitConfig dev queues)
     { extras = \q -> if q == FG.defaultQueue then frameSubmitExtras f imageIndex else noExtras

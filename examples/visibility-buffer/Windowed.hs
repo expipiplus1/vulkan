@@ -51,7 +51,7 @@ import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, srgbEncoding)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, noRecycledResources, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
@@ -109,6 +109,7 @@ main opts = prettyError . runResourceT $ do
     (Window.shouldQuit window)
     WindowLoop
       { wlMkState = allocateBindings vma dev pls sceneStatic
+      , wlMkRecycled = noRecycledResources
       , wlRender = renderScene opts vc pls window controls startTime
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
@@ -194,13 +195,13 @@ allocateBindings allocator dev pls sceneStatic sc = do
 
 renderScene
   :: Options
-  -> VulkanContext
+  -> VulkanContext rr
   -> Scene.ScenePipelines
   -> GLFW.Window
   -> Controls
   -> Double
   -> Bindings
-  -> Frame
+  -> Frame rr
   -> ResourceT IO ()
 renderScene opts vc pls window controls startTime bindings f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f

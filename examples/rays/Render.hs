@@ -44,10 +44,10 @@ data RenderState = RenderState
   }
 
 renderFrame
-  :: VulkanContext
+  :: VulkanContext rr
   -> VMA.Allocator
   -> RenderState
-  -> Frame
+  -> Frame rr
   -> ResourceT IO ()
 renderFrame vc vma rs f = do
   let

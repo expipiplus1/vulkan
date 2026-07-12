@@ -19,7 +19,7 @@ import Vulkan.Utils.Frame (Frame (..))
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.Swapchain (SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noRecycledResources, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
@@ -98,6 +98,7 @@ main = runResourceT $ do
     (shouldQuit win)
     WindowLoop
       { wlMkState = noWindowState
+      , wlMkRecycled = noRecycledResources
       , wlRender = \() f -> renderFrame vc vma renderState f
       , wlOnFrame = noOnFrame
       , wlOnExit = \f -> liftIO $ do

@@ -14,6 +14,7 @@ module Vulkan.Utils.WindowLoop
   ( WindowLoop (..)
   , runWindowLoop
   , noWindowState
+  , noRecycledResources
   , noOnFrame
   , noOnExit
   ) where
@@ -29,39 +30,40 @@ import Data.IORef
 import Data.Word (Word64)
 import GHC.Clock (getMonotonicTimeNSec)
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Frame (Frame (..), advanceFrame, drainFrames, initialFrame, runFrame)
+import Vulkan.Utils.Frame (Frame (..), InitRecycledResources, advanceFrame, drainFrames, initialFrame, runFrame)
 import Vulkan.Utils.Swapchain (Swapchain, recreateSwapchain, threwSwapchainError)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 
-data WindowLoop s = WindowLoop
+data WindowLoop s rr = WindowLoop
   { wlMkState :: Swapchain -> ResourceT IO (s, ReleaseKey)
   {- ^ Build per-swapchain state. The release key is fired when the
   swapchain is recreated and a fresh state replaces this one.
   -}
-  , wlRender :: s -> Frame -> ResourceT IO ()
+  , wlMkRecycled :: InitRecycledResources (ResourceT IO) rr
+  , wlRender :: s -> Frame rr -> ResourceT IO ()
   -- ^ Per-frame render action; runs inside @runFrame@.
   , wlOnFrame :: Word64 -> Word64 -> ResourceT IO ()
   {- ^ Optional metric hook with start/end nanoseconds around 'runFrame'.
   Use 'noOnFrame' if you don't care.
   -}
-  , wlOnExit :: Frame -> ResourceT IO ()
+  , wlOnExit :: Frame rr -> ResourceT IO ()
   -- ^ Fired once when the window closes. Use 'noOnExit' if you don't care.
   }
 
 runWindowLoop
-  :: VulkanContext
+  :: VulkanContext rr
   -> Swapchain
   -> IO Vk.Extent2D
   -- ^ Get current drawable size (called on resize)
   -> IO Bool
   -- ^ Per-frame poller; 'True' means quit
-  -> WindowLoop s
+  -> WindowLoop s rr
   -> ResourceT IO ()
 runWindowLoop vc initialSC getSize shouldQuit WindowLoop{..} = do
   initialState <- wlMkState initialSC
   scRef <- liftIO $ newIORef initialSC
   stRef <- liftIO $ newIORef initialState
-  initial <- initialFrame vc initialSC
+  initial <- initialFrame vc initialSC wlMkRecycled
   let
     perFrame f = do
       currentSC <- liftIO $ readIORef scRef
@@ -113,10 +115,13 @@ noWindowState _ = do
   key <- register (pure ())
   pure ((), key)
 
+noRecycledResources :: (Applicative m) => InitRecycledResources m ()
+noRecycledResources _vc _dbIx _pools = pure ()
+
 noOnFrame :: Word64 -> Word64 -> ResourceT IO ()
 noOnFrame _ _ = pure ()
 
-noOnExit :: Frame -> ResourceT IO ()
+noOnExit :: Frame rr -> ResourceT IO ()
 noOnExit _ = pure ()
 
 loopJust :: (Monad m) => (a -> m (Maybe a)) -> a -> m ()

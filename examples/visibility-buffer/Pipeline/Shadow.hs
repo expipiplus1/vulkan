@@ -66,21 +66,25 @@ buildPipeline dev params shadowFormat depthFormat layout =
     fmap snd $ buildColorPipeline dev (Just layout) \resolvedLayout ->
       SomeStruct $
         (basePipelineCreateInfo resolvedLayout Nothing 1 True (zero :: Vk.PipelineVertexInputStateCreateInfo '[]) dynStates stages)
-          { Vk.depthStencilState = Just zero
-              { Vk.depthTestEnable = True
-              , Vk.depthWriteEnable = True
-              , Vk.depthCompareOp = Vk.COMPARE_OP_GREATER
-              }
+          { Vk.depthStencilState =
+              Just
+                zero
+                  { Vk.depthTestEnable = True
+                  , Vk.depthWriteEnable = True
+                  , Vk.depthCompareOp = Vk.COMPARE_OP_GREATER
+                  }
           }
           ::& renderingCreateInfo
             :& ()
   where
     dynStates = V.fromList [Vk.DYNAMIC_STATE_VIEWPORT, Vk.DYNAMIC_STATE_SCISSOR]
-    renderingCreateInfo = zero
-      { viewMask = 0x3F
-      , colorAttachmentFormats = [shadowFormat]
-      , depthAttachmentFormat = depthFormat
-      } :: PipelineRenderingCreateInfo
+    renderingCreateInfo =
+      zero
+        { viewMask = 0x3F
+        , colorAttachmentFormats = [shadowFormat]
+        , depthAttachmentFormat = depthFormat
+        }
+        :: PipelineRenderingCreateInfo
 
 -- | A set binding the vertex (0), mesh (1), object (2), view-proj (3) and instance-remap (4) SSBOs.
 allocateSet :: Vk.Device -> Pipeline -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet

@@ -62,7 +62,7 @@ withWindowedVk
   :: (MonadResource m, MonadFail m)
   => WindowedConfig
   -> WindowAdapter m
-  -> m (VulkanContext, VMA.Allocator, Swapchain)
+  -> m (VulkanContext rr, VMA.Allocator, Swapchain)
 withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   inst <-
     waAllocateInstance

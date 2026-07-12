@@ -28,12 +28,12 @@ import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, noRecycledResources, runWindowLoop)
 import Vulkan.Zero (zero)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
 runTriangle
-  :: VulkanContext
+  :: VulkanContext ()
   -> Swapchain
   -- ^ Initial swapchain
   -> IO Vk.Extent2D
@@ -62,6 +62,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
             traverse (\iv -> Framebuffer.allocateFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
           groupKey <- register (traverse_ (release . fst) framebuffers)
           pure (fmap snd framebuffers, groupKey)
+      , wlMkRecycled = noRecycledResources
       , wlRender = drawTriangle vc renderPass pipeline
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
@@ -72,11 +73,11 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
 ----------------------------------------------------------------
 
 drawTriangle
-  :: VulkanContext
+  :: VulkanContext ()
   -> Vk.RenderPass
   -> Vk.Pipeline
   -> Vector Vk.Framebuffer
-  -> Frame
+  -> Frame ()
   -> ResourceT IO ()
 drawTriangle vc renderPass pipeline framebuffers f = do
   let sc = fSwapchain f

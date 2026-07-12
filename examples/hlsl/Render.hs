@@ -15,11 +15,11 @@ import Vulkan.Zero (zero)
 
 -- | Acquire an image, record a clear+draw, submit, and present.
 renderFrame
-  :: VulkanContext
+  :: VulkanContext rr
   -> Vk.RenderPass
   -> Vk.Pipeline
   -> Vector Vk.Framebuffer
-  -> Frame
+  -> Frame rr
   -> ResourceT IO ()
 renderFrame vc renderPass pipeline framebuffers f = do
   let sc = fSwapchain f

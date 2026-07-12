@@ -37,6 +37,7 @@ module Vulkan.Utils.Frame
   , frameInstanceRequirements
   , frameDeviceRequirements
   , syncDeviceRequirements
+  , InitRecycledResources
   ) where
 
 import Control.Concurrent (forkIO)
@@ -73,14 +74,14 @@ import Vulkan.Utils.Swapchain (Swapchain (..), sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
-data Frame = Frame
+data Frame rr = Frame
   { fIndex :: Word64
   -- ^ Monotonic, used as the timeline-semaphore signal value for this frame.
   , fSwapchain :: Swapchain
   {- ^ The swapchain this frame targets. Held by reference so a frame
   in flight keeps its swapchain alive across recreation.
   -}
-  , fRecycled :: RecycledResources
+  , fRecycled :: RecycledResources rr
   {- ^ This frame's image-available semaphore + command pool — borrowed from
   the recycle channel; returned at retire time.
   -}
@@ -147,19 +148,27 @@ frameDeviceRequirements = [U.reqs|VK_KHR_swapchain|] <> syncDeviceRequirements
 -- Construction
 ----------------------------------------------------------------
 
+type InitRecycledResources m rr = VulkanContext rr -> Int -> Queues Vk.CommandPool -> m rr
+
 {- | Build the initial frame with one spare 'RecycledResources' seeded
 into the recycle channel. That, plus the set attached to this frame,
 caps max-in-flight at 2 (CPU recording + GPU executing the previous).
 -}
-initialFrame :: (MonadResource m) => VulkanContext -> Swapchain -> m Frame
-initialFrame vc fSwapchain = do
-  fRecycled <- mkRecycledResources vc
-  spare <- mkRecycledResources vc
+initialFrame
+  :: forall rr m
+   . (MonadResource m)
+  => VulkanContext rr
+  -> Swapchain
+  -> InitRecycledResources m rr
+  -> m (Frame rr)
+initialFrame vc fSwapchain mkRecycled = do
+  fResources <- allocate createInternalState closeInternalState
+  fRecycled <- mkRecycledResources vc $ mkRecycled vc 0
+  spare <- mkRecycledResources vc $ mkRecycled vc 1
   liftIO (vcRecycleBin vc spare)
   (_, fHostTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
   fDeferredWork <- liftIO $ newIORef mempty
-  fResources <- allocate createInternalState closeInternalState
   liftIO $ runInternalState (resourceTRefCount (sRelease fSwapchain)) (snd fResources)
   pure Frame{fIndex = 1, ..}
 
@@ -168,13 +177,14 @@ Caller passes the (possibly-recreated) 'Swapchain'.
 -}
 advanceFrame
   :: (MonadResource m)
-  => VulkanContext
+  => VulkanContext rr
   -> Swapchain
   -- ^ Same as old, or freshly recreated
-  -> Frame
+  -> Frame rr
   -- ^ The just-finished frame
-  -> m Frame
+  -> m (Frame rr)
 advanceFrame vc sc f = do
+  fResources <- allocate createInternalState closeInternalState
   fRecycled <-
     liftIO $
       vcRecycleNib vc >>= \case
@@ -182,7 +192,6 @@ advanceFrame vc sc f = do
         Right rr -> pure rr
   fGPUWork <- liftIO $ newIORef mempty
   fDeferredWork <- liftIO $ newIORef mempty
-  fResources <- allocate createInternalState closeInternalState
   liftIO $ runInternalState (resourceTRefCount (sRelease sc)) (snd fResources)
   pure
     Frame
@@ -206,12 +215,12 @@ begin recording immediately.
 
 Anything 'allocate'd inside @action@ is freed when the frame retires.
 -}
-runFrame :: VulkanContext -> Frame -> ResourceT IO a -> IO a
+runFrame :: VulkanContext rr -> Frame rr -> ResourceT IO a -> IO a
 runFrame vc f action =
   runInternalState action (snd (fResources f))
     `finally` waitAndRecycle vc f
 
-waitAndRecycle :: VulkanContext -> Frame -> IO ()
+waitAndRecycle :: VulkanContext rr -> Frame rr -> IO ()
 waitAndRecycle vc f = do
   waits <- readIORef (fGPUWork f)
   deferred <- readIORef (fDeferredWork f)
@@ -256,8 +265,8 @@ directly.
 -}
 recordCommands
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
-  -> Frame
+  => VulkanContext rr
+  -> Frame rr
   -> (Vk.CommandBuffer -> m ())
   -> m Vk.CommandBuffer
 {-# INLINE recordCommands #-}
@@ -289,8 +298,8 @@ stage, extra signals), call 'queueSubmit2' directly and append
 -}
 queueSubmitFrame
   :: (MonadIO m)
-  => VulkanContext
-  -> Frame
+  => VulkanContext rr
+  -> Frame rr
   -> Word32
   {- ^ Acquired image index (from 'acquireFrameImage'); selects the per-image
   present-wait semaphore to signal.
@@ -330,7 +339,7 @@ recreation. Timeouts and unexpected results are also translated to
 'ERROR_OUT_OF_DATE_KHR' — the main loop's swapchain-recreation path is the
 right place to recover.
 -}
-acquireFrameImage :: (MonadIO m) => VulkanContext -> Frame -> m (Vk.Result, Word32)
+acquireFrameImage :: (MonadIO m) => VulkanContext rr -> Frame rr -> m (Vk.Result, Word32)
 {-# INLINE acquireFrameImage #-}
 acquireFrameImage vc Frame{..} =
   liftIO $
@@ -358,7 +367,7 @@ If either the prior acquire (passed in) or this present reports
 'SUBOPTIMAL_KHR', raises 'ERROR_OUT_OF_DATE_KHR' so the main loop
 recreates the swapchain.
 -}
-presentFrameImage :: (MonadIO m) => VulkanContext -> Frame -> Vk.Result -> Word32 -> m ()
+presentFrameImage :: (MonadIO m) => VulkanContext rr -> Frame rr -> Vk.Result -> Word32 -> m ()
 {-# INLINE presentFrameImage #-}
 presentFrameImage vc f acquireResult imageIndex = liftIO $ do
   presentResult <-
@@ -383,7 +392,7 @@ to tear down GPU resources.
 
 Assumes max-in-flight is 2 (see 'initialFrame').
 -}
-drainFrames :: VulkanContext -> Frame -> IO ()
+drainFrames :: VulkanContext rr -> Frame rr -> IO ()
 drainFrames vc f = do
   waitAndRecycle vc f
   let take1 = vcRecycleNib vc >>= either id pure
@@ -412,8 +421,12 @@ allocateTimelineSemaphore dev initial =
 + a command pool keyed to the graphics queue family. (The present-wait
 semaphore is per swapchain image, on the 'Swapchain', not here.)
 -}
-mkRecycledResources :: (MonadResource m) => VulkanContext -> m RecycledResources
-mkRecycledResources vc = do
+mkRecycledResources
+  :: (MonadResource m)
+  => VulkanContext rr
+  -> (Queues Vk.CommandPool -> m rr)
+  -> m (RecycledResources rr)
+mkRecycledResources vc mkData = do
   (_, rrImageAvailable) <-
     Vk.withSemaphore
       dev
@@ -425,6 +438,7 @@ mkRecycledResources vc = do
     fmap Map.fromList $
       traverse (\fam -> fmap (fam,) (allocateCommandPool dev fam)) (nub (toList families))
   let rrCommandPools = fmap (byFamily Map.!) families
+  rrData <- mkData rrCommandPools
   pure RecycledResources{..}
   where
     dev = vcDevice vc
@@ -467,7 +481,7 @@ Wait image-available; signal this image's render-finished and the host
 timeline at the frame index — the shape 'queueSubmitFrame' hard-codes,
 for drivers that assemble their own submits.
 -}
-frameSubmitExtras :: Frame -> Word32 -> SubmitExtras
+frameSubmitExtras :: Frame rr -> Word32 -> SubmitExtras
 frameSubmitExtras f imageIndex =
   SubmitExtras
     { waits = [(rrImageAvailable (fRecycled f), PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, 0)]

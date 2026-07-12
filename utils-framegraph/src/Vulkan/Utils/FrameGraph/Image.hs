@@ -120,7 +120,7 @@ newManaged image range = do
 in visualization output.
 -}
 describedAs :: Text -> ManagedImage -> ManagedImage
-describedAs t mi = mi{info = t}
+describedAs t ManagedImage{..} = ManagedImage{info = t, ..}
 
 {- | Mark the allocation as @SHARING_MODE_CONCURRENT@ across the families it
 is used on.

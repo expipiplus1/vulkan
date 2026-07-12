@@ -41,7 +41,7 @@ import qualified VulkanMemoryAllocator as VMA
 
 createTLAS
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
@@ -142,7 +142,7 @@ createTLAS vc vma sceneBuffers = do
 
 buildAccelerationStructure
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> RT.AccelerationStructureBuildGeometryInfoKHR
   -> Vector RT.AccelerationStructureBuildRangeInfoKHR
@@ -204,7 +204,7 @@ buildAccelerationStructure vc vma geom ranges sizes = do
 
 createBLAS
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
@@ -236,7 +236,7 @@ createBLAS vc vma sceneBuffers = do
 
 sceneGeometry
   :: (MonadIO m)
-  => VulkanContext
+  => VulkanContext rr
   -> SceneBuffers
   -> m
        ( RT.AccelerationStructureGeometryKHR '[]
@@ -266,7 +266,7 @@ sceneGeometry vc SceneBuffers{..} = do
 
 oneShotComputeCommands
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> (Vk.CommandBuffer -> IO ())
   -> m ()
 oneShotComputeCommands vc cmds = do

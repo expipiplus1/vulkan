@@ -68,7 +68,7 @@ import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noRecycledResources, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
@@ -106,6 +106,7 @@ main = prettyError . runResourceT $ do
     (shouldQuit sdlWindow)
     WindowLoop
       { wlMkState = allocateBindings dev vma juliaPL sharedFamilies
+      , wlMkRecycled = noRecycledResources
       , wlRender = \bindings f -> renderJulia vc juliaPL topology colorRef bindings f
       , wlOnFrame = \start end -> reportFrameTime (end - start)
       , wlOnExit = noOnExit
@@ -154,7 +155,7 @@ data AsyncSetup = AsyncSetup
   -}
   }
 
-detectTopology :: (MonadResource m) => VulkanContext -> m (Maybe AsyncSetup)
+detectTopology :: (MonadResource m) => VulkanContext rr -> m (Maybe AsyncSetup)
 detectTopology vc = do
   let
     QueueFamilyIndex graphicsFamily = fst (qGraphics (vcQueues vc))
@@ -290,13 +291,13 @@ colorSubresourceRange =
 ----------------------------------------------------------------
 
 renderJulia
-  :: VulkanContext
+  :: VulkanContext rr
   -> Pipeline
   -> Maybe AsyncSetup
   -> IORef Float
   -- ^ colour-scheme phase, shared across swapchains so it survives resizes
   -> Bindings
-  -> Frame
+  -> Frame rr
   -> ResourceT IO ()
 renderJulia vc jp topology colorRef bindings f = do
   constants <- computeConstants (sExtent sc)
@@ -369,8 +370,8 @@ cross-frame WAR wait the compute one (specific to reusing one offscreen
 image), and the returned completions feed the frame recycler.
 -}
 executeAdaptive
-  :: VulkanContext
-  -> Frame
+  :: VulkanContext rr
+  -> Frame rr
   -> Word32
   -> Maybe AsyncSetup
   -> Bool

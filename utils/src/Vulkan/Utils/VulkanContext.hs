@@ -20,16 +20,16 @@ import Vulkan.Utils.Queues (Queues (..))
 recycle channel ends carry per-frame 'RecycledResources' between the frame
 loop and the wait-and-recycle thread.
 -}
-data VulkanContext = VulkanContext
+data VulkanContext rr = VulkanContext
   { vcInstance :: Vk.Instance
   , vcPhysicalDevice :: Vk.PhysicalDevice
   , vcDevice :: Vk.Device
   , vcQueues :: Queues (QueueFamilyIndex, Vk.Queue)
-  , vcRecycleBin :: RecycledResources -> IO ()
+  , vcRecycleBin :: (RecycledResources rr) -> IO ()
   {- ^ Drop a frame's reusable bits back into the pool. Called from the
   per-frame wait thread once the GPU is done with the frame.
   -}
-  , vcRecycleNib :: IO (Either (IO RecycledResources) RecycledResources)
+  , vcRecycleNib :: IO (Either (IO (RecycledResources rr)) (RecycledResources rr))
   {- ^ Pull a frame's reusable bits out. 'Right' if available immediately;
   'Left' is a blocking read.
   -}
@@ -44,7 +44,7 @@ swapchain image (see 'Vulkan.Utils.Swapchain.sRenderFinished'), because a
 present-wait semaphore is only safe to reuse once its image is re-acquired,
 not when the frame's render completes.
 -}
-data RecycledResources = RecycledResources
+data RecycledResources a = RecycledResources
   { rrImageAvailable :: Vk.Semaphore
   , rrCommandPools :: Queues Vk.CommandPool
   {- ^ One command pool per queue role, reset when the frame retires. Roles
@@ -52,6 +52,8 @@ data RecycledResources = RecycledResources
   per distinct family — pools are expensive to create and cheap to reset,
   which is the whole point of recycling them.
   -}
+  , rrData :: a
+  -- ^ Double-buffered data of the application to ping-pong around updating and rendering.
   }
 
 {- | Assemble a 'VulkanContext' from already-constructed handles. Builds the
@@ -63,7 +65,7 @@ mkVulkanContext
   -> Vk.PhysicalDevice
   -> Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
-  -> IO VulkanContext
+  -> IO (VulkanContext rr)
 mkVulkanContext vcInstance vcPhysicalDevice vcDevice vcQueues = do
   (binW, binR) <- newChan
   let
