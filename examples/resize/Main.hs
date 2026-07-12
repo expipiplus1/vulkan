@@ -56,7 +56,7 @@ import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
-import Vulkan.Utils.FrameGraph.Driver (SubmitExtras (..), Submitted (..), allocateCommandPool, noExtras, submitGraphQueued)
+import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), SubmitExtras (..), Submitted (..), allocateCommandPool, noExtras, submitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -408,11 +408,19 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
             }
 
   mask_ do
-    submitted <- submitGraphQueued dev Nothing queueTable extrasFor graph
+    -- The driver registers every queue's completion into fGPUWork before it
+    -- submits anything, so the recycler waits the whole graph — even a
+    -- mid-way submit failure only costs it the wait timeout.
+    _ <-
+      submitGraphQueued
+        (submitConfig dev queueTable)
+          { extras = extrasFor
+          , register = \submitted ->
+              for_ submitted \s ->
+                atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
+          }
+        graph
     liftIO do
-      -- The recycler waits every queue's completion before reusing the frame.
-      for_ submitted \s ->
-        atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
       -- The WAR fence must see every blit, not just dirty frames': a clean frame
       -- re-blitting a stale swapchain image still reads the offscreen image, and
       -- the next compute waits the timeline only up to the last recorded value.

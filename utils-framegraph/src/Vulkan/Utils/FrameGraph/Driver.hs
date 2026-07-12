@@ -39,6 +39,8 @@ instead of deadlocking.
 -}
 module Vulkan.Utils.FrameGraph.Driver
   ( submitGraphQueued
+  , SubmitConfig (..)
+  , submitConfig
   , SubmitExtras (..)
   , noExtras
   , Submitted (..)
@@ -113,16 +115,54 @@ data Submitted = Submitted
   , value :: Word64
   }
 
-{- | Record a compiled graph and submit it, one submit per segment, then
-execute the host queue's passes.
+{- | How 'submitGraphQueued' maps a graph onto the device.
+
+'submitConfig' fills everything but the queue table with inert defaults.
 
 The queue table maps the graph's 'FG.QueueId's to real queues and the pools
 to take this run's one-time command buffers from (reset the pool to reclaim
-them, e.g. per frame in flight). Cross-queue waits come from the schedule;
-@extras@ adds the frame-level ones — waits on the queue's first segment,
-signals on its last (ignored for the host queue, which has no submit to
-splice into). The per-run timelines live in the current 'MonadResource'
-scope, so keep it open until the returned 'Submitted' values are waited on.
+them, e.g. per frame in flight). @extras@ adds the frame-level waits and
+signals — waits on the queue's first segment, signals on its last (ignored
+for the host queue, which has no submit to splice into).
+-}
+data SubmitConfig = SubmitConfig
+  { device :: Vk.Device
+  , queues :: FG.QueueId -> (Vk.Queue, Vk.CommandPool)
+  , hostQueue :: Maybe FG.QueueId
+  -- ^ the host queue: its passes execute on the CPU after the submits
+  , extras :: FG.QueueId -> SubmitExtras
+  , register :: [Submitted] -> IO ()
+  {- ^ Called with every queue's completion BEFORE anything is submitted:
+  wire it to the frame's GPU-work list ('Vulkan.Utils.Frame.fGPUWork') and
+  reclamation waits the whole graph with no hand-rolled sync — and no race
+  when a submit fails midway, since a registered-but-never-signalled value
+  degrades to the recycler's wait timeout instead of reclaiming under
+  in-flight work.
+  -}
+  , deferHost :: Maybe (IO () -> IO ())
+  {- ^ Hand the ordered host-pass tail to this runner (e.g. the frame's
+  deferred work, executed on the recycle thread) instead of executing it
+  before returning; the caller's thread then never blocks on the GPU.
+  -}
+  }
+
+-- | A 'SubmitConfig' with no host queue, no extras, and no completion sink.
+submitConfig :: Vk.Device -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool)) -> SubmitConfig
+submitConfig device queues =
+  SubmitConfig
+    { device
+    , queues
+    , hostQueue = Nothing
+    , extras = const noExtras
+    , register = const (pure ())
+    , deferHost = Nothing
+    }
+
+{- | Record a compiled graph and submit it, one submit per segment, then
+execute the host queue's passes.
+
+The per-run timelines live in the current 'MonadResource' scope, so keep it
+open until the returned 'Submitted' values are waited on.
 
 A queue's passes are cut into segments at wait boundaries ('planSegments'),
 so mid-stream cross-queue dependencies — device ping-pong,
@@ -130,22 +170,23 @@ device→host→device round trips — schedule instead of deadlocking; each
 segment's waits hoist to its own front.
 
 Passes on the designated host queue record nothing: after the device
-submits go out, each runs on the calling thread — its schedule waits
-realised as a host timeline wait, its body as plain IO (peek a readback
-mapping, write an upload one), its signal as 'signalSemaphore', which
-already-submitted device work may be waiting on. The graph must have at
-least one device pass.
+submits go out, each runs on the calling thread (or the 'deferHost' runner)
+— its schedule waits realised as a host timeline wait, its body as plain IO
+(peek a readback mapping, write an upload one), its signal as
+'signalSemaphore', which already-submitted device work may be waiting on.
+The graph must have at least one device pass.
 -}
 submitGraphQueued
   :: (MonadResource m)
-  => Vk.Device
-  -> Maybe FG.QueueId
-  -- ^ the host queue: its passes execute on the CPU after the submits
-  -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
-  -> (FG.QueueId -> SubmitExtras)
+  => SubmitConfig
   -> FG.FrameGraph Recorder ()
   -> m [Submitted]
-submitGraphQueued dev hostQueue queueTable extras graph = do
+submitGraphQueued config graph = do
+  let
+    dev = config.device
+    queueTable = config.queues
+    hostQueue = config.hostQueue
+    extras = config.extras
   snap <- FG.snapshot graph
   let
     syncs = mapMaybe (.sync) snap.passes
@@ -203,6 +244,22 @@ submitGraphQueued dev hostQueue queueTable extras graph = do
                   ]
               }
               :: DependencyInfo '[]
+
+      let
+        deviceDone =
+          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
+          | qid <- deviceQids
+          , let v = maximum [seg.signal | seg <- segments, seg.queue == qid]
+          ]
+        hostDone =
+          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
+          | qid <- ordNub [s.queue | s <- hostSyncs]
+          , let v = maximum [s.signal | s <- hostSyncs, s.queue == qid]
+          ]
+        done = deviceDone <> hostDone
+      -- Before anything records or submits: a value that never signals only
+      -- costs the recycler its wait timeout.
+      liftIO (config.register done)
 
       recorder <- newRecorder (NE.head buffers)
       deferredRef <- liftIO (newIORef [])

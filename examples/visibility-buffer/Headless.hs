@@ -37,7 +37,7 @@ import Numeric.Half (Half)
 import System.Exit (exitFailure)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.FrameGraph.Driver (allocateCommandPool, noExtras, submitGraphQueued, waitSubmitted)
+import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), allocateCommandPool, submitConfig, submitGraphQueued, waitSubmitted)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, sliceLayers, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
@@ -240,7 +240,7 @@ runGraph dev queues async graph = do
   let queueTable q = case computeSlot of
         Just slot | q == computeQueue -> slot
         _ -> (graphicsQueue, graphicsPool)
-  submitted <- submitGraphQueued dev (Just hostQueue) queueTable (const noExtras) graph
+  submitted <- submitGraphQueued (submitConfig dev queueTable){hostQueue = Just hostQueue} graph
   _ <- waitSubmitted dev maxBound submitted
   pure ()
 
