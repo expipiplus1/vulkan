@@ -40,3 +40,16 @@ default-extensions:
 - StrictData
 - TypeApplications
 - TypeFamilies
+
+tests:
+  vulkan-utils-framegraph-test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+    - base
+    - containers
+    - vector
+    - vulkan-utils-framegraph
+    - fragr
+    - tasty
+    - tasty-hunit
