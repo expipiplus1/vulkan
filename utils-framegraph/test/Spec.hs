@@ -1,6 +1,8 @@
 module Main (main) where
 
-import Data.List (sort)
+import Data.IntMap.Strict qualified as IntMap
+import Data.IntSet qualified as IntSet
+import Data.List (sort, subsequences)
 import Data.Word (Word64)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertBool, testCase, (@?=))
@@ -9,7 +11,89 @@ import Fragr qualified as FG
 import Vulkan.Utils.FrameGraph.Aliasing (Candidate (..), happensBefore, planAliases, scheduleOf)
 
 main :: IO ()
-main = defaultMain (testGroup "vulkan-utils-framegraph" [ordering, aliasing])
+main = defaultMain (testGroup "vulkan-utils-framegraph" [ordering, aliasing, exhaustive])
+
+----------------------------------------------------------------
+-- Exhaustive: every small schedule, against an independent oracle
+----------------------------------------------------------------
+
+{- | Every schedule of @n@ passes over @q@ queues, with every combination of
+waits — a pass may wait each foreign queue's current watermark, or not.
+
+That is the whole space the compiler can hand us at this size, so the checks
+below are not samples: they are closed over it.
+-}
+schedules :: Int -> Int -> [[FG.PassSync]]
+schedules n q = go 0 (replicate q 0) []
+  where
+    go i counters acc
+      | i == n = [reverse acc]
+      | otherwise = do
+          queue <- [0 .. q - 1]
+          -- Wait on any subset of the other queues' latest signals.
+          waitMask <- subsequences [j | j <- [0 .. q - 1], j /= queue]
+          let
+            signal = (counters !! queue) + 1
+            counters' = [if j == queue then signal else c | (j, c) <- zip [0 ..] counters]
+            waits = [(j, counters !! j) | j <- waitMask, counters !! j > 0]
+          go (i + 1) counters' (pass i queue signal waits : acc)
+
+{- | The relation, derived a second way: build the edges explicitly and take
+their transitive closure. Deliberately unlike the vector clock it checks —
+an oracle that shared the implementation would prove nothing.
+-}
+oracle :: [FG.PassSync] -> Int -> Int -> Bool
+oracle syncs = \i j -> IntSet.member i (IntMap.findWithDefault IntSet.empty j reach)
+  where
+    indexed = zip [0 ..] syncs
+    -- Direct predecessors: the previous pass on the same queue, and every
+    -- pass whose signal a wait names at or below its watermark.
+    preds s =
+      [ i
+      | (i, p) <- indexed
+      , p.queue == s.queue && p.signal < s.signal
+          || or [p.queue == w.queue && p.signal <= w.value | w <- s.waits]
+      ]
+    -- Transitive closure, accumulated in position order: every predecessor is
+    -- at an earlier position, so its own reach set is already in the map.
+    reach = foldl step IntMap.empty indexed
+    step m (j, s) =
+      let ps = preds s
+      in IntMap.insert j (IntSet.unions (IntSet.fromList ps : [IntMap.findWithDefault IntSet.empty i m | i <- ps])) m
+
+exhaustive :: TestTree
+exhaustive =
+  testGroup
+    "exhaustive (5 passes, 3 queues, all wait combinations)"
+    [ testCase "happensBefore agrees with the closure oracle everywhere" do
+        let bad =
+              [ (syncs, i, j)
+              | syncs <- schedules 5 3
+              , let s = scheduleOf syncs
+              , let ref = oracle syncs
+              , i <- [0 .. 4]
+              , j <- [0 .. 4]
+              , happensBefore s i j /= ref i j
+              ]
+        assertBool (show (take 1 bad)) (null bad)
+    , -- The invariant the whole feature rests on: anything the planner puts in
+      -- one block must be pairwise ordered, so the tenancies cannot overlap.
+      testCase "every planned group is pairwise ordered" do
+        let bad =
+              [ (syncs, x, y)
+              | syncs <- schedules 5 3
+              , let s = scheduleOf syncs
+              , -- One entry per pass, plus a long-lived one spanning the run.
+              cs <- [[Candidate i (i, i) | i <- [0 .. 4]], [Candidate 9 (0, 4), Candidate 0 (1, 1), Candidate 1 (2, 3)]]
+              , g <- planAliases s cs
+              , x <- g
+              , y <- g
+              , x /= y
+              , not (happensBefore s (snd x.live) (fst y.live))
+              , not (happensBefore s (snd y.live) (fst x.live))
+              ]
+        assertBool (show (take 1 bad)) (null bad)
+    ]
 
 -- A pass on a queue, signalling a value, waiting on foreign queues.
 pass :: Int -> Int -> Word64 -> [(Int, Word64)] -> FG.PassSync
