@@ -44,7 +44,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
-import Vulkan.Utils.FrameGraph.Driver (frameSubmitConfig, submitGraphQueued)
+import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
 import Vulkan.Utils.FrameGraph.Recorder (recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -270,7 +270,13 @@ renderScene opts vc pls window controls startTime bindings f = do
   let dev = vcDevice vc
   _ <-
     submitGraphQueued
-      (frameSubmitConfig dev f imageIndex (const (snd (qGraphics (vcQueues vc)), qGraphics (rrCommandPools f.fRecycled))))
+      ( frameSubmitConfig dev f imageIndex \_ ->
+          QueueSlot
+            { queue = snd (qGraphics (vcQueues vc))
+            , family = let QueueFamilyIndex fam = fst (qGraphics (vcQueues vc)) in fam
+            , pool = qGraphics (rrCommandPools f.fRecycled)
+            }
+      )
       graph
   presentFrameImage vc f acquireResult imageIndex
   where

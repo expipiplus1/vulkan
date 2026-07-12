@@ -42,6 +42,7 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Data.Text qualified as Text
 import Data.Vector qualified as V
@@ -50,7 +51,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, queueBarrier, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, markChained, queueBarrier, recorderFamily, recorderHost, recorderQueue)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -70,6 +71,10 @@ data ManagedImage = ManagedImage
   , stateRef :: IORef ImageState
   , queueRef :: IORef (Maybe FG.QueueId)
   -- ^ The device queue that last accessed it; 'Nothing' until one has.
+  , releasedRef :: IORef (Maybe ImageState)
+  {- ^ The state a pending ownership release saw, so the acquiring half can
+  build the barrier that matches it exactly.
+  -}
   , shared :: Bool
   {- ^ The allocation is @SHARING_MODE_CONCURRENT@ across the families the
   graph uses it on ('sharedAcrossQueues'). An unmarked resource accessed
@@ -108,7 +113,8 @@ newManaged :: (MonadIO m) => Vk.Image -> Vk.ImageSubresourceRange -> m ManagedIm
 newManaged image range = do
   stateRef <- liftIO (newIORef undefinedState)
   queueRef <- liftIO (newIORef Nothing)
-  pure ManagedImage{image, range, stateRef, queueRef, shared = False, info = ""}
+  releasedRef <- liftIO (newIORef Nothing)
+  pure ManagedImage{releasedRef, image, range, stateRef, queueRef, shared = False, info = ""}
 
 {- | Attach a summary (e.g. 'imageInfo') shown next to the resource's name
 in visualization output.
@@ -159,9 +165,10 @@ instance FG.Resource ManagedImage where
   preRead h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
   preWrite h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
 
-  -- Producer-side handoff: transition into the consuming access's state in
-  -- the producing queue's buffer (fired only for cross-queue data edges).
-  preRelease h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
+  -- The two halves of a cross-queue hand-off, fired on the producing and the
+  -- consuming side of each data edge.
+  preRelease h _ usage peer rec mi = transferOwnership Release rec (FG.handleId h) peer mi usage
+  preAcquire h _ usage peer rec mi = transferOwnership Acquire rec (FG.handleId h) peer mi usage
 
   describeDesc d = d.info
 
@@ -328,6 +335,91 @@ queueTransition rec node mi usage = do
   nextTransition (if hosted then HostAccess else DeviceQueue queue) evented mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBarrier rec srcStage dstStage barrier
 
+-- | Which half of a cross-queue hand-off a barrier is.
+data TransferSide = Release | Acquire
+  deriving stock (Eq, Show)
+
+{- | The producer- and consumer-side halves of a cross-queue hand-off.
+
+On a @CONCURRENT@ image ('sharedAcrossQueues') the release half carries the
+layout transition producer-side — its source scope stays on a queue that
+supports it — and the acquire half is a no-op: the driver's semaphore
+already orders the two, and no family owns the image.
+
+On an @EXCLUSIVE@ image the pair is a real queue-family ownership transfer:
+the same barrier is recorded twice, once in each queue's buffer, with both
+family indices named. The halves must match exactly, so both are computed
+from the state the release saw — the acquire is what advances the tracked
+state, and it marks the node chained so the consumer's own declared access
+does not place a second barrier on top of it.
+
+Same-family queues own nothing to transfer: the release still moves the
+layout, the acquire still just advances the tracking.
+-}
+transferOwnership :: (MonadIO m) => TransferSide -> Recorder -> Int -> FG.QueueId -> ManagedImage -> Usage -> m ()
+transferOwnership side rec node peer mi usage = do
+  hosted <- recorderHost rec
+  queue <- recorderQueue rec
+  ourFamily <- recorderFamily rec queue
+  peerFamily <- recorderFamily rec peer
+  cur <- liftIO (readIORef mi.stateRef)
+  released <- liftIO (readIORef mi.releasedRef)
+  let
+    next = usageState usage
+    -- The producer is the release's queue and the acquire's peer.
+    (srcFamily, dstFamily) = case side of
+      Release -> (ourFamily, peerFamily)
+      Acquire -> (peerFamily, ourFamily)
+    -- The host owns nothing (it is not a family), and a CONCURRENT image is
+    -- owned by no one: those hand-offs ride the semaphore alone.
+    owned =
+      not mi.shared
+        && not hosted
+        && srcFamily /= dstFamily
+        && srcFamily /= Vk.QUEUE_FAMILY_IGNORED
+        && dstFamily /= Vk.QUEUE_FAMILY_IGNORED
+    -- Both halves describe the same barrier, so the acquire builds its own
+    -- from the state the release saw.
+    from = case side of
+      Release -> cur
+      Acquire -> fromMaybe cur released
+    barrier =
+      SomeStruct
+        zero
+          { Vk.srcAccessMask = case side of
+              Release -> from.access
+              Acquire -> zero
+          , Vk.dstAccessMask = case side of
+              Release -> zero
+              Acquire -> next.access
+          , Vk.oldLayout = from.layout
+          , Vk.newLayout = next.layout
+          , Vk.srcQueueFamilyIndex = if owned then srcFamily else Vk.QUEUE_FAMILY_IGNORED
+          , Vk.dstQueueFamilyIndex = if owned then dstFamily else Vk.QUEUE_FAMILY_IGNORED
+          , Vk.image = mi.image
+          , Vk.subresourceRange = mi.range
+          }
+    -- A release's destination scope and an acquire's source scope are ignored
+    -- by the spec; the halves must otherwise be identical.
+    (srcStage, dstStage) = case side of
+      Release -> (from.stage, Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
+      Acquire -> (Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, next.stage)
+  case side of
+    Release -> do
+      -- The release performs the layout transition (its barrier executes on
+      -- the producer's queue), so the tracked state advances with it.
+      when (owned || cur /= next) do
+        queueBarrier rec srcStage dstStage barrier
+        liftIO (writeIORef mi.stateRef next)
+      liftIO (writeIORef mi.releasedRef (Just cur))
+    Acquire -> do
+      when owned $ queueBarrier rec srcStage dstStage barrier
+      liftIO do
+        writeIORef mi.stateRef next
+        writeIORef mi.queueRef (Just queue)
+        writeIORef mi.releasedRef Nothing
+      markChained rec node
+
 {- | Diff the tracked state against the 'Usage''s target and advance it.
 
 Hands back the @(srcStage, dstStage, barrier)@ still to be recorded — the
@@ -354,16 +446,26 @@ nextTransition accessor evented mi usage = liftIO do
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
     chained = cross || evented
+    -- Crossing to a new family without a transfer: the contents are undefined
+    -- there, so the access acquires by discarding them (it writes — the guard
+    -- below rejects a read).
+    discards = cross && not mi.shared
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
     -- own; unchained writes need one even with the state unchanged.
     needed = cur /= next || (usageWrites usage && not chained)
-  when (cross && not mi.shared) $
+  -- An unshared (EXCLUSIVE) resource reaching another family without an
+  -- ownership transfer ('transferOwnership') has undefined contents there. A
+  -- write that does not read them is still fine — it acquires by discarding
+  -- (see 'discards') — but a read would see garbage, so it is fatal.
+  when (cross && not mi.shared && not (usageWrites usage)) $
     error
-      ( "Vulkan.Utils.FrameGraph: cross-queue access to an unshared resource ("
+      ( "Vulkan.Utils.FrameGraph: cross-queue read of an unshared resource ("
           <> show mi.info
-          <> "): mark it 'sharedAcrossQueues' (and allocate it CONCURRENT), or keep it on one queue"
+          <> ") the graph never handed over: it must be produced on the reading queue, "
+          <> "marked 'sharedAcrossQueues' (CONCURRENT), or written by a pass the graph "
+          <> "can transfer ownership from"
       )
   case accessor of
     DeviceQueue q -> writeIORef mi.queueRef (Just q)
@@ -379,10 +481,10 @@ nextTransition accessor evented mi usage = liftIO do
               zero
                 { Vk.srcAccessMask = srcAccess
                 , Vk.dstAccessMask = next.access
-                , Vk.oldLayout = cur.layout
+                , Vk.oldLayout = if discards then Vk.IMAGE_LAYOUT_UNDEFINED else cur.layout
                 , Vk.newLayout = next.layout
-                , -- IGNORED (not 0) so the barrier is a plain transition, no
-                  -- ownership transfer: cross-family access needs CONCURRENT sharing.
+                , -- IGNORED (not 0): a plain transition, not an ownership
+                  -- transfer ('transferOwnership' emits those).
                   Vk.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
                 , Vk.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
                 , Vk.image = mi.image

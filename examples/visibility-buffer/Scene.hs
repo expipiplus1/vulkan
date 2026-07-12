@@ -608,13 +608,15 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   (_, (toneImage, toneView)) <-
     allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "tone"
   (_, (displayImage, displayView)) <-
-    -- Read by the headless readback copy on the graphics queue.
-    allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "display"
+    -- EXCLUSIVE on purpose: the gamma pass writes it on the compute queue and
+    -- the headless readback copy reads it on graphics, so the graph hands it
+    -- over with a real queue-family ownership transfer.
+    allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
   vis <- sharedAcrossQueues <$> describedImage visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
   depth <- describedImage depthFormat extent depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   colorHDR <- describedImage hdrFormat extent colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
   tone <- describedImage hdrFormat extent toneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  display <- sharedAcrossQueues <$> describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
+  display <- describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
 
   -- Bloom pyramid: one mipped image (base = half the scene extent); each mip is a
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).

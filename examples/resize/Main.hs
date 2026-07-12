@@ -56,7 +56,7 @@ import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, noExtras, presentFrameImage)
-import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
+import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, sharedAcrossQueues)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -389,19 +389,25 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
   computeSlot <- case topology of
     Just as | dirty -> do
       prevBlitDone <- liftIO (readIORef as.lastBlitDone)
-      pure (Just (as.computeQueue, qCompute (rrCommandPools (fRecycled f)), prevBlitDone))
+      pure (Just (as.computeQueue, qCompute (rrCommandPools (fRecycled f)), prevBlitDone, as.computeFamily))
     _ -> pure Nothing
 
   let
+    QueueFamilyIndex graphicsFam = fst (qGraphics (vcQueues vc))
     queueTable q = case computeSlot of
-      Just (queue, pool, _) | q == computeQueue -> (queue, pool)
-      _ -> (snd (qGraphics (vcQueues vc)), qGraphics (rrCommandPools (fRecycled f)))
+      Just (queue, pool, _, fam) | q == computeQueue -> QueueSlot{queue, family = fam, pool}
+      _ ->
+        QueueSlot
+          { queue = snd (qGraphics (vcQueues vc))
+          , family = graphicsFam
+          , pool = qGraphics (rrCommandPools (fRecycled f))
+          }
     base = frameSubmitConfig dev f imageIndex queueTable
     extrasFor q
       -- The cross-frame WAR wait: the offscreen image the julia pass overwrites
       -- may still feed a previous frame's in-flight blit — a hazard between
       -- graphs, invisible to this frame's schedule.
-      | Just (_, _, prevBlitDone) <- computeSlot
+      | Just (_, _, prevBlitDone, _) <- computeSlot
       , q == computeQueue =
           noExtras{waits = [(fHostTimeline f, Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT, prevBlitDone)]}
       | otherwise = base.extras q

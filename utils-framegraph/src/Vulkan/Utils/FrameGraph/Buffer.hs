@@ -33,13 +33,14 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Data.Vector qualified as V
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, queueBufferBarrier, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, markChained, queueBufferBarrier, recorderFamily, recorderHost, recorderQueue)
 import Vulkan.Zero (zero)
 
 -- | A buffer whose stage/access the frame graph tracks and barriers.
@@ -48,6 +49,10 @@ data ManagedBuffer = ManagedBuffer
   , stateRef :: IORef BufferState
   , queueRef :: IORef (Maybe FG.QueueId)
   -- ^ The device queue that last accessed it; 'Nothing' until one has.
+  , releasedRef :: IORef (Maybe BufferState)
+  {- ^ The state a pending ownership release saw, so the acquiring half can
+  build the barrier that matches it exactly.
+  -}
   , shared :: Bool
   {- ^ The allocation is @SHARING_MODE_CONCURRENT@ across the families the
   graph uses it on ('sharedAcrossQueues'). An unmarked resource accessed
@@ -64,7 +69,8 @@ newManagedBuffer :: (MonadIO m) => Vk.Buffer -> m ManagedBuffer
 newManagedBuffer buffer = liftIO do
   stateRef <- newIORef freshState
   queueRef <- newIORef Nothing
-  pure ManagedBuffer{buffer, stateRef, queueRef, shared = False, info = ""}
+  releasedRef <- newIORef Nothing
+  pure ManagedBuffer{releasedRef, buffer, stateRef, queueRef, shared = False, info = ""}
 
 -- | Attach a summary shown next to the resource's name in visualization output.
 describedAs :: Text -> ManagedBuffer -> ManagedBuffer
@@ -94,8 +100,9 @@ instance FG.Resource ManagedBuffer where
   preRead h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
   preWrite h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
 
-  -- Producer-side handoff, as in the image adapter.
-  preRelease h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
+  -- The two halves of a cross-queue hand-off, as in the image adapter.
+  preRelease h _ usage peer rec mb = transferOwnership Release rec (FG.handleId h) peer mb usage
+  preAcquire h _ usage peer rec mb = transferOwnership Acquire rec (FG.handleId h) peer mb usage
 
   describeDesc d = d.info
 
@@ -195,6 +202,72 @@ queueTransition rec node mb usage = do
   nextTransition (if hosted then HostAccess else DeviceQueue queue) evented mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBufferBarrier rec srcStage dstStage barrier
 
+-- | Which half of a cross-queue hand-off a barrier is.
+data TransferSide = Release | Acquire
+  deriving stock (Eq, Show)
+
+{- | The producer- and consumer-side halves of a cross-queue hand-off.
+
+The image adapter's rules, minus the layout: on a @CONCURRENT@ buffer the
+semaphore alone orders the two sides and both halves are no-ops; on an
+@EXCLUSIVE@ one they are a real queue-family ownership transfer, the same
+barrier recorded in each queue's buffer with both family indices named.
+The acquire advances the tracked state and marks the node chained.
+-}
+transferOwnership :: (MonadIO m) => TransferSide -> Recorder -> Int -> FG.QueueId -> ManagedBuffer -> Usage -> m ()
+transferOwnership side rec node peer mb usage = do
+  hosted <- recorderHost rec
+  queue <- recorderQueue rec
+  ourFamily <- recorderFamily rec queue
+  peerFamily <- recorderFamily rec peer
+  cur <- liftIO (readIORef mb.stateRef)
+  released <- liftIO (readIORef mb.releasedRef)
+  let
+    next = usageState usage
+    (srcFamily, dstFamily) = case side of
+      Release -> (ourFamily, peerFamily)
+      Acquire -> (peerFamily, ourFamily)
+    -- The host owns nothing (it is not a family), and a CONCURRENT buffer is
+    -- owned by no one.
+    owned =
+      not mb.shared
+        && not hosted
+        && srcFamily /= dstFamily
+        && srcFamily /= Vk.QUEUE_FAMILY_IGNORED
+        && dstFamily /= Vk.QUEUE_FAMILY_IGNORED
+    from = case side of
+      Release -> cur
+      Acquire -> fromMaybe cur released
+    barrier =
+      SomeStruct
+        zero
+          { Vk.srcAccessMask = case side of
+              Release -> from.access
+              Acquire -> zero
+          , Vk.dstAccessMask = case side of
+              Release -> zero
+              Acquire -> next.access
+          , Vk.srcQueueFamilyIndex = srcFamily
+          , Vk.dstQueueFamilyIndex = dstFamily
+          , Vk.buffer = mb.buffer
+          , Vk.offset = 0
+          , Vk.size = Vk.WHOLE_SIZE
+          }
+    (srcStage, dstStage) = case side of
+      Release -> (from.stage, Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
+      Acquire -> (Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, next.stage)
+  case side of
+    Release -> do
+      when owned $ queueBufferBarrier rec srcStage dstStage barrier
+      liftIO (writeIORef mb.releasedRef (Just cur))
+    Acquire -> do
+      when owned $ queueBufferBarrier rec srcStage dstStage barrier
+      liftIO do
+        writeIORef mb.stateRef next
+        writeIORef mb.queueRef (Just queue)
+        writeIORef mb.releasedRef Nothing
+      markChained rec node
+
 {- | Diff the tracked state against the 'Usage''s target and advance it.
 
 A read whose state differs from the previous one still emits a barrier (the
@@ -221,16 +294,26 @@ nextTransition accessor evented mb usage = liftIO do
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
     chained = cross || evented
+    -- Crossing to a new family without a transfer: the contents are undefined
+    -- there, so the access acquires by discarding them (it writes — the guard
+    -- below rejects a read).
+    discards = cross && not mb.shared
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
     -- own; unchained writes need one even with the state unchanged.
     needed = cur /= next || (usageWrites usage && not chained)
-  when (cross && not mb.shared) $
+  -- An unshared (EXCLUSIVE) resource reaching another family without an
+  -- ownership transfer ('transferOwnership') has undefined contents there. A
+  -- write that does not read them is still fine — it acquires by discarding
+  -- (see 'discards') — but a read would see garbage, so it is fatal.
+  when (cross && not mb.shared && not (usageWrites usage)) $
     error
-      ( "Vulkan.Utils.FrameGraph: cross-queue access to an unshared resource ("
+      ( "Vulkan.Utils.FrameGraph: cross-queue read of an unshared resource ("
           <> show mb.info
-          <> "): mark it 'sharedAcrossQueues' (and allocate it CONCURRENT), or keep it on one queue"
+          <> ") the graph never handed over: it must be produced on the reading queue, "
+          <> "marked 'sharedAcrossQueues' (CONCURRENT), or written by a pass the graph "
+          <> "can transfer ownership from"
       )
   case accessor of
     DeviceQueue q -> writeIORef mb.queueRef (Just q)

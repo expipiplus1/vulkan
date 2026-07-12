@@ -38,7 +38,7 @@ import System.Exit (exitFailure)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (allocateCommandPool)
-import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), submitConfig, submitGraphQueued, waitSubmitted)
+import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), SubmitConfig (..), submitConfig, submitGraphQueued, waitSubmitted)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, sliceLayers, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
@@ -234,7 +234,7 @@ pools are not — they are expensive to create and exist to be reused.
 -}
 runGraph
   :: Vk.Device
-  -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
+  -> (FG.QueueId -> QueueSlot)
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
 runGraph dev queueTable graph = do
@@ -247,16 +247,16 @@ allocateQueueTable
   :: Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
-  -> ResourceT IO (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
+  -> ResourceT IO (FG.QueueId -> QueueSlot)
 allocateQueueTable dev queues async = do
   let (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
   graphicsPool <- allocateCommandPool dev graphicsFamily
   computeSlot <- forM async \computeFamily -> do
     pool <- allocateCommandPool dev computeFamily
-    pure (snd (qCompute queues), pool)
+    pure QueueSlot{queue = snd (qCompute queues), family = computeFamily, pool}
   pure \q -> case computeSlot of
     Just slot | q == computeQueue -> slot
-    _ -> (graphicsQueue, graphicsPool)
+    _ -> QueueSlot{queue = graphicsQueue, family = graphicsFamily, pool = graphicsPool}
 
 ----------------------------------------------------------------
 -- Debug dumps (intermediate buffers)

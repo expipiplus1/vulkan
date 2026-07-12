@@ -28,9 +28,13 @@ events: one per-run @VkEvent@ each, signalled after the producing pass
 (@vkCmdSetEvent2@) and waited before the consuming one (@vkCmdWaitEvents2@)
 with a dependency built once from both endpoints' covers — the consumer's
 own transitions then chain off the wait ('setEventedNodes'), so the work
-scheduled between the endpoints overlaps the dependency. Like the adapters,
-this driver realises no queue-family ownership transfers (cross-family
-resources need CONCURRENT sharing).
+scheduled between the endpoints overlaps the dependency.
+
+Cross-queue hand-offs of an @EXCLUSIVE@ resource are realised as queue-family
+ownership transfers: the adapters' release and acquire hooks emit the matching
+barrier pair, naming the families from this driver's 'QueueSlot's. A
+@CONCURRENT@ resource ('sharedAcrossQueues') owns nothing and rides the
+semaphore alone.
 
 Each queue's pass stream is cut into segments at wait boundaries
 ('planSegments'), one submit per segment, so mid-stream cross-queue
@@ -40,6 +44,7 @@ instead of deadlocking.
 module Vulkan.Utils.FrameGraph.Driver
   ( submitGraphQueued
   , SubmitConfig (..)
+  , QueueSlot (..)
   , submitConfig
   , frameSubmitConfig
   , Submitted (..)
@@ -84,7 +89,7 @@ import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo (..),
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), allocatePrimary, allocateTimelineSemaphore, frameSubmitExtras, noExtras)
 import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
 import Vulkan.Utils.FrameGraph.Image qualified as Image
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setEventedNodes, setRecorder, setRecorderHost)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setEventedNodes, setRecorder, setRecorderFamilies, setRecorderHost)
 import Vulkan.Zero (zero)
 
 {- | One queue's completion handle.
@@ -99,6 +104,16 @@ data Submitted = Submitted
   , value :: Word64
   }
 
+{- | The device side of one 'FG.QueueId': where its passes submit, which
+family owns their resources, and the pool their buffers come from.
+-}
+data QueueSlot = QueueSlot
+  { queue :: Vk.Queue
+  , family :: Word32
+  -- ^ names the sides of an ownership transfer across it
+  , pool :: Vk.CommandPool
+  }
+
 {- | How 'submitGraphQueued' maps a graph onto the device.
 
 'submitConfig' fills everything but the queue table with inert defaults.
@@ -111,7 +126,7 @@ for the host queue, which has no submit to splice into).
 -}
 data SubmitConfig = SubmitConfig
   { device :: Vk.Device
-  , queues :: FG.QueueId -> (Vk.Queue, Vk.CommandPool)
+  , queues :: FG.QueueId -> QueueSlot
   , hostQueue :: Maybe FG.QueueId
   -- ^ the host queue: its passes execute on the CPU after the submits
   , extras :: FG.QueueId -> SubmitExtras
@@ -138,7 +153,7 @@ data SubmitConfig = SubmitConfig
   }
 
 -- | A 'SubmitConfig' with no host queue, no extras, and no completion sink.
-submitConfig :: Vk.Device -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool)) -> SubmitConfig
+submitConfig :: Vk.Device -> (FG.QueueId -> QueueSlot) -> SubmitConfig
 submitConfig device queues =
   SubmitConfig
     { device
@@ -158,7 +173,7 @@ render thread never blocks on the GPU (mind 'deferHost''s presentation
 caveat). Override 'extras' by wrapping the field (it is per-queue) rather
 than replacing it.
 -}
-frameSubmitConfig :: Vk.Device -> Frame -> Word32 -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool)) -> SubmitConfig
+frameSubmitConfig :: Vk.Device -> Frame -> Word32 -> (FG.QueueId -> QueueSlot) -> SubmitConfig
 frameSubmitConfig dev f imageIndex queues =
   (submitConfig dev queues)
     { extras = \q -> if q == FG.defaultQueue then frameSubmitExtras f imageIndex else noExtras
@@ -206,9 +221,9 @@ submitGraphQueued config graph = do
     [] -> pure []
     _ -> do
       segmentSlots <- for segments \seg -> do
-        let (vkQueue, pool) = queueTable seg.queue
-        cb <- allocatePrimary dev pool
-        pure (seg, vkQueue, cb)
+        let slot = queueTable seg.queue
+        cb <- allocatePrimary dev slot.pool
+        pure (seg, slot.queue, cb)
       let deviceQids = ordNub [seg.queue | seg <- segments]
       timelines <-
         Map.fromList <$> for (deviceQids <> ordNub [s.queue | s <- hostSyncs]) \qid -> do
@@ -269,6 +284,10 @@ submitGraphQueued config graph = do
         done = deviceDone <> hostDone
 
       recorder <- newRecorder (NE.head buffers)
+      -- The families an ownership transfer names its two sides from; the host
+      -- queue is not a family and owns nothing.
+      setRecorderFamilies recorder \q ->
+        if Just q == hostQueue then Vk.QUEUE_FAMILY_IGNORED else (queueTable q).family
       deferredRef <- liftIO (newIORef [])
       FG.addPreExec graph flushBarriers
       -- The release hooks queue producer-side barriers after the pass body.

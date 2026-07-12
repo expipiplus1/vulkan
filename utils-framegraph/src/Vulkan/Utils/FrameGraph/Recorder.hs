@@ -19,7 +19,10 @@ module Vulkan.Utils.FrameGraph.Recorder
   , setRecorderHost
   , setEventedNodes
   , eventedNode
+  , markChained
   , recorderHost
+  , setRecorderFamilies
+  , recorderFamily
   , Accessor (..)
   , recorderCommandBuffer
   , recorderQueue
@@ -42,6 +45,7 @@ import Data.IntSet qualified as IntSet
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NE
 import Data.Vector qualified as V
+import Data.Word (Word32)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
@@ -61,7 +65,11 @@ data Recorder = Recorder
   , host :: IORef Bool
   -- ^ Host mode: the current pass has no command buffer ('setRecorderHost').
   , evented :: IORef IntSet
-  -- ^ Nodes whose dependency rides a split-barrier event this pass waited on.
+  {- ^ Nodes whose dependency this pass already synchronized: a split-barrier
+  event it waited on, or an ownership acquire it performed.
+  -}
+  , familyOf :: IORef (FG.QueueId -> Word32)
+  -- ^ The queue family behind each 'FG.QueueId' ('setRecorderFamilies').
   }
 
 -- | The barriers queued for the current pass, OR-ing the stage scopes.
@@ -77,7 +85,14 @@ noBarriers = Barriers zero zero [] []
 
 -- | A recorder pointed at an initial buffer on queue 0; swap it with 'setRecorder'.
 newRecorder :: (MonadIO m) => Vk.CommandBuffer -> m Recorder
-newRecorder cb = liftIO $ Recorder <$> newIORef (FG.QueueId 0, cb) <*> newIORef noBarriers <*> newIORef False <*> newIORef IntSet.empty
+newRecorder cb =
+  liftIO $
+    Recorder
+      <$> newIORef (FG.QueueId 0, cb)
+      <*> newIORef noBarriers
+      <*> newIORef False
+      <*> newIORef IntSet.empty
+      <*> newIORef (const Vk.QUEUE_FAMILY_IGNORED)
 
 -- | Point the recorder at the queue's command buffer the next passes record into.
 setRecorder :: (MonadIO m) => Recorder -> FG.QueueId -> Vk.CommandBuffer -> m ()
@@ -110,9 +125,25 @@ record no events leave it empty and every barrier stays self-sufficient.
 setEventedNodes :: (MonadIO m) => Recorder -> IntSet -> m ()
 setEventedNodes rec nodes = liftIO (writeIORef rec.evented nodes)
 
--- | Whether the node's dependency rides an event this pass waited on.
+-- | Whether the node's dependency this pass already synchronized.
 eventedNode :: (MonadIO m) => Recorder -> Int -> m Bool
 eventedNode rec node = liftIO (IntSet.member node <$> readIORef rec.evented)
+
+{- | Mark a node as already synchronized for the current pass.
+
+The ownership-acquire hook does this: the acquire barrier it emitted carries
+the full dependency, so the pass's own declared access must not re-place one.
+-}
+markChained :: (MonadIO m) => Recorder -> Int -> m ()
+markChained rec node = liftIO (modifyIORef' rec.evented (IntSet.insert node))
+
+-- | The queue-family table an ownership transfer names its two sides from.
+setRecorderFamilies :: (MonadIO m) => Recorder -> (FG.QueueId -> Word32) -> m ()
+setRecorderFamilies rec families = liftIO (writeIORef rec.familyOf families)
+
+-- | The family behind a 'FG.QueueId'.
+recorderFamily :: (MonadIO m) => Recorder -> FG.QueueId -> m Word32
+recorderFamily rec queue = liftIO (($ queue) <$> readIORef rec.familyOf)
 
 {- | Who is performing an access: a device queue, or the host.
 

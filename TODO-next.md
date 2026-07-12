@@ -29,23 +29,21 @@ short-lived, so they are the candidates. This is a **memory** win, not a perf
 one, and it is the only item here that can corrupt silently if the ranges are
 wrong — hence the fragr-side test landing first.
 
-## Queue-family ownership transfers
+## Streaming cave chunks
 
-The `sharedAcrossQueues` guard (`bc1550c9e`) makes an unshared cross-queue
-access fatal instead of silent, but the real transfer is still unimplemented:
-everything that crosses is CONCURRENT.
+The QFOT machinery is in place (see below), so the shape the cave wants is
+now expressible: generate a chunk's geometry on the compute (or a transfer)
+queue, hand it to graphics with an ownership transfer, and drop the chunks
+that fall out of reach. What is missing is the *content* side — a chunk
+allocator with a free list, per-chunk draw ranges in the object table, and a
+residency policy — not any synchronization work.
 
-`FG.preRelease` / `FG.preAcquire` already fire on the right sides with the
-consuming access's flags, and `PassSync.releases` / `.acquires` carry
-`Transfer{handle, peer, flags}`. What is missing is a `QueueId -> family` map
-(the driver has the queue table; family is not in it) so the barrier pair can
-set real `srcQueueFamilyIndex` / `dstQueueFamilyIndex`. The release barrier's
-dst scope and the acquire's src scope are ignored by spec and the pair must
-otherwise match — the same exact-match discipline as the sync2 event pair
-already in `Driver.depInfoOf`.
-
-Only worth doing when something actually wants EXCLUSIVE (a large dedicated
-target where CONCURRENT's cost shows up). Until then the guard is the feature.
+Note the one QFOT rule that shapes the design: a resource whose contents you
+still care about must be handed over by a graph edge (producer pass →
+consumer pass). A queue picking up an EXCLUSIVE resource it did not receive
+may only *discard* it (the adapters do exactly this on a cross-family write:
+`UNDEFINED` old layout). So a chunk's generate → draw hand-off must be edges
+in one graph, or the chunk must be CONCURRENT.
 
 ## Uploads through the host queue
 
