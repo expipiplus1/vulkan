@@ -12,7 +12,9 @@ library:
   source-dirs: src
   dependencies:
   - base >= 4.16 && <5
+  - containers
   - fragr
+  - resourcet
   - text
   - transformers
   - vector

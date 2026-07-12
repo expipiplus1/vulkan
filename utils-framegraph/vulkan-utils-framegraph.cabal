@@ -23,6 +23,7 @@ source-repository head
 library
   exposed-modules:
       Vulkan.Utils.FrameGraph.Buffer
+      Vulkan.Utils.FrameGraph.Driver
       Vulkan.Utils.FrameGraph.Image
       Vulkan.Utils.FrameGraph.Recorder
       Vulkan.Utils.FrameGraph.Swapchain
@@ -49,7 +50,9 @@ library
   ghc-options: -Wall
   build-depends:
       base >=4.16 && <5
+    , containers
     , fragr
+    , resourcet
     , text
     , transformers
     , vector

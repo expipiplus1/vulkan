@@ -43,6 +43,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.FrameGraph.Driver (allocatePrimary)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
@@ -57,7 +58,6 @@ import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 import Blit (blitImage)
-import Driver (beginPrimary)
 import qualified Exposure
 import Options (Options)
 import qualified Options
@@ -264,7 +264,7 @@ renderScene opts vc pls window controls startTime bindings f = do
     sayErrString ("graph dumped to visibility-buffer-live.dot, presenting " <> viewName mode)
 
   let dev = vcDevice vc
-  graphicsCb <- beginPrimary dev (rrCommandPool f.fRecycled)
+  graphicsCb <- allocatePrimary dev (rrCommandPool f.fRecycled)
   -- Move the orbs ahead of the graph; the cull and the shadow refresh that
   -- consume the new positions are graph passes now ("Scene").
   Scene.recordOrbUploads graphicsCb bindings.scene t

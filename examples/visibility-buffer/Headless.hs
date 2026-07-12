@@ -8,21 +8,21 @@ Renders the scene once at a fixed extent across two queues, copies the result to
 host image, saves a PNG and asserts deterministic checks.
 
 The @geometry@ pass runs on the graphics queue and @shade@ + @readback@ on the
-async compute queue (when the GPU has a distinct compute family): geometry
-signals a semaphore the compute buffer waits on, fenced at the end. On shared
-hardware everything collapses to one buffer and one fenced submit.
+async compute queue (when the GPU has a distinct compute family); the
+cross-queue submit ordering comes off the compiled schedule
+('submitGraphQueued'). On shared hardware everything collapses to one buffer
+and one submit.
 -}
 module Headless
   ( main
   ) where
 
 import qualified Codec.Picture as JP
-import Control.Monad (foldM, forM_, unless, when)
+import Control.Monad (foldM, forM, forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (ResourceT, allocate, runResourceT)
+import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.IntSet as IntSet
-import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.Text.IO as TIO
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -34,18 +34,18 @@ import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), withHeadlessVk)
 import ImageReadback (makeReadbackImage, savePng)
 import Numeric.Half (Half)
 import System.Exit (exitFailure)
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
+import Vulkan.Utils.FrameGraph.Driver (allocateCommandPool, noExtras, submitGraphQueued, waitSubmitted)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), copyManagedImageToHost, newManagedImage, sliceLayers, transitionImageTo, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
 import Buffer (readbackBuffer)
-import Driver (beginPrimary, commandPool, oneShot)
+import Driver (oneShot)
 import qualified Exposure
 import Options (Options)
 import qualified Options
@@ -202,11 +202,11 @@ computeQueue = FG.QueueId 1
 computeQueueId :: Maybe Word32 -> FG.QueueId
 computeQueueId = maybe FG.defaultQueue (const computeQueue)
 
-{- | Record the graph across its queues and wait for completion.
+{- | Record the graph across its queues, submit and wait for completion.
 
-Single queue: one buffer, one fenced submit. Async: geometry on the graphics
-queue signals a semaphore the compute buffer (shade + readback) waits on,
-fenced at the end.
+'submitGraphQueued' derives the cross-queue waits from the compiled schedule
+(async: the shade/readback submit chains off the geometry work at exactly the
+handed-over accesses' stages); this driver only maps 'FG.QueueId's to queues.
 -}
 runGraph
   :: Vk.Device
@@ -216,45 +216,16 @@ runGraph
   -> ResourceT IO ()
 runGraph dev queues async graph = do
   let (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
-  graphicsPool <- commandPool dev graphicsFamily
-  graphicsCb <- beginPrimary dev graphicsPool
-
-  computePair <- case async of
-    Just computeFamily -> do
-      pool <- commandPool dev computeFamily
-      cb <- beginPrimary dev pool
-      pure (Just (snd (qCompute queues), cb))
-    Nothing -> pure Nothing
-
-  let
-    cbFor q = case computePair of
-      Just (_, cb) | q == computeQueue -> cb
-      _ -> graphicsCb
-    buffers = graphicsCb :| maybe [] (pure . snd) computePair
-  recordGraph cbFor buffers graph
-
-  (_, fence) <- Vk.withFence dev zero Nothing allocate
-  case computePair of
-    Just (computeQueue', computeCb) -> do
-      (_, geomDone) <- Vk.withSemaphore dev zero Nothing allocate
-      Vk.queueSubmit graphicsQueue [SomeStruct (submitInfo graphicsCb [] [] [geomDone])] Vk.NULL_HANDLE
-      -- The COMPUTE_SHADER wait stage must cover everything the compute buffer
-      -- reads from the graphics queue: the shade pass's inputs are handed over
-      -- producer-side (see the geometry pass in "Scene"), keyed to this stage.
-      Vk.queueSubmit computeQueue' [SomeStruct (submitInfo computeCb [geomDone] [Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT] [])] fence
-    Nothing ->
-      Vk.queueSubmit graphicsQueue [SomeStruct (submitInfo graphicsCb [] [] [])] fence
-  _ <- Vk.waitForFences dev [fence] True maxBound
+  graphicsPool <- allocateCommandPool dev graphicsFamily
+  computeSlot <- forM async \computeFamily -> do
+    pool <- allocateCommandPool dev computeFamily
+    pure (snd (qCompute queues), pool)
+  let queueTable q = case computeSlot of
+        Just slot | q == computeQueue -> slot
+        _ -> (graphicsQueue, graphicsPool)
+  submitted <- submitGraphQueued dev queueTable (const noExtras) graph
+  _ <- waitSubmitted dev maxBound submitted
   pure ()
-  where
-    submitInfo cb waits waitStages signals =
-      zero
-        { Vk.commandBuffers = [Vk.commandBufferHandle cb]
-        , Vk.waitSemaphores = V.fromList waits
-        , Vk.waitDstStageMask = V.fromList waitStages
-        , Vk.signalSemaphores = V.fromList signals
-        }
-        :: Vk.SubmitInfo '[]
 
 ----------------------------------------------------------------
 -- Debug dumps (intermediate buffers)

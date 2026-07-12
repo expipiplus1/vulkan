@@ -52,6 +52,7 @@ import Data.Word (Word32, Word64)
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
+import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer (isBufferFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, queueBarrier, recorderQueue)
 import Vulkan.Zero (zero)
 
@@ -235,9 +236,13 @@ usageFlags = \case
   StorageWrite stage -> FG.Flags (storageMarker .|. writeBit .|. stageBits stage)
   Sampled stage -> FG.Flags (sampledMarker .|. stageBits stage)
 
--- | Decode 'FG.Flags' produced by 'usageFlags'.
+-- | Decode 'FG.Flags' produced by 'usageFlags'; anything else is an error.
 flagsUsage :: FG.Flags -> Usage
-flagsUsage (FG.Flags w)
+flagsUsage flags@(FG.Flags w)
+  -- Loud failure over a silently wrong barrier: the buffer codec shares the
+  -- storage marker bits, so a cross-fed value must not decode.
+  | Buffer.isBufferFlags flags =
+      error ("Vulkan.Utils.FrameGraph.Image.flagsUsage: not an image usage: " <> show w)
   | w .&. storageMarker /= 0 =
       let stage = coerce (fromIntegral (w .&. stageMask) :: Word32)
       in if w .&. writeBit /= 0 then StorageWrite stage else StorageRead stage

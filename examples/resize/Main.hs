@@ -17,20 +17,21 @@ surviving passes need: a fully idle frame records /nothing/ and just re-presents
 The one topology-dependent line is @'FG.setQueue' computeQueueId@ on the
 @julia@ pass, where @computeQueueId@ is chosen once at startup: the graphics
 queue when compute shares its family, an async-compute queue when it doesn't.
-Everything else — pruning, barrier placement, and the per-queue routing of
-commands — falls out of 'FG.executeQueued': on shared hardware every pass lands
-on one queue and it degenerates to a single command buffer and submit; on async
-hardware @executeAdaptive@ submits the compute buffer signalling a timeline the
-graphics submit waits on. The offscreen image is CONCURRENT across the two
-families, so no queue-family ownership transfer is needed — only the timeline
-handshake, and only on the (rare) frames that recompute.
+Everything else — pruning, barrier placement, per-queue command routing and
+the cross-queue submit handshake — falls out of 'submitGraphQueued': on shared
+hardware every pass lands on one queue and it degenerates to a single command
+buffer and submit; on async hardware the graphics submit waits the compute
+one's timeline at the stages the schedule says it hands over. The offscreen
+image is CONCURRENT across the two families, so no queue-family ownership
+transfer is needed — only that handshake, and only on the (rare) frames that
+recompute. What stays app-side is strictly frame-level ('executeAdaptive').
 -}
 module Main
   ( main
   ) where
 
 import Blit (blitImage)
-import Control.Exception (handle, mask_)
+import Control.Exception (handle)
 import Control.Lens.Getter ((^.))
 import Control.Monad (when)
 import Control.Monad.IO.Class
@@ -40,7 +41,6 @@ import Data.Foldable (for_)
 import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as IntSet
-import Data.List.NonEmpty (NonEmpty ((:|)))
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Word (Word32, Word64)
@@ -51,17 +51,14 @@ import Linear.Metric (norm)
 import Linear.V2
 import qualified SDL
 import Say (sayErrString)
-import UnliftIO.Exception (displayException)
+import UnliftIO.Exception (displayException, mask_)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
-import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
-import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
+import Vulkan.Utils.FrameGraph.Driver (SubmitExtras (..), Submitted (..), allocateCommandPool, noExtras, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.Pipeline (Pipeline)
@@ -150,8 +147,6 @@ data AsyncSetup = AsyncSetup
   { graphicsFamily :: Word32
   , computeFamily :: Word32
   , computeQueue :: Vk.Queue
-  , readyTimeline :: Vk.Semaphore
-  -- ^ Compute signals this at the frame index; the graphics blit waits on it.
   , lastBlitDone :: IORef Word64
   {- ^ Frame index of the last blit that read the shared offscreen image; the
   next compute waits for it before overwriting (cross-frame write-after-read).
@@ -166,7 +161,6 @@ detectTopology vc = do
   if graphicsFamily == computeFamily
     then pure Nothing
     else do
-      (_, readyTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
       lastBlitDone <- liftIO (newIORef 0)
       pure $
         Just
@@ -174,7 +168,6 @@ detectTopology vc = do
             { graphicsFamily
             , computeFamily
             , computeQueue = snd (qCompute (vcQueues vc))
-            , readyTimeline
             , lastBlitDone
             }
 
@@ -358,22 +351,17 @@ renderJulia vc jp topology colorRef bindings f = do
       FG.writeWith swapchainH (usageFlags TransferDst)
 
 ----------------------------------------------------------------
--- Windowed submit bridge (Layer 2) + app policy (Layer 3)
+-- Frame-level submit policy (Layer 3)
 --
--- The topology-agnostic 'recordingBackend' (route each pass to its queue's
--- buffer) now lives in "Vulkan.Utils.FrameGraph.Image"; only the submit policy
--- below is app-specific.
+-- The intra-frame cross-queue handshake is 'submitGraphQueued''s, derived
+-- from the compiled schedule; only what spans frames stays here.
 ----------------------------------------------------------------
 
-{- | Record the compiled graph across its queues and submit. On a single-queue
-schedule this is one command buffer and one graphics submit; when the julia pass
-landed on a distinct compute queue, the compute work is recorded into its own
-buffer and submitted signalling the 'AsyncSetup' ready timeline, which the
-graphics submit then waits on.
+{- | Submit the compiled graph with this frame's extras.
 
-The command-buffer allocation and the two-submit shape (Layer 2, windowed) plus
-the cross-frame WAR fence (Layer 3, specific to reusing one offscreen image) stay
-here; only 'recordingBackend' above is topology-agnostic mechanism.
+The swapchain semaphores and host timeline ride the graphics submit, the
+cross-frame WAR wait the compute one (specific to reusing one offscreen
+image), and the returned completions feed the frame recycler.
 -}
 executeAdaptive
   :: VulkanContext
@@ -389,107 +377,47 @@ executeAdaptive
 executeAdaptive vc f imageIndex topology dirty didBlit graph = do
   let dev = vcDevice vc
 
-  graphicsCb <- beginPrimary dev (rrCommandPool (fRecycled f))
   -- The julia pass is the only compute-queue pass, added iff @dirty@ (and dirty
   -- implies needBlit, so it always survives culling): compute runs exactly when
-  -- an async topology is present and the frame is dirty. Its buffer travels with
-  -- the 'AsyncSetup' that submits it.
-  computePair <- case topology of
+  -- an async topology is present and the frame is dirty. Its one-shot pool is
+  -- freed with the frame's scope; the WAR read travels with the slot so the
+  -- compute extras can never lose it.
+  computeSlot <- case topology of
     Just as | dirty -> do
-      (_, computePool) <-
-        Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = as.computeFamily} Nothing allocate
-      cb <- beginPrimary dev computePool
-      pure (Just (as, cb))
+      computePool <- allocateCommandPool dev as.computeFamily
+      prevBlitDone <- liftIO (readIORef as.lastBlitDone)
+      pure (Just (as.computeQueue, computePool, prevBlitDone))
     _ -> pure Nothing
 
   let
-    -- Route each pass's commands to its queue's buffer (see 'FG.setQueue').
-    cbFor q = case computePair of
-      Just (_, cb) | q == computeQueue -> cb
-      _ -> graphicsCb
-    buffers = graphicsCb :| maybe [] (pure . snd) computePair
-  recordGraph cbFor buffers graph
+    queueTable q = case computeSlot of
+      Just (queue, pool, _) | q == computeQueue -> (queue, pool)
+      _ -> (snd (qGraphics (vcQueues vc)), rrCommandPool (fRecycled f))
+    renderFinished = sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex
+    extrasFor q
+      -- The cross-frame WAR wait: the offscreen image the julia pass overwrites
+      -- may still feed a previous frame's in-flight blit — a hazard between
+      -- graphs, invisible to this frame's schedule.
+      | Just (_, _, prevBlitDone) <- computeSlot
+      , q == computeQueue =
+          noExtras{waits = [(fHostTimeline f, Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT, prevBlitDone)]}
+      | otherwise =
+          SubmitExtras
+            { waits = [(rrImageAvailable (fRecycled f), Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
+            , signals = [(renderFinished, 0), (fHostTimeline f, fIndex f)]
+            }
 
-  liftIO . mask_ $ do
-    submitFrame vc f imageIndex graphicsCb computePair
-    -- The WAR fence must see every blit, not just dirty frames': a clean frame
-    -- re-blitting a stale swapchain image still reads the offscreen image, and
-    -- the next compute waits the timeline only up to the last recorded value.
-    for_ topology \as ->
-      when didBlit $ writeIORef as.lastBlitDone (fIndex f)
-
--- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
-beginPrimary :: (MonadResource m, MonadFail m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
-beginPrimary dev pool = do
-  (_, [cb]) <-
-    Vk.withCommandBuffers
-      dev
-      zero{Vk.commandPool = pool, Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY, Vk.commandBufferCount = 1}
-      allocate
-  Vk.beginCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-  pure cb
-
-{- | The submit(s): a compute submit (when the compute buffer exists) signalling
-the ready timeline at this frame index and waiting on the last blit, then the
-graphics submit waiting on image-available (and the ready timeline, when compute
-ran) and signalling render-finished plus the host timeline.
--}
-submitFrame
-  :: VulkanContext
-  -> Frame
-  -> Word32
-  -> Vk.CommandBuffer
-  -> Maybe (AsyncSetup, Vk.CommandBuffer)
-  -> IO ()
-submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
-  case computePair of
-    Just (as, cb) -> do
-      prevBlitDone <- readIORef as.lastBlitDone
-      let computeSubmit =
-            zero
-              { Vk.waitSemaphores = [fHostTimeline]
-              , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT]
-              , Vk.commandBuffers = [Vk.commandBufferHandle cb]
-              , Vk.signalSemaphores = [as.readyTimeline]
-              }
-              ::& zero{waitSemaphoreValues = [prevBlitDone], signalSemaphoreValues = [fIndex]}
-                :& ()
-      Vk.queueSubmit as.computeQueue [SomeStruct computeSubmit] Vk.NULL_HANDLE
-    Nothing -> pure ()
-
-  let
-    renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
-    RecycledResources{rrImageAvailable} = fRecycled
-    graphicsQueue = snd (qGraphics (vcQueues vc))
-    -- Only the wait side differs by whether compute ran; the buffer and signals
-    -- (render-finished + host timeline) are the same either way.
-    (waitSemaphores, waitStages, waitValues) = case computePair of
-      Just (as, _) ->
-        ( [rrImageAvailable, as.readyTimeline]
-        , [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, Vk.PIPELINE_STAGE_TRANSFER_BIT]
-        , [0, fIndex]
-        )
-      Nothing ->
-        ( [rrImageAvailable]
-        , [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
-        , [0]
-        )
-    graphicsSubmit =
-      zero
-        { Vk.waitSemaphores = waitSemaphores
-        , Vk.waitDstStageMask = waitStages
-        , Vk.commandBuffers = [Vk.commandBufferHandle graphicsCb]
-        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
-        }
-        ::& zero{waitSemaphoreValues = waitValues, signalSemaphoreValues = [0, fIndex]}
-          :& ()
-  Vk.queueSubmit graphicsQueue [SomeStruct graphicsSubmit] Vk.NULL_HANDLE
-
-  -- Host-side wait bookkeeping: the graphics timeline always, the compute
-  -- timeline when it ran. The blit's WAR fence is the caller's, per frame.
-  atomicModifyIORef' fGPUWork (\jobs -> ((fHostTimeline, fIndex) : jobs, ()))
-  for_ computePair \(as, _) ->
-    atomicModifyIORef' fGPUWork (\jobs -> ((as.readyTimeline, fIndex) : jobs, ()))
+  mask_ do
+    submitted <- submitGraphQueued dev queueTable extrasFor graph
+    liftIO do
+      -- The recycler waits every queue's completion before reusing the frame.
+      for_ submitted \s ->
+        atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
+      -- The WAR fence must see every blit, not just dirty frames': a clean frame
+      -- re-blitting a stale swapchain image still reads the offscreen image, and
+      -- the next compute waits the timeline only up to the last recorded value.
+      for_ topology \as ->
+        when didBlit $ writeIORef as.lastBlitDone (fIndex f)
 
 ----------------------------------------------------------------
 -- Julia dispatch

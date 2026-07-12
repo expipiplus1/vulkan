@@ -24,9 +24,10 @@ module Vulkan.Utils.FrameGraph.Recorder
   , recordingCommandBuffer
   , recordingBackend
   , recordGraph
+  , recordGraphSyncs
   ) where
 
-import Control.Monad (when)
+import Control.Monad (void, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
@@ -190,8 +191,31 @@ recordGraph
   -> NonEmpty Vk.CommandBuffer
   -> FG.FrameGraph Recorder ()
   -> m ()
-recordGraph cbFor buffers graph = do
+recordGraph cbFor buffers graph = void (recordGraphSyncs cbFor buffers graph)
+
+{- | 'recordGraph', handing back each executed pass's 'FG.PassSync'.
+
+In execution order, for a caller deriving its submits from the schedule
+(see "Vulkan.Utils.FrameGraph.Driver" for the packaged one).
+-}
+recordGraphSyncs
+  :: (MonadIO m)
+  => (FG.QueueId -> Vk.CommandBuffer)
+  -> NonEmpty Vk.CommandBuffer
+  -> FG.FrameGraph Recorder ()
+  -> m [FG.PassSync]
+recordGraphSyncs cbFor buffers graph = do
   recorder <- newRecorder (NE.head buffers)
+  syncs <- liftIO (newIORef [])
   FG.addPreExec graph flushBarriers
-  FG.executeQueued graph (recordingBackend recorder cbFor) Nothing recorder ()
+  let
+    routing = recordingBackend recorder cbFor
+    collecting =
+      routing
+        { FG.beforePass = \psync -> do
+            modifyIORef' syncs (psync :)
+            routing.beforePass psync
+        }
+  FG.executeQueued graph collecting Nothing recorder ()
   traverse_ Vk.endCommandBuffer buffers
+  liftIO (reverse <$> readIORef syncs)
