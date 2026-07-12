@@ -17,8 +17,8 @@ module Vulkan.Utils.FrameGraph.Recorder
   , newRecorder
   , setRecorder
   , setRecorderHost
-  , setEventedNodes
-  , eventedNode
+  , clearChained
+  , chainedNode
   , markChained
   , recorderHost
   , setRecorderFamilies
@@ -64,7 +64,7 @@ data Recorder = Recorder
   , pending :: IORef Barriers
   , host :: IORef Bool
   -- ^ Host mode: the current pass has no command buffer ('setRecorderHost').
-  , evented :: IORef IntSet
+  , chained :: IORef IntSet
   {- ^ Nodes whose dependency this pass already synchronized: a split-barrier
   event it waited on, or an ownership acquire it performed.
   -}
@@ -114,20 +114,17 @@ setRecorderHost rec queue = liftIO do
   modifyIORef' rec.slot (\(_, cb) -> (queue, cb))
   writeIORef rec.host True
 
-{- | Declare which nodes the current pass's split-barrier events cover.
+{- | Drop the chained marks, at the start of each pass.
 
-The driver sets this per pass from the schedule's 'FG.waitEvents' covers
-(having recorded the @vkCmdWaitEvents2@ they name); the adapters then chain
-those accesses' barriers off the event instead of re-synchronizing — the
-same relaxation a cross-queue access gets from its semaphore. Drivers that
-record no events leave it empty and every barrier stays self-sufficient.
+They are per-pass: a mark left over from the previous one would suppress a
+barrier this pass genuinely needs.
 -}
-setEventedNodes :: (MonadIO m) => Recorder -> IntSet -> m ()
-setEventedNodes rec nodes = liftIO (writeIORef rec.evented nodes)
+clearChained :: (MonadIO m) => Recorder -> m ()
+clearChained rec = liftIO (writeIORef rec.chained mempty)
 
 -- | Whether the node's dependency this pass already synchronized.
-eventedNode :: (MonadIO m) => Recorder -> Int -> m Bool
-eventedNode rec node = liftIO (IntSet.member node <$> readIORef rec.evented)
+chainedNode :: (MonadIO m) => Recorder -> Int -> m Bool
+chainedNode rec node = liftIO (IntSet.member node <$> readIORef rec.chained)
 
 {- | Mark a node as already synchronized for the current pass.
 
@@ -135,7 +132,7 @@ The ownership-acquire hook does this: the acquire barrier it emitted carries
 the full dependency, so the pass's own declared access must not re-place one.
 -}
 markChained :: (MonadIO m) => Recorder -> Int -> m ()
-markChained rec node = liftIO (modifyIORef' rec.evented (IntSet.insert node))
+markChained rec node = liftIO (modifyIORef' rec.chained (IntSet.insert node))
 
 -- | The queue-family table an ownership transfer names its two sides from.
 setRecorderFamilies :: (MonadIO m) => Recorder -> (FG.QueueId -> Word32) -> m ()

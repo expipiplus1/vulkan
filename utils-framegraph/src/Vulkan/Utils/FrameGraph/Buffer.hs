@@ -40,7 +40,7 @@ import Data.Vector qualified as V
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, markChained, queueBufferBarrier, recorderFamily, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, chainedNode, flushBarriers, markChained, queueBufferBarrier, recorderFamily, recorderHost, recorderQueue)
 import Vulkan.Zero (zero)
 
 -- | A buffer whose stage/access the frame graph tracks and barriers.
@@ -189,17 +189,16 @@ transitionBuffersTo cb accesses = do
 
 {- | The hook path: 'transitionBufferTo' rules, but queued and queue-aware.
 
-Queue hops chain to the driver's semaphore and evented accesses to their
-@vkCmdWaitEvents2@, like the image adapter's: the prior synchronization's
-scope must cover the usage's stage, and cross-family access needs
-CONCURRENT sharing.
+Queue hops chain to the driver's semaphore, like the image adapter's: the
+prior synchronization's scope must cover the usage's stage, and cross-family
+access needs CONCURRENT sharing.
 -}
 queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedBuffer -> Usage -> m ()
 queueTransition rec node mb usage = do
   queue <- recorderQueue rec
-  evented <- eventedNode rec node
+  chained0 <- chainedNode rec node
   hosted <- recorderHost rec
-  nextTransition (if hosted then HostAccess else DeviceQueue queue) evented mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  nextTransition (if hosted then HostAccess else DeviceQueue queue) chained0 mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBufferBarrier rec srcStage dstStage barrier
 
 -- | Which half of a cross-queue hand-off a barrier is.
@@ -288,11 +287,11 @@ nextTransition
   :: (MonadIO m)
   => Accessor
   -> Bool
-  -- ^ the access rides a split-barrier event ('eventedNode')
+  -- ^ an ownership acquire already synchronized it ('chainedNode')
   -> ManagedBuffer
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.BufferMemoryBarrier))
-nextTransition accessor evented mb usage = liftIO do
+nextTransition accessor marked mb usage = liftIO do
   cur <- readIORef mb.stateRef
   lastQueue <- readIORef mb.queueRef
   let
@@ -303,7 +302,7 @@ nextTransition accessor evented mb usage = liftIO do
     cross = case (accessor, lastQueue) of
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
-    chained = cross || evented
+    chained = cross || marked
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their

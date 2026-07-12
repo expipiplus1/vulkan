@@ -54,6 +54,7 @@ import Say (sayErrString)
 import UnliftIO.Exception (displayException, mask_)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..))
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, noExtras, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
@@ -409,7 +410,7 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
       -- graphs, invisible to this frame's schedule.
       | Just (_, _, prevBlitDone, _) <- computeSlot
       , q == computeQueue =
-          noExtras{waits = [(fHostTimeline f, Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT, prevBlitDone)]}
+          noExtras{waits = [(fHostTimeline f, PIPELINE_STAGE_2_COMPUTE_SHADER_BIT, prevBlitDone)]}
       | otherwise = base.extras q
 
   mask_ do

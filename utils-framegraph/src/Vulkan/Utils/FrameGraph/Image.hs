@@ -51,7 +51,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, markChained, queueBarrier, recorderFamily, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, chainedNode, flushBarriers, markChained, queueBarrier, recorderFamily, recorderHost, recorderQueue)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -319,7 +319,7 @@ sliceLayers mi = Vk.ImageSubresourceLayers mi.range.aspectMask mi.range.baseMipL
 The barrier goes into the 'Recorder''s per-pass batch (flushed before the
 exec callback), and when the access rides a prior synchronization — a
 cross-queue hop (the driver's semaphore) or a split-barrier event the pass
-waited on ('eventedNode') — it chains to it instead: source scope becomes
+waited on ('chainedNode') — it chains to it instead: source scope becomes
 the destination stage with no access mask, since the semaphore/event
 already provides execution ordering and memory availability. The driver's
 wait @dstStageMask@ / event scope must cover the usage's stage (both then
@@ -330,9 +330,9 @@ undefined on the new family.
 queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedImage -> Usage -> m ()
 queueTransition rec node mi usage = do
   queue <- recorderQueue rec
-  evented <- eventedNode rec node
+  chained0 <- chainedNode rec node
   hosted <- recorderHost rec
-  nextTransition (if hosted then HostAccess else DeviceQueue queue) evented mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  nextTransition (if hosted then HostAccess else DeviceQueue queue) chained0 mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBarrier rec srcStage dstStage barrier
 
 -- | Which half of a cross-queue hand-off a barrier is.
@@ -440,11 +440,11 @@ nextTransition
   :: (MonadIO m)
   => Accessor
   -> Bool
-  -- ^ the access rides a split-barrier event ('eventedNode')
+  -- ^ an ownership acquire already synchronized it ('chainedNode')
   -> ManagedImage
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.ImageMemoryBarrier))
-nextTransition accessor evented mi usage = liftIO do
+nextTransition accessor marked mi usage = liftIO do
   cur <- readIORef mi.stateRef
   lastQueue <- readIORef mi.queueRef
   let
@@ -455,7 +455,7 @@ nextTransition accessor evented mi usage = liftIO do
     cross = case (accessor, lastQueue) of
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
-    chained = cross || evented
+    chained = cross || marked
     -- Crossing to a new family without a transfer: the contents are undefined
     -- there, so the access acquires by discarding them (it writes — the guard
     -- below rejects a read).

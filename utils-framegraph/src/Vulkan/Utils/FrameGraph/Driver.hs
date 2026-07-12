@@ -23,12 +23,12 @@ cross-frame hazard on a resource the graphs share (a previous frame's
 still-in-flight read is not a pass the compiler can see). Everything inside
 one graph is derived; everything between graphs is an extra.
 
-The schedule's split-barrier events are realised as synchronization2
-events: one per-run @VkEvent@ each, signalled after the producing pass
-(@vkCmdSetEvent2@) and waited before the consuming one (@vkCmdWaitEvents2@)
-with a dependency built once from both endpoints' covers — the consumer's
-own transitions then chain off the wait ('setEventedNodes'), so the work
-scheduled between the endpoints overlaps the dependency.
+Synchronization is timeline semaphores and synchronization2, and nothing
+else: submits go through @vkQueueSubmit2@, so a wait carries its value and
+its stage in one 'SemaphoreSubmitInfo'. The schedule's split-barrier events
+are deliberately not realised as @VkEvent@s — they only ever bought overlap,
+and each access already places a self-sufficient barrier. Binary semaphores
+survive only where WSI mandates them (acquire/present), as 'SubmitExtras'.
 
 Cross-queue hand-offs of an @EXCLUSIVE@ resource are realised as queue-family
 ownership transfers: the adapters' release and acquire hooks emit the matching
@@ -50,10 +50,10 @@ module Vulkan.Utils.FrameGraph.Driver
   , Submitted (..)
   , waitSubmitted
   , waitStage
-  , accessStage
+  , accessScopes
   ) where
 
-import Control.Monad (unless, void)
+import Control.Monad (unless, void, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.&.), (.|.))
@@ -77,19 +77,19 @@ import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import Vulkan.Core10 qualified as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import Vulkan.Core10 qualified as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
-import Vulkan.Core10 qualified as EventCreateInfo (EventCreateInfo (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlagBits (EVENT_CREATE_DEVICE_ONLY_BIT))
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..), signalSemaphore, waitSemaphoresSafe)
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (signalSemaphore, waitSemaphoresSafe)
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreSignalInfo (SemaphoreSignalInfo (..))
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreWaitInfo (SemaphoreWaitInfo (..))
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2 (..), AccessFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..), PipelineStageFlags2)
-import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo (..), MemoryBarrier2 (..), cmdSetEvent2, cmdWaitEvents2)
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SubmitInfo2 (..), queueSubmit2)
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 qualified as CommandBufferSubmitInfo (CommandBufferSubmitInfo (..))
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 qualified as SemaphoreSubmitInfo (SemaphoreSubmitInfo (..))
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), allocatePrimary, allocateTimelineSemaphore, frameSubmitExtras, noExtras)
 import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
 import Vulkan.Utils.FrameGraph.Image qualified as Image
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setEventedNodes, setRecorder, setRecorderFamilies, setRecorderHost)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, clearChained, flushBarriers, newRecorder, setRecorder, setRecorderFamilies, setRecorderHost)
 import Vulkan.Zero (zero)
 
 {- | One queue's completion handle.
@@ -241,37 +241,6 @@ submitGraphQueued config graph = do
           Just ix -> let (_, _, cb) = slotsV V.! ix in cb
           Nothing -> error "submitGraphQueued: pass outside the planned schedule"
 
-      -- Split-barrier events: one per-run VkEvent per schedule event, its
-      -- dependency info built once from both endpoints' covers (SetEvent2 and
-      -- WaitEvents2 must match exactly).
-      let
-        orScope (a, b) (c, d) = (a .|. c, b .|. d)
-        eventScopes side = Map.fromListWith orScope [(se.event, foldr (orScope . accessScopes) (zero, zero) se.covers) | s <- deviceSyncs, se <- side s]
-        srcScopes = eventScopes (.signalEvents)
-        dstScopes = eventScopes (.waitEvents)
-      events <-
-        Map.traverseWithKey
-          (\_ _ -> snd <$> Vk.withEvent dev zero{EventCreateInfo.flags = EVENT_CREATE_DEVICE_ONLY_BIT} Nothing allocate)
-          srcScopes
-      let
-        eventOf eid = Map.findWithDefault (error "submitGraphQueued: wait on an event never signalled") eid events
-        depInfoOf eid =
-          let
-            (srcStage, srcAccess) = Map.findWithDefault (zero, zero) eid srcScopes
-            (dstStage, dstAccess) = Map.findWithDefault (zero, zero) eid dstScopes
-          in
-            zero
-              { memoryBarriers =
-                  [ zero
-                      { srcStageMask = srcStage
-                      , srcAccessMask = srcAccess
-                      , dstStageMask = dstStage
-                      , dstAccessMask = dstAccess
-                      }
-                  ]
-              }
-              :: DependencyInfo '[]
-
       let
         deviceDone =
           [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
@@ -300,18 +269,11 @@ submitGraphQueued config graph = do
                   if Just psync.queue == hostQueue
                     then setRecorderHost recorder psync.queue
                     else do
-                      let cb = cbFor psync.passId
-                      setRecorder recorder psync.queue cb
-                      setEventedNodes recorder (IntSet.fromList (map FG.accessId (concatMap (.covers) psync.waitEvents)))
-                      unless (null psync.waitEvents) $
-                        cmdWaitEvents2
-                          cb
-                          (V.fromList [eventOf se.event | se <- psync.waitEvents])
-                          (V.fromList [SomeStruct (depInfoOf se.event) | se <- psync.waitEvents])
-              , FG.afterPass = \psync ->
-                  unless (Just psync.queue == hostQueue) $
-                    for_ psync.signalEvents \se ->
-                      cmdSetEvent2 (cbFor psync.passId) (eventOf se.event) (depInfoOf se.event)
+                      setRecorder recorder psync.queue (cbFor psync.passId)
+                      -- Only an ownership acquire chains a node ('markChained');
+                      -- clear it, or a stale mark suppresses a later pass's barrier.
+                      clearChained recorder
+              , FG.afterPass = \_psync -> pure ()
               , FG.invoke = \psync body ->
                   if Just psync.queue == hostQueue
                     then modifyIORef' deferredRef ((psync, body) :)
@@ -338,19 +300,18 @@ submitGraphQueued config graph = do
           submitSignals =
             (timelineOf seg.queue, seg.signal)
               : (if Map.lookup seg.queue lastSeg == Just ix then ex.signals else [])
+          -- A binary semaphore (the WSI pair) ignores the value; a timeline
+          -- ignores nothing, and carries its stage in the same struct.
+          waitInfo (sem, st, v) = zero{SemaphoreSubmitInfo.semaphore = sem, SemaphoreSubmitInfo.stageMask = st, SemaphoreSubmitInfo.value = v}
+          signalInfo (sem, v) = zero{SemaphoreSubmitInfo.semaphore = sem, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT, SemaphoreSubmitInfo.value = v}
           submit =
             zero
-              { Vk.waitSemaphores = V.fromList [sem | (sem, _, _) <- submitWaits]
-              , Vk.waitDstStageMask = V.fromList [st | (_, st, _) <- submitWaits]
-              , Vk.commandBuffers = [Vk.commandBufferHandle cb]
-              , Vk.signalSemaphores = V.fromList (map fst submitSignals)
+              { waitSemaphoreInfos = V.fromList (map waitInfo submitWaits)
+              , commandBufferInfos = [SomeStruct zero{CommandBufferSubmitInfo.commandBuffer = Vk.commandBufferHandle cb}]
+              , signalSemaphoreInfos = V.fromList (map signalInfo submitSignals)
               }
-              ::& zero
-                { waitSemaphoreValues = V.fromList [v | (_, _, v) <- submitWaits]
-                , signalSemaphoreValues = V.fromList (map snd submitSignals)
-                }
-                :& ()
-        Vk.queueSubmit vkQueue [SomeStruct submit] Vk.NULL_HANDLE
+              :: SubmitInfo2 '[]
+        queueSubmit2 vkQueue [SomeStruct submit] Vk.NULL_HANDLE
 
       -- The host passes, in schedule order: wait, run, signal — inline, or
       -- handed whole to the 'deferHost' runner.
@@ -378,7 +339,7 @@ cross-queue waits all hoist to its front.
 -}
 data SegmentPlan = SegmentPlan
   { queue :: FG.QueueId
-  , fronts :: Map FG.QueueId (Word64, Vk.PipelineStageFlags)
+  , fronts :: Map FG.QueueId (Word64, PipelineStageFlags2)
   {- ^ per producer queue: the timeline value to wait for, at the covered
   accesses' stages
   -}
@@ -409,7 +370,12 @@ planSegments syncs = (toList segs, routes)
       -> (Map FG.QueueId Int, Seq.Seq SegmentPlan, Map Int Int)
     step (open, acc, rts) s =
       let
-        needs = Map.fromListWith mergeWait [(w.queue, (w.value, waitStage w)) | w <- s.waits]
+        -- An acquire barrier is only ordered after its release if the wait's dst
+        -- scope covers it, and its src half comes from the pre-release state —
+        -- a stage the consuming accesses need not name. Widen, or the two halves
+        -- of the transition race (WAW on the layout transition).
+        acquiring = if null s.acquires then zero else PIPELINE_STAGE_2_ALL_COMMANDS_BIT
+        needs = Map.fromListWith mergeWait [(w.queue, (w.value, waitStage w .|. acquiring)) | w <- s.waits]
         covered seg =
           Map.foldrWithKey
             (\p (v, _) ok -> ok && maybe False ((v <=) . fst) (Map.lookup p seg.fronts))
@@ -456,30 +422,22 @@ waitSubmitted dev timeout submitted =
       }
     timeout
 
-{- | The submit-front @waitDstStageMask@ covering a schedule wait.
+{- | The stage a schedule wait is consumed at ('SemaphoreSubmitInfo.stageMask').
 
 The OR of its protected accesses' stages. Matches the adapters' cross-queue
 barrier chaining ('Image.queueTransition' hands over at exactly the
 consuming usage's stage), so the semaphore and the barrier meet. An access
 declared without flags carries no scope: over-synchronize.
 -}
-waitStage :: FG.Wait -> Vk.PipelineStageFlags
+waitStage :: FG.Wait -> PipelineStageFlags2
 waitStage w
-  | null w.covers = Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
-  | otherwise = foldl' (\acc a -> acc .|. accessStage a) zero w.covers
+  | null w.covers = PIPELINE_STAGE_2_ALL_COMMANDS_BIT
+  | otherwise = foldl' (\acc a -> acc .|. fst (accessScopes a)) zero w.covers
 
-{- | The pipeline stage an access's flags decode to.
+{- | An access's synchronization2 scope (stage + access mask).
 
 Dispatched on the access's resource type; an adapter this module does not
 know about carries no decodable scope and over-synchronizes.
--}
-accessStage :: FG.Access -> Vk.PipelineStageFlags
-accessStage (FG.Access h flags) = resourceStage h flags
-
-{- | An access's synchronization2 scope (stage + access mask), for an event's
-dependency info.
-
-Same dispatch and over-synchronization rules as 'accessStage'.
 -}
 accessScopes :: FG.Access -> (PipelineStageFlags2, AccessFlags2)
 accessScopes (FG.Access (_ :: FG.Handle r) flags) = case flags of
@@ -502,23 +460,3 @@ stage2 s = coerce (fromIntegral (coerce s :: Word32) :: Word64)
 
 access2 :: Vk.AccessFlags -> AccessFlags2
 access2 a = coerce (fromIntegral (coerce a :: Word32) :: Word64)
-
-{- | The stage a resource's typed flags decode to, sanitized for a wait mask.
-
-@HOST@ (forbidden in @pWaitDstStageMask@ — host reads order via the
-host-side timeline wait, so the device scope may be anything), an empty
-stage, and an unknown resource type (no scope information) all widen to
-@ALL_COMMANDS@.
--}
-resourceStage :: forall r. (FG.Resource r) => FG.Handle r -> Maybe (FG.Flags r) -> Vk.PipelineStageFlags
-resourceStage _handle = \case
-  Nothing -> Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
-  Just flags
-    | stage == zero || stage .&. Vk.PIPELINE_STAGE_HOST_BIT /= zero ->
-        Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT
-    | otherwise -> stage
-    where
-      stage
-        | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Image.ManagedImage) = (Image.usageState flags).stage
-        | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Buffer.ManagedBuffer) = (Buffer.usageState flags).stage
-        | otherwise = Vk.PIPELINE_STAGE_ALL_COMMANDS_BIT

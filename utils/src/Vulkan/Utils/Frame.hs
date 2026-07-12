@@ -55,6 +55,11 @@ import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
+import Vulkan.Core13 (PhysicalDeviceSynchronization2Features)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..), PipelineStageFlags2)
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SubmitInfo2 (..), queueSubmit2)
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as CommandBufferSubmitInfo (CommandBufferSubmitInfo (..))
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as SemaphoreSubmitInfo (SemaphoreSubmitInfo (..))
 import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
@@ -124,6 +129,8 @@ frameDeviceRequirements =
     VK_KHR_swapchain
     VK_KHR_timeline_semaphore
     PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+    VK_KHR_synchronization2
+    PhysicalDeviceSynchronization2Features.synchronization2
   |]
 
 ----------------------------------------------------------------
@@ -267,7 +274,7 @@ swapchain's per-image render-finished semaphore (at @imageIndex@) plus its
 timeline value, and submits on the graphics queue.
 
 For a non-standard submit shape (multiple submit infos, different wait
-stage, extra signals), call 'Vk.queueSubmit' directly and append
+stage, extra signals), call 'queueSubmit2' directly and append
 @(fHostTimeline f, fIndex f)@ to @fGPUWork f@.
 -}
 queueSubmitFrame
@@ -282,23 +289,25 @@ queueSubmitFrame
   -> m ()
 {-# INLINE queueSubmitFrame #-}
 queueSubmitFrame vc Frame{..} imageIndex cbs = liftIO . mask_ $ do
-  Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
+  queueSubmit2 gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
   atomicModifyIORef' fGPUWork $ \jobs -> ((fHostTimeline, fIndex) : jobs, ())
   where
     gQ = snd (qGraphics (vcQueues vc))
     renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
+    -- The two WSI semaphores are binary (mandated: acquire signals one,
+    -- present waits on one) and ignore their values; the timeline is ours.
     submitInfo =
       zero
-        { Vk.waitSemaphores = [rrImageAvailable]
-        , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
-        , Vk.commandBuffers = fmap Vk.commandBufferHandle cbs
-        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
+        { waitSemaphoreInfos =
+            [zero{SemaphoreSubmitInfo.semaphore = rrImageAvailable, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_TOP_OF_PIPE_BIT}]
+        , commandBufferInfos =
+            fmap (\cb -> SomeStruct zero{CommandBufferSubmitInfo.commandBuffer = Vk.commandBufferHandle cb}) cbs
+        , signalSemaphoreInfos =
+            [ zero{SemaphoreSubmitInfo.semaphore = renderFinished, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT}
+            , zero{SemaphoreSubmitInfo.semaphore = fHostTimeline, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT, SemaphoreSubmitInfo.value = fIndex}
+            ]
         }
-        ::& zero
-          { waitSemaphoreValues = [1]
-          , signalSemaphoreValues = [1, fIndex]
-          }
-          :& ()
+        :: SubmitInfo2 '[]
     RecycledResources{rrImageAvailable} = fRecycled
 
 {- | Acquire the next swapchain image for this frame, signalling the frame's
@@ -435,7 +444,7 @@ Timeline semaphores carry their value; a binary semaphore's value is
 ignored (pass 0).
 -}
 data SubmitExtras = SubmitExtras
-  { waits :: [(Vk.Semaphore, Vk.PipelineStageFlags, Word64)]
+  { waits :: [(Vk.Semaphore, PipelineStageFlags2, Word64)]
   , signals :: [(Vk.Semaphore, Word64)]
   }
 
@@ -451,7 +460,7 @@ for drivers that assemble their own submits.
 frameSubmitExtras :: Frame -> Word32 -> SubmitExtras
 frameSubmitExtras f imageIndex =
   SubmitExtras
-    { waits = [(rrImageAvailable (fRecycled f), Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
+    { waits = [(rrImageAvailable (fRecycled f), PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, 0)]
     , signals =
         [ (sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex, 0)
         , (fHostTimeline f, fIndex f)
