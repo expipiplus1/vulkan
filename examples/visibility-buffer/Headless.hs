@@ -196,10 +196,10 @@ render opts allocator dev queues async = do
   let (visImage, depthImage) = Scene.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where
-    -- The copy queue must match the scene passes': on single-queue hardware
-    -- there is no semaphore for a cross-queue transition to lean on.
+    -- On the graphics queue, sandwiching the compute chain: on async hardware
+    -- this makes the driver segment the graphics stream (geometry before the
+    -- compute passes, the copy after them) instead of rejecting the schedule.
     readbackSetup displayOut cpuH = do
-      FG.setQueue (computeQueueId async)
       FG.readWith displayOut TransferSrc
       FG.writeWith cpuH TransferDst
     hostSetup cpuWritten = do

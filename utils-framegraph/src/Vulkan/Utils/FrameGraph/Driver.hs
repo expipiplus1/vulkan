@@ -26,10 +26,10 @@ Like the adapters, this driver realises no queue-family ownership transfers
 (cross-family resources need CONCURRENT sharing) and collapses the
 schedule's split-barrier events into the hooks' immediate barriers.
 
-Hoisting per-pass waits to one submit per queue needs the queue-level
-dependency graph to stay acyclic; a schedule where two queues wait on each
-other's later passes is rejected before anything is submitted. Splitting
-buffers at wait boundaries would lift that; no graph here needs it yet.
+Each queue's pass stream is cut into segments at wait boundaries
+('planSegments'), one submit per segment, so mid-stream cross-queue
+dependencies — device ping-pong, device→host→device round trips — schedule
+instead of deadlocking.
 -}
 module Vulkan.Utils.FrameGraph.Driver
   ( submitGraphQueued
@@ -43,17 +43,18 @@ module Vulkan.Utils.FrameGraph.Driver
   , accessStage
   ) where
 
-import Control.Monad (unless, void, when)
+import Control.Monad (unless, void)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.&.), (.|.))
-import Data.Foldable (foldl', for_, traverse_)
+import Data.Foldable (foldl', for_, toList, traverse_)
 import Data.IORef (modifyIORef', newIORef, readIORef)
 import Data.List (partition)
 import Data.List.NonEmpty qualified as NE
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Data.Set (Set)
+import Data.Maybe (mapMaybe)
+import Data.Sequence qualified as Seq
 import Data.Set qualified as Set
 import Data.Traversable (for)
 import Data.Vector qualified as V
@@ -99,16 +100,21 @@ data Submitted = Submitted
   , value :: Word64
   }
 
-{- | Record a compiled graph and submit it, one submit per executing device
-queue, then execute the host queue's passes.
+{- | Record a compiled graph and submit it, one submit per segment, then
+execute the host queue's passes.
 
 The queue table maps the graph's 'FG.QueueId's to real queues and the pools
 to take this run's one-time command buffers from (reset the pool to reclaim
 them, e.g. per frame in flight). Cross-queue waits come from the schedule;
-@extras@ adds the frame-level ones (ignored for the host queue — a host
-pass has no submit to splice into). The per-run timelines live in the
-current 'MonadResource' scope, so keep it open until the returned
-'Submitted' values are waited on.
+@extras@ adds the frame-level ones — waits on the queue's first segment,
+signals on its last (ignored for the host queue, which has no submit to
+splice into). The per-run timelines live in the current 'MonadResource'
+scope, so keep it open until the returned 'Submitted' values are waited on.
+
+A queue's passes are cut into segments at wait boundaries ('planSegments'),
+so mid-stream cross-queue dependencies — device ping-pong,
+device→host→device round trips — schedule instead of deadlocking; each
+segment's waits hoist to its own front.
 
 Passes on the designated host queue record nothing: after the device
 submits go out, each runs on the calling thread — its schedule waits
@@ -126,32 +132,35 @@ submitGraphQueued
   -> (FG.QueueId -> SubmitExtras)
   -> FG.FrameGraph Recorder ()
   -> m [Submitted]
-submitGraphQueued dev hostQueue queueTable extras graph =
-  FG.executingQueues graph >>= \case
+submitGraphQueued dev hostQueue queueTable extras graph = do
+  snap <- FG.snapshot graph
+  let
+    syncs = mapMaybe (.sync) snap.passes
+    (hostSyncs, deviceSyncs) = partition (\s -> Just s.queue == hostQueue) syncs
+    (segments, routes) = planSegments deviceSyncs
+  case syncs of
     [] -> pure []
-    qids -> do
-      let (hostQids, deviceQids) = partition (\q -> Just q == hostQueue) qids
-      deviceSlots <- for deviceQids \qid -> do
-        let (vkQueue, pool) = queueTable qid
+    _ -> do
+      segmentSlots <- for segments \seg -> do
+        let (vkQueue, pool) = queueTable seg.queue
         cb <- allocatePrimary dev pool
-        (_, timeline) <- allocateTimelineSemaphore dev 0
-        pure (qid, (vkQueue, cb, timeline))
-      hostSlots <- for hostQids \qid -> do
-        (_, timeline) <- allocateTimelineSemaphore dev 0
-        pure (qid, timeline)
-      buffers <- case NE.nonEmpty [cb | (_, (_, cb, _)) <- deviceSlots] of
+        pure (seg, vkQueue, cb)
+      let deviceQids = ordNub [seg.queue | seg <- segments]
+      timelines <-
+        Map.fromList <$> for (deviceQids <> ordNub [s.queue | s <- hostSyncs]) \qid -> do
+          (_, timeline) <- allocateTimelineSemaphore dev 0
+          pure (qid, timeline)
+      buffers <- case NE.nonEmpty [cb | (_, _, cb) <- segmentSlots] of
         Nothing -> error "submitGraphQueued: a host-only graph has nothing to submit"
         Just ne -> pure ne
       let
-        cbTable = Map.fromList [(qid, cb) | (qid, (_, cb, _)) <- deviceSlots]
-        timelines = Map.fromList ([(qid, t) | (qid, (_, _, t)) <- deviceSlots] <> hostSlots)
         timelineOf qid =
           Map.findWithDefault (error "submitGraphQueued: wait on a queue with no executing pass") qid timelines
-        cbFor qid =
-          Map.findWithDefault (error "submitGraphQueued: queue outside the compiled schedule") qid cbTable
+        cbFor pid = case Map.lookup pid routes of
+          Just ix -> let (_, _, cb) = segmentSlots !! ix in cb
+          Nothing -> error "submitGraphQueued: pass outside the planned schedule"
 
       recorder <- newRecorder (NE.head buffers)
-      syncsRef <- liftIO (newIORef [])
       deferredRef <- liftIO (newIORef [])
       FG.addPreExec graph flushBarriers
       -- The release hooks queue producer-side barriers after the pass body.
@@ -161,10 +170,9 @@ submitGraphQueued dev hostQueue queueTable extras graph =
               { FG.beforePass = \psync ->
                   if Just psync.queue == hostQueue
                     then setRecorderHost recorder psync.queue
-                    else setRecorder recorder psync.queue (cbFor psync.queue)
+                    else setRecorder recorder psync.queue (cbFor psync.passId)
               , FG.afterPass = \_ -> pure ()
-              , FG.invoke = \psync body -> do
-                  modifyIORef' syncsRef (psync :)
+              , FG.invoke = \psync body ->
                   if Just psync.queue == hostQueue
                     then modifyIORef' deferredRef ((psync, body) :)
                     else body
@@ -173,18 +181,17 @@ submitGraphQueued dev hostQueue queueTable extras graph =
       FG.executeQueued graph backend Nothing recorder ()
       traverse_ Vk.endCommandBuffer buffers
 
-      syncs <- liftIO (reverse <$> readIORef syncsRef)
-      let plan = submitPlan syncs
-      when (hoistCyclic plan) $
-        error "submitGraphQueued: cross-queue waits form a cycle at submit granularity"
-
-      submitted <- liftIO $ for deviceSlots \(qid, (vkQueue, cb, timeline)) -> do
+      let
+        firstSeg = Map.fromListWith (\_ old -> old) [(seg.queue, ix) | (ix, (seg, _, _)) <- zip [0 :: Int ..] segmentSlots]
+        lastSeg = Map.fromList [(seg.queue, ix) | (ix, (seg, _, _)) <- zip [0 ..] segmentSlots]
+      liftIO $ for_ (zip [0 ..] segmentSlots) \(ix, (seg, vkQueue, cb)) -> do
         let
-          (signalValue, foreignWaits) = plan Map.! qid
-          ex = extras qid
-          derived = [(timelineOf p, stages, value) | (p, (value, stages)) <- Map.toAscList foreignWaits]
-          submitWaits = derived <> ex.waits
-          submitSignals = (timeline, signalValue) : ex.signals
+          ex = extras seg.queue
+          derived = [(timelineOf p, stages, value) | (p, (value, stages)) <- Map.toAscList seg.fronts]
+          submitWaits = derived <> (if Map.lookup seg.queue firstSeg == Just ix then ex.waits else [])
+          submitSignals =
+            (timelineOf seg.queue, seg.signal)
+              : (if Map.lookup seg.queue lastSeg == Just ix then ex.signals else [])
           submit =
             zero
               { Vk.waitSemaphores = V.fromList [sem | (sem, _, _) <- submitWaits]
@@ -198,7 +205,6 @@ submitGraphQueued dev hostQueue queueTable extras graph =
                 }
                 :& ()
         Vk.queueSubmit vkQueue [SomeStruct submit] Vk.NULL_HANDLE
-        pure Submitted{queue = qid, semaphore = timeline, value = signalValue}
 
       -- The host passes, in schedule order: wait, run, signal.
       liftIO do
@@ -214,42 +220,90 @@ submitGraphQueued dev hostQueue queueTable extras graph =
                   }
                 maxBound
           body
-          for_ (lookup psync.queue hostSlots) \timeline ->
-            signalSemaphore dev zero{SemaphoreSignalInfo.semaphore = timeline, SemaphoreSignalInfo.value = psync.signal}
-      let hostDone = [Submitted{queue = qid, semaphore = timeline, value = fst (plan Map.! qid)} | (qid, timeline) <- hostSlots]
-      pure (submitted <> hostDone)
+          signalSemaphore dev zero{SemaphoreSignalInfo.semaphore = timelineOf psync.queue, SemaphoreSignalInfo.value = psync.signal}
+      let
+        deviceDone =
+          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
+          | qid <- deviceQids
+          , let v = maximum [seg.signal | seg <- segments, seg.queue == qid]
+          ]
+        hostDone =
+          [ Submitted{queue = qid, semaphore = timelineOf qid, value = v}
+          | qid <- ordNub [s.queue | s <- hostSyncs]
+          , let v = maximum [s.signal | s <- hostSyncs, s.queue == qid]
+          ]
+      pure (deviceDone <> hostDone)
 
-{- | The per-queue submit plan derived from the schedule.
-
-For each queue: the value its timeline ends the run at, and per foreign
-queue the value to wait for before the submit may start, scoped to the
-stages of the accesses those waits protect. The compiler keeps dropped
-waits' covers on the kept wait, so the derived masks span every consumer
-behind the watermark.
+{- | One planned submit: a contiguous run of one queue's passes whose
+cross-queue waits all hoist to its front.
 -}
-submitPlan :: [FG.PassSync] -> Map FG.QueueId (Word64, Map FG.QueueId (Word64, Vk.PipelineStageFlags))
-submitPlan syncs =
-  Map.fromListWith merge [(s.queue, (s.signal, waitsOf s)) | s <- syncs]
-  where
-    merge (v1, w1) (v2, w2) = (max v1 v2, Map.unionWith mergeWait w1 w2)
-    waitsOf :: FG.PassSync -> Map FG.QueueId (Word64, Vk.PipelineStageFlags)
-    waitsOf s =
-      Map.fromListWith mergeWait [(w.queue, (w.value, waitStage w)) | w <- s.waits]
-    mergeWait (v1, s1) (v2, s2) = (max v1 v2, s1 .|. s2)
+data SegmentPlan = SegmentPlan
+  { queue :: FG.QueueId
+  , fronts :: Map FG.QueueId (Word64, Vk.PipelineStageFlags)
+  {- ^ per producer queue: the timeline value to wait for, at the covered
+  accesses' stages
+  -}
+  , signal :: Word64
+  -- ^ the value the segment's submit signals (its passes' max)
+  }
 
-{- | Whether the plan's hoisted waits turn the queue-level dependencies cyclic.
+{- | Cut each queue's pass stream into segments at wait boundaries.
 
-Hoisting every wait to its queue's submit front is only sound on a DAG;
-a cycle would deadlock the device.
+A pass joins its queue's open segment when every wait it carries is already
+implied by the segment's front (same producer, value not above the front's;
+its stages widen the mask). Anything else — a higher value, a producer the
+segment has not waited on — closes the segment and opens a new one fronted
+by the pass's own waits. Front waits therefore only reference passes
+registered before the segment's first pass, which makes the segment graph
+acyclic by construction: no cycle check, no rejected schedules.
+
+Waiting a mid-segment value completes when that segment's submit does — a
+timeline wait is @>=@, so coarsening the signal points is sound.
 -}
-hoistCyclic :: Map FG.QueueId (Word64, Map FG.QueueId (Word64, Vk.PipelineStageFlags)) -> Bool
-hoistCyclic plan = or [q `Set.member` reachable ds | (q, ds) <- Map.toList edges]
+planSegments :: [FG.PassSync] -> ([SegmentPlan], Map Int Int)
+planSegments syncs = (toList segs, routes)
   where
-    edges :: Map FG.QueueId (Set FG.QueueId)
-    edges = Map.map (Map.keysSet . snd) plan
-    reachable ds =
-      let ds' = ds <> foldMap (\d -> Map.findWithDefault mempty d edges) ds
-      in if ds' == ds then ds else reachable ds'
+    (_, segs, routes) = foldl' step (Map.empty, Seq.empty, Map.empty) syncs
+    step
+      :: (Map FG.QueueId Int, Seq.Seq SegmentPlan, Map Int Int)
+      -> FG.PassSync
+      -> (Map FG.QueueId Int, Seq.Seq SegmentPlan, Map Int Int)
+    step (open, acc, rts) s =
+      let
+        needs = Map.fromListWith mergeWait [(w.queue, (w.value, waitStage w)) | w <- s.waits]
+        covered seg =
+          Map.foldrWithKey
+            (\p (v, _) ok -> ok && maybe False ((v <=) . fst) (Map.lookup p seg.fronts))
+            True
+            needs
+      in
+        case Map.lookup s.queue open of
+          Just ix
+            | seg <- Seq.index acc ix
+            , covered seg ->
+                ( open
+                , Seq.adjust
+                    (\sg -> SegmentPlan{queue = sg.queue, fronts = Map.unionWith mergeWait sg.fronts needs, signal = max sg.signal s.signal})
+                    ix
+                    acc
+                , Map.insert s.passId ix rts
+                )
+          _ ->
+            let ix = Seq.length acc
+            in ( Map.insert s.queue ix open
+               , acc Seq.|> SegmentPlan{queue = s.queue, fronts = needs, signal = s.signal}
+               , Map.insert s.passId ix rts
+               )
+    mergeWait (v1, st1) (v2, st2) = (max v1 v2, st1 .|. st2)
+
+-- | Order-preserving dedup for the short queue lists.
+ordNub :: (Ord a) => [a] -> [a]
+ordNub = go Set.empty
+  where
+    go _ [] = []
+    go seen (x : xs)
+      | x `Set.member` seen = go seen xs
+      | otherwise = x : go (Set.insert x seen) xs
 
 -- | Block until every 'Submitted' timeline reaches its value.
 waitSubmitted :: (MonadIO m) => Vk.Device -> Word64 -> [Submitted] -> m Vk.Result
