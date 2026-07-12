@@ -42,3 +42,4 @@ generate-new/out-xr
 *.bak
 
 .vscode
+.mgmt
