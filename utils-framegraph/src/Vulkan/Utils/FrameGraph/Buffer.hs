@@ -38,7 +38,7 @@ import Data.Vector qualified as V
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, queueBufferBarrier, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, eventedNode, flushBarriers, queueBufferBarrier, recorderQueue)
 import Vulkan.Zero (zero)
 
 -- | A buffer whose stage/access the frame graph tracks and barriers.
@@ -73,11 +73,11 @@ instance FG.Resource ManagedBuffer where
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ usage rec mb = queueTransition rec mb usage
-  preWrite _ usage rec mb = queueTransition rec mb usage
+  preRead h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
+  preWrite h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
 
   -- Producer-side handoff, as in the image adapter.
-  preRelease _ usage rec mb = queueTransition rec mb usage
+  preRelease h _ usage rec mb = queueTransition rec (FG.handleId h) mb usage
 
   describeDesc d = d.info
 
@@ -158,20 +158,22 @@ transitionBuffersTo cb accesses = do
   where
     collect acc@(srcs, dsts, barriers) (mb, usage) = do
       lastQueue <- liftIO (readIORef mb.queueRef)
-      nextTransition lastQueue mb usage >>= \case
+      nextTransition lastQueue False mb usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
 
 {- | The hook path: 'transitionBufferTo' rules, but queued and queue-aware.
 
-Queue hops chain to the driver's semaphore like the image adapter's: the
-driver's wait @dstStageMask@ must cover the usage's stage, and cross-family
-access needs CONCURRENT sharing.
+Queue hops chain to the driver's semaphore and evented accesses to their
+@vkCmdWaitEvents2@, like the image adapter's: the prior synchronization's
+scope must cover the usage's stage, and cross-family access needs
+CONCURRENT sharing.
 -}
-queueTransition :: (MonadIO m) => Recorder -> ManagedBuffer -> Usage -> m ()
-queueTransition rec mb usage = do
+queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedBuffer -> Usage -> m ()
+queueTransition rec node mb usage = do
   queue <- recorderQueue rec
-  nextTransition queue mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  evented <- eventedNode rec node
+  nextTransition queue evented mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBufferBarrier rec srcStage dstStage barrier
 
 {- | Diff the tracked state against the 'Usage''s target and advance it.
@@ -183,20 +185,23 @@ of an already-matching state skips it.
 nextTransition
   :: (MonadIO m)
   => FG.QueueId
+  -> Bool
+  -- ^ the access rides a split-barrier event ('eventedNode')
   -> ManagedBuffer
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.BufferMemoryBarrier))
-nextTransition queue mb usage = liftIO do
+nextTransition queue evented mb usage = liftIO do
   cur <- readIORef mb.stateRef
   lastQueue <- readIORef mb.queueRef
   let
     next = usageState usage
     cross = queue /= lastQueue
-    srcStage = if cross then next.stage else cur.stage
-    srcAccess = if cross then zero else cur.access
-    -- Cross-queue same-state accesses are ordered by the semaphore alone;
-    -- same-queue writes need the barrier even with the state unchanged.
-    needed = cur /= next || (usageWrites usage && not cross)
+    chained = cross || evented
+    srcStage = if chained then next.stage else cur.stage
+    srcAccess = if chained then zero else cur.access
+    -- Semaphore/event-ordered same-state accesses need no barrier of their
+    -- own; unchained writes need one even with the state unchanged.
+    needed = cur /= next || (usageWrites usage && not chained)
   when cross (writeIORef mb.queueRef queue)
   if needed
     then do

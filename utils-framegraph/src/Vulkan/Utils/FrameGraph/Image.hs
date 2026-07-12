@@ -49,7 +49,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, queueBarrier, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, eventedNode, flushBarriers, queueBarrier, recorderQueue)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -138,12 +138,12 @@ instance FG.Resource ManagedImage where
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ usage rec mi = queueTransition rec mi usage
-  preWrite _ usage rec mi = queueTransition rec mi usage
+  preRead h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
+  preWrite h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
 
   -- Producer-side handoff: transition into the consuming access's state in
   -- the producing queue's buffer (fired only for cross-queue data edges).
-  preRelease _ usage rec mi = queueTransition rec mi usage
+  preRelease h _ usage rec mi = queueTransition rec (FG.handleId h) mi usage
 
   describeDesc d = d.info
 
@@ -262,7 +262,7 @@ transitionImagesTo cb accesses = do
   where
     collect acc@(srcs, dsts, barriers) (mi, usage) = do
       lastQueue <- liftIO (readIORef mi.queueRef)
-      nextTransition lastQueue mi usage >>= \case
+      nextTransition lastQueue False mi usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
 
@@ -292,19 +292,21 @@ sliceLayers mi = Vk.ImageSubresourceLayers mi.range.aspectMask mi.range.baseMipL
 {- | The hook path: 'transitionImageTo' rules, but queued and queue-aware.
 
 The barrier goes into the 'Recorder''s per-pass batch (flushed before the
-exec callback), and when the access lands on a different queue than the
-previous one it is chained to the driver's inter-queue semaphore instead —
-source scope becomes the destination stage with no access mask, since the
-semaphore already provides execution ordering and memory availability. The
-driver's wait @dstStageMask@ must cover the usage's stage (both then chain),
-and cross-family access needs CONCURRENT sharing: no ownership
+exec callback), and when the access rides a prior synchronization — a
+cross-queue hop (the driver's semaphore) or a split-barrier event the pass
+waited on ('eventedNode') — it chains to it instead: source scope becomes
+the destination stage with no access mask, since the semaphore/event
+already provides execution ordering and memory availability. The driver's
+wait @dstStageMask@ / event scope must cover the usage's stage (both then
+chain), and cross-family access needs CONCURRENT sharing: no ownership
 release/acquire pair is emitted, so an EXCLUSIVE image's contents are
 undefined on the new family.
 -}
-queueTransition :: (MonadIO m) => Recorder -> ManagedImage -> Usage -> m ()
-queueTransition rec mi usage = do
+queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedImage -> Usage -> m ()
+queueTransition rec node mi usage = do
   queue <- recorderQueue rec
-  nextTransition queue mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  evented <- eventedNode rec node
+  nextTransition queue evented mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBarrier rec srcStage dstStage barrier
 
 {- | Diff the tracked state against the 'Usage''s target and advance it.
@@ -316,20 +318,23 @@ runs.
 nextTransition
   :: (MonadIO m)
   => FG.QueueId
+  -> Bool
+  -- ^ the access rides a split-barrier event ('eventedNode')
   -> ManagedImage
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.ImageMemoryBarrier))
-nextTransition queue mi usage = liftIO do
+nextTransition queue evented mi usage = liftIO do
   cur <- readIORef mi.stateRef
   lastQueue <- readIORef mi.queueRef
   let
     next = usageState usage
     cross = queue /= lastQueue
-    srcStage = if cross then next.stage else cur.stage
-    srcAccess = if cross then zero else cur.access
-    -- Cross-queue same-state accesses are ordered by the semaphore alone;
-    -- same-queue writes need the barrier even with the state unchanged.
-    needed = cur /= next || (usageWrites usage && not cross)
+    chained = cross || evented
+    srcStage = if chained then next.stage else cur.stage
+    srcAccess = if chained then zero else cur.access
+    -- Semaphore/event-ordered same-state accesses need no barrier of their
+    -- own; unchained writes need one even with the state unchanged.
+    needed = cur /= next || (usageWrites usage && not chained)
   when cross (writeIORef mi.queueRef queue)
   if needed
     then do

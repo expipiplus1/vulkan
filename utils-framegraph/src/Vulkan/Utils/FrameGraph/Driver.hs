@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE PatternSynonyms #-}
 
 {-| Package-level multi-queue submit driver.
@@ -22,9 +23,14 @@ cross-frame hazard on a resource the graphs share (a previous frame's
 still-in-flight read is not a pass the compiler can see). Everything inside
 one graph is derived; everything between graphs is an extra.
 
-Like the adapters, this driver realises no queue-family ownership transfers
-(cross-family resources need CONCURRENT sharing) and collapses the
-schedule's split-barrier events into the hooks' immediate barriers.
+The schedule's split-barrier events are realised as synchronization2
+events: one per-run @VkEvent@ each, signalled after the producing pass
+(@vkCmdSetEvent2@) and waited before the consuming one (@vkCmdWaitEvents2@)
+with a dependency built once from both endpoints' covers — the consumer's
+own transitions then chain off the wait ('setEventedNodes'), so the work
+scheduled between the endpoints overlaps the dependency. Like the adapters,
+this driver realises no queue-family ownership transfers (cross-family
+resources need CONCURRENT sharing).
 
 Each queue's pass stream is cut into segments at wait boundaries
 ('planSegments'), one submit per segment, so mid-stream cross-queue
@@ -47,8 +53,10 @@ import Control.Monad (unless, void)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.&.), (.|.))
+import Data.Coerce (coerce)
 import Data.Foldable (foldl', for_, toList, traverse_)
 import Data.IORef (modifyIORef', newIORef, readIORef)
+import Data.IntSet qualified as IntSet
 import Data.List (partition)
 import Data.List.NonEmpty qualified as NE
 import Data.Map.Strict (Map)
@@ -65,14 +73,19 @@ import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import Vulkan.Core10 qualified as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import Vulkan.Core10 qualified as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
+import Vulkan.Core10 qualified as EventCreateInfo (EventCreateInfo (..))
 import Vulkan.Core10 qualified as Vk
+import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlagBits (EVENT_CREATE_DEVICE_ONLY_BIT))
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..), signalSemaphore, waitSemaphoresSafe)
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreSignalInfo (SemaphoreSignalInfo (..))
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreWaitInfo (SemaphoreWaitInfo (..))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2 (..), AccessFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..), PipelineStageFlags2)
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo (..), MemoryBarrier2 (..), cmdSetEvent2, cmdWaitEvents2)
 import Vulkan.Utils.Frame (allocateTimelineSemaphore)
 import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
 import Vulkan.Utils.FrameGraph.Image qualified as Image
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setRecorder, setRecorderHost)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, newRecorder, setEventedNodes, setRecorder, setRecorderHost)
 import Vulkan.Zero (zero)
 
 {- | Frame-level waits and signals spliced into one queue's submit.
@@ -160,6 +173,37 @@ submitGraphQueued dev hostQueue queueTable extras graph = do
           Just ix -> let (_, _, cb) = segmentSlots !! ix in cb
           Nothing -> error "submitGraphQueued: pass outside the planned schedule"
 
+      -- Split-barrier events: one per-run VkEvent per schedule event, its
+      -- dependency info built once from both endpoints' covers (SetEvent2 and
+      -- WaitEvents2 must match exactly).
+      let
+        orScope (a, b) (c, d) = (a .|. c, b .|. d)
+        eventScopes side = Map.fromListWith orScope [(se.event, foldr (orScope . accessScopes) (zero, zero) se.covers) | s <- deviceSyncs, se <- side s]
+        srcScopes = eventScopes (.signalEvents)
+        dstScopes = eventScopes (.waitEvents)
+      events <-
+        Map.traverseWithKey
+          (\_ _ -> snd <$> Vk.withEvent dev zero{EventCreateInfo.flags = EVENT_CREATE_DEVICE_ONLY_BIT} Nothing allocate)
+          srcScopes
+      let
+        eventOf eid = Map.findWithDefault (error "submitGraphQueued: wait on an event never signalled") eid events
+        depInfoOf eid =
+          let
+            (srcStage, srcAccess) = Map.findWithDefault (zero, zero) eid srcScopes
+            (dstStage, dstAccess) = Map.findWithDefault (zero, zero) eid dstScopes
+          in
+            zero
+              { memoryBarriers =
+                  [ zero
+                      { srcStageMask = srcStage
+                      , srcAccessMask = srcAccess
+                      , dstStageMask = dstStage
+                      , dstAccessMask = dstAccess
+                      }
+                  ]
+              }
+              :: DependencyInfo '[]
+
       recorder <- newRecorder (NE.head buffers)
       deferredRef <- liftIO (newIORef [])
       FG.addPreExec graph flushBarriers
@@ -170,8 +214,19 @@ submitGraphQueued dev hostQueue queueTable extras graph = do
               { FG.beforePass = \psync ->
                   if Just psync.queue == hostQueue
                     then setRecorderHost recorder psync.queue
-                    else setRecorder recorder psync.queue (cbFor psync.passId)
-              , FG.afterPass = \_ -> pure ()
+                    else do
+                      let cb = cbFor psync.passId
+                      setRecorder recorder psync.queue cb
+                      setEventedNodes recorder (IntSet.fromList (map FG.accessId (concatMap (.covers) psync.waitEvents)))
+                      unless (null psync.waitEvents) $
+                        cmdWaitEvents2
+                          cb
+                          (V.fromList [eventOf se.event | se <- psync.waitEvents])
+                          (V.fromList [SomeStruct (depInfoOf se.event) | se <- psync.waitEvents])
+              , FG.afterPass = \psync ->
+                  unless (Just psync.queue == hostQueue) $
+                    for_ psync.signalEvents \se ->
+                      cmdSetEvent2 (cbFor psync.passId) (eventOf se.event) (depInfoOf se.event)
               , FG.invoke = \psync body ->
                   if Just psync.queue == hostQueue
                     then modifyIORef' deferredRef ((psync, body) :)
@@ -336,6 +391,33 @@ know about carries no decodable scope and over-synchronizes.
 -}
 accessStage :: FG.Access -> Vk.PipelineStageFlags
 accessStage (FG.Access h flags) = resourceStage h flags
+
+{- | An access's synchronization2 scope (stage + access mask), for an event's
+dependency info.
+
+Same dispatch and over-synchronization rules as 'accessStage'.
+-}
+accessScopes :: FG.Access -> (PipelineStageFlags2, AccessFlags2)
+accessScopes (FG.Access (_ :: FG.Handle r) flags) = case flags of
+  Nothing -> fullScope
+  Just f
+    | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Image.ManagedImage) ->
+        fromState (Image.usageState f).stage (Image.usageState f).access
+    | Just HRefl <- eqTypeRep (typeRep @r) (typeRep @Buffer.ManagedBuffer) ->
+        fromState (Buffer.usageState f).stage (Buffer.usageState f).access
+    | otherwise -> fullScope
+  where
+    fullScope = (PIPELINE_STAGE_2_ALL_COMMANDS_BIT, ACCESS_2_MEMORY_READ_BIT .|. ACCESS_2_MEMORY_WRITE_BIT)
+    fromState st ac
+      | st == zero || st .&. Vk.PIPELINE_STAGE_HOST_BIT /= zero = fullScope
+      | otherwise = (stage2 st, access2 ac)
+
+-- The synchronization1 bits are valid synchronization2 bits verbatim.
+stage2 :: Vk.PipelineStageFlags -> PipelineStageFlags2
+stage2 s = coerce (fromIntegral (coerce s :: Word32) :: Word64)
+
+access2 :: Vk.AccessFlags -> AccessFlags2
+access2 a = coerce (fromIntegral (coerce a :: Word32) :: Word64)
 
 {- | The stage a resource's typed flags decode to, sanitized for a wait mask.
 

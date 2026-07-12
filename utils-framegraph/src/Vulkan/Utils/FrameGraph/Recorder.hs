@@ -17,6 +17,8 @@ module Vulkan.Utils.FrameGraph.Recorder
   , newRecorder
   , setRecorder
   , setRecorderHost
+  , setEventedNodes
+  , eventedNode
   , recorderCommandBuffer
   , recorderQueue
   , queueBarrier
@@ -33,6 +35,8 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, modifyIORef', newIORef, readIORef, writeIORef)
+import Data.IntSet (IntSet)
+import Data.IntSet qualified as IntSet
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NE
 import Data.Vector qualified as V
@@ -54,6 +58,8 @@ data Recorder = Recorder
   , pending :: IORef Barriers
   , host :: IORef Bool
   -- ^ Host mode: the current pass has no command buffer ('setRecorderHost').
+  , evented :: IORef IntSet
+  -- ^ Nodes whose dependency rides a split-barrier event this pass waited on.
   }
 
 -- | The barriers queued for the current pass, OR-ing the stage scopes.
@@ -69,7 +75,7 @@ noBarriers = Barriers zero zero [] []
 
 -- | A recorder pointed at an initial buffer on queue 0; swap it with 'setRecorder'.
 newRecorder :: (MonadIO m) => Vk.CommandBuffer -> m Recorder
-newRecorder cb = liftIO $ Recorder <$> newIORef (FG.QueueId 0, cb) <*> newIORef noBarriers <*> newIORef False
+newRecorder cb = liftIO $ Recorder <$> newIORef (FG.QueueId 0, cb) <*> newIORef noBarriers <*> newIORef False <*> newIORef IntSet.empty
 
 -- | Point the recorder at the queue's command buffer the next passes record into.
 setRecorder :: (MonadIO m) => Recorder -> FG.QueueId -> Vk.CommandBuffer -> m ()
@@ -90,6 +96,21 @@ setRecorderHost :: (MonadIO m) => Recorder -> FG.QueueId -> m ()
 setRecorderHost rec queue = liftIO do
   modifyIORef' rec.slot (\(_, cb) -> (queue, cb))
   writeIORef rec.host True
+
+{- | Declare which nodes the current pass's split-barrier events cover.
+
+The driver sets this per pass from the schedule's 'FG.waitEvents' covers
+(having recorded the @vkCmdWaitEvents2@ they name); the adapters then chain
+those accesses' barriers off the event instead of re-synchronizing — the
+same relaxation a cross-queue access gets from its semaphore. Drivers that
+record no events leave it empty and every barrier stays self-sufficient.
+-}
+setEventedNodes :: (MonadIO m) => Recorder -> IntSet -> m ()
+setEventedNodes rec nodes = liftIO (writeIORef rec.evented nodes)
+
+-- | Whether the node's dependency rides an event this pass waited on.
+eventedNode :: (MonadIO m) => Recorder -> Int -> m Bool
+eventedNode rec node = liftIO (IntSet.member node <$> readIORef rec.evented)
 
 -- | The command buffer currently selected.
 recorderCommandBuffer :: (MonadIO m) => Recorder -> m Vk.CommandBuffer
