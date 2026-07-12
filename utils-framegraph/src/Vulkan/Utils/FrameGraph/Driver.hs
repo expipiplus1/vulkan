@@ -1,14 +1,13 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE PatternSynonyms #-}
 
 {-| Package-level multi-queue submit driver.
 
 'submitGraphQueued' turns a compiled graph into one submit per executing
 device queue: a one-time primary begun from each queue's pool, cross-queue
 ordering realised with per-run timeline semaphores straight off the
-schedule — each wait's value from 'FG.Wait' and its @waitDstStageMask@
-decoded from the accesses it protects ('waitStage'), the same stages the
-resource adapters chain their cross-queue barriers to.
+schedule — each wait's value from 'FG.Wait' and its stage decoded from the
+accesses it protects ('waitStage'), the same stages the resource adapters
+chain their cross-queue barriers to.
 
 The host is just another queue: passes assigned to the designated host
 'FG.QueueId' execute on the CPU after the submits, each waiting its
@@ -53,14 +52,13 @@ module Vulkan.Utils.FrameGraph.Driver
   , accessScopes
   ) where
 
-import Control.Monad (unless, void, when)
+import Control.Monad (unless, void)
 import Control.Monad.IO.Class (MonadIO (..))
-import Control.Monad.Trans.Resource (MonadResource, allocate)
+import Control.Monad.Trans.Resource (MonadResource)
 import Data.Bits ((.&.), (.|.))
 import Data.Coerce (coerce)
 import Data.Foldable (foldl', for_, toList, traverse_)
 import Data.IORef (atomicModifyIORef', modifyIORef', newIORef, readIORef)
-import Data.IntSet qualified as IntSet
 import Data.List (partition)
 import Data.List.NonEmpty qualified as NE
 import Data.Map.Strict (Map)
@@ -74,7 +72,7 @@ import Data.Word (Word32, Word64)
 import Type.Reflection (eqTypeRep, typeRep, type (:~~:) (HRefl))
 
 import Fragr qualified as FG
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import Vulkan.Core10 qualified as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import Vulkan.Core10 qualified as Vk

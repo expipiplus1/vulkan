@@ -36,6 +36,7 @@ module Vulkan.Utils.Frame
   , waitTwice
   , frameInstanceRequirements
   , frameDeviceRequirements
+  , syncDeviceRequirements
   ) where
 
 import Control.Concurrent (forkIO)
@@ -119,19 +120,28 @@ frameInstanceRequirements =
       minBound
   ]
 
-{- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
-'allocateTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
-calling 'Vulkan.Utils.Initialization.allocateDeviceFromRequirements'.
+{- | Timeline semaphores and synchronization2.
+
+The two primitives everything here synchronizes with: 'queueSubmitFrame' and
+'allocateTimelineSemaphore', and any submit built by hand. Both are core in
+1.3 and universally available in practice, so a headless boot wants them too
+— 'frameDeviceRequirements' is these plus a swapchain.
 -}
-frameDeviceRequirements :: [DeviceRequirement]
-frameDeviceRequirements =
+syncDeviceRequirements :: [DeviceRequirement]
+syncDeviceRequirements =
   [U.reqs|
-    VK_KHR_swapchain
     VK_KHR_timeline_semaphore
     PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
     VK_KHR_synchronization2
     PhysicalDeviceSynchronization2Features.synchronization2
   |]
+
+{- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
+'allocateTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
+calling 'Vulkan.Utils.Initialization.allocateDeviceFromRequirements'.
+-}
+frameDeviceRequirements :: [DeviceRequirement]
+frameDeviceRequirements = [U.reqs|VK_KHR_swapchain|] <> syncDeviceRequirements
 
 ----------------------------------------------------------------
 -- Construction
