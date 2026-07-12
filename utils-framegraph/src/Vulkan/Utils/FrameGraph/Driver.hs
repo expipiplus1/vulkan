@@ -6,9 +6,8 @@
 device queue: a one-time primary begun from each queue's pool, cross-queue
 ordering realised with per-run timeline semaphores straight off the
 schedule — each wait's value from 'FG.Wait' and its @waitDstStageMask@
-decoded from the accesses it protects ('waitStage', widened by the pass's
-'FG.Transfer' acquires), the same stages the resource adapters chain their
-cross-queue barriers to.
+decoded from the accesses it protects ('waitStage'), the same stages the
+resource adapters chain their cross-queue barriers to.
 
 The host is just another queue: passes assigned to the designated host
 'FG.QueueId' execute on the CPU after the submits, each waiting its
@@ -224,17 +223,9 @@ submitGraphQueued dev hostQueue queueTable extras graph =
 
 For each queue: the value its timeline ends the run at, and per foreign
 queue the value to wait for before the submit may start, scoped to the
-stages of the accesses those waits protect.
-
-The wait scope is widened by each pass's 'FG.Transfer' acquires: fragr's
-watermark dedup drops a later pass's wait — covers included — when an
-earlier same-queue pass already awaited a higher value, which is sound for
-a full-scope wait but not for a stage-scoped one. Acquires carry every
-cross-queue data edge's consuming flags undeduplicated, so folding them in
-restores those stages. Cross-queue anti-edges (renaming writes) have no
-transfer payload; a dropped anti-edge wait at a stage outside the kept
-covers stays unordered — fixing that needs the compiler to keep dropped
-waits' covers (see TODO-fragr.md).
+stages of the accesses those waits protect. The compiler keeps dropped
+waits' covers on the kept wait, so the derived masks span every consumer
+behind the watermark.
 -}
 submitPlan :: [FG.PassSync] -> Map FG.QueueId (Word64, Map FG.QueueId (Word64, Vk.PipelineStageFlags))
 submitPlan syncs =
@@ -243,14 +234,7 @@ submitPlan syncs =
     merge (v1, w1) (v2, w2) = (max v1 v2, Map.unionWith mergeWait w1 w2)
     waitsOf :: FG.PassSync -> Map FG.QueueId (Word64, Vk.PipelineStageFlags)
     waitsOf s =
-      Map.fromListWith
-        mergeWait
-        ( [(w.queue, (w.value, waitStage w)) | w <- s.waits]
-            -- Value 0 never raises the kept waits' max; acquires only widen the
-            -- stage scope (an acquire's peer always has a kept wait — the first
-            -- cross-queue edge is never above the watermark).
-            <> [(peer, (0, transferStage t)) | t@(FG.Transfer _ peer _) <- s.acquires]
-        )
+      Map.fromListWith mergeWait [(w.queue, (w.value, waitStage w)) | w <- s.waits]
     mergeWait (v1, s1) (v2, s2) = (max v1 v2, s1 .|. s2)
 
 {- | Whether the plan's hoisted waits turn the queue-level dependencies cyclic.
@@ -298,10 +282,6 @@ know about carries no decodable scope and over-synchronizes.
 -}
 accessStage :: FG.Access -> Vk.PipelineStageFlags
 accessStage (FG.Access h flags) = resourceStage h flags
-
--- | 'accessStage' for a transfer's consuming flags.
-transferStage :: FG.Transfer -> Vk.PipelineStageFlags
-transferStage (FG.Transfer h _peer flags) = resourceStage h flags
 
 {- | The stage a resource's typed flags decode to, sanitized for a wait mask.
 
