@@ -46,7 +46,12 @@ not when the frame's render completes.
 -}
 data RecycledResources = RecycledResources
   { rrImageAvailable :: Vk.Semaphore
-  , rrCommandPool :: Vk.CommandPool
+  , rrCommandPools :: Queues Vk.CommandPool
+  {- ^ One command pool per queue role, reset when the frame retires. Roles
+  sharing a queue family share the pool handle, so a frame holds one pool
+  per distinct family — pools are expensive to create and cheap to reset,
+  which is the whole point of recycling them.
+  -}
   }
 
 {- | Assemble a 'VulkanContext' from already-constructed handles. Builds the

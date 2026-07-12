@@ -275,7 +275,7 @@ renderScene opts vc pls window controls startTime bindings f = do
   let dev = vcDevice vc
   _ <-
     submitGraphQueued
-      (frameSubmitConfig dev f imageIndex (const (snd (qGraphics (vcQueues vc)), rrCommandPool f.fRecycled)))
+      (frameSubmitConfig dev f imageIndex (const (snd (qGraphics (vcQueues vc)), qGraphics (rrCommandPools f.fRecycled))))
       graph
   presentFrameImage vc f acquireResult imageIndex
   where

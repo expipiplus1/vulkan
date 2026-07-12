@@ -55,7 +55,7 @@ import UnliftIO.Exception (displayException, mask_)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
-import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, allocateCommandPool, noExtras, presentFrameImage)
+import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, noExtras, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
@@ -379,20 +379,19 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
 
   -- The julia pass is the only compute-queue pass, added iff @dirty@ (and dirty
   -- implies needBlit, so it always survives culling): compute runs exactly when
-  -- an async topology is present and the frame is dirty. Its one-shot pool is
-  -- freed with the frame's scope; the WAR read travels with the slot so the
-  -- compute extras can never lose it.
+  -- an async topology is present and the frame is dirty. Its buffer comes from
+  -- the frame's compute pool (recycled with the frame, never rebuilt); the WAR
+  -- read travels with the slot so the compute extras can never lose it.
   computeSlot <- case topology of
     Just as | dirty -> do
-      computePool <- allocateCommandPool dev as.computeFamily
       prevBlitDone <- liftIO (readIORef as.lastBlitDone)
-      pure (Just (as.computeQueue, computePool, prevBlitDone))
+      pure (Just (as.computeQueue, qCompute (rrCommandPools (fRecycled f)), prevBlitDone))
     _ -> pure Nothing
 
   let
     queueTable q = case computeSlot of
       Just (queue, pool, _) | q == computeQueue -> (queue, pool)
-      _ -> (snd (qGraphics (vcQueues vc)), rrCommandPool (fRecycled f))
+      _ -> (snd (qGraphics (vcQueues vc)), qGraphics (rrCommandPools (fRecycled f)))
     base = frameSubmitConfig dev f imageIndex queueTable
     extrasFor q
       -- The cross-frame WAR wait: the offscreen image the julia pass overwrites

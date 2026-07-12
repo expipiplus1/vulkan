@@ -43,7 +43,10 @@ import Control.Exception (finally, mask_, throwIO)
 import Control.Monad
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource
+import Data.Foldable (for_, toList)
 import Data.IORef
+import Data.List (nub)
+import qualified Data.Map.Strict as Map
 import qualified Data.Vector as V
 import Data.Word
 import System.IO (hPutStrLn, stderr)
@@ -209,11 +212,11 @@ waitAndRecycle vc f = do
       case r of
         Vk.TIMEOUT -> hPutStrLn stderr "Frame wait timed out (1s) — GPU may be hung"
         _ -> pure ()
-    -- Pool reuse: reset, dropping all recorded buffers.
-    Vk.resetCommandPool
-      (vcDevice vc)
-      (rrCommandPool (fRecycled f))
-      Vk.COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+    -- Pool reuse: reset each distinct pool, dropping all recorded buffers.
+    -- No RELEASE_RESOURCES: the point of recycling a pool is to keep its
+    -- arena warm for the next frame's buffers.
+    for_ (nub (toList (rrCommandPools (fRecycled f)))) $ \pool ->
+      Vk.resetCommandPool (vcDevice vc) pool zero
     -- Free the per-frame ResourceT scope. Must precede the channel deposit so
     -- the deposit signals "all per-frame cleanup done" — otherwise the next
     -- frame could pick up the recycled pool while this frame's cleanup is
@@ -246,7 +249,7 @@ recordCommands vc Frame{fRecycled} record = do
     Vk.withCommandBuffers
       (vcDevice vc)
       zero
-        { Vk.commandPool = rrCommandPool fRecycled
+        { Vk.commandPool = qGraphics (rrCommandPools fRecycled)
         , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
         , Vk.commandBufferCount = 1
         }
@@ -398,11 +401,15 @@ mkRecycledResources vc = do
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
       Nothing
       allocate
-  rrCommandPool <- allocateCommandPool dev qfi
+  -- One pool per distinct family, shared by every role on it.
+  byFamily <-
+    fmap Map.fromList $
+      traverse (\fam -> fmap (fam,) (allocateCommandPool dev fam)) (nub (toList families))
+  let rrCommandPools = fmap (byFamily Map.!) families
   pure RecycledResources{..}
   where
     dev = vcDevice vc
-    (QueueFamilyIndex qfi, _) = qGraphics (vcQueues vc)
+    families = fmap (\(QueueFamilyIndex fam, _) -> fam) (vcQueues vc)
 
 -- | Allocate a command pool for the family, released with the scope.
 allocateCommandPool :: (MonadResource m) => Vk.Device -> Word32 -> m Vk.CommandPool

@@ -142,6 +142,8 @@ render opts allocator dev queues async = do
   scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedFamilies True
   (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat extent
   cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
+  -- Pools once, for every graph run below; only the buffers are per-run.
+  queueTable <- allocateQueueTable dev queues async
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
@@ -174,7 +176,7 @@ render opts allocator dev queues async = do
           liftIO (writeIORef result (Just img))
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
-        runGraph dev queues async graph
+        runGraph dev queueTable graph
         liftIO (readIORef result) >>= maybe (error "headless: the host readback pass did not run") pure
 
   -- One run: the host meter pass sits between luminance and tonemap, so the
@@ -225,25 +227,36 @@ computeQueueId = maybe FG.defaultQueue (const computeQueue)
 'submitGraphQueued' derives the cross-queue waits from the compiled schedule
 (async: the shade/readback submit chains off the geometry work at exactly the
 handed-over accesses' stages); this driver only maps 'FG.QueueId's to queues.
+
+The queue table is built once ('allocateQueueTable') and reused by every
+graph run: the buffers are per-run (freed with the enclosing scope), the
+pools are not — they are expensive to create and exist to be reused.
 -}
 runGraph
   :: Vk.Device
-  -> Queues (QueueFamilyIndex, Vk.Queue)
-  -> Maybe Word32
+  -> (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
-runGraph dev queues async graph = do
+runGraph dev queueTable graph = do
+  submitted <- submitGraphQueued (submitConfig dev queueTable){hostQueue = Just hostQueue} graph
+  _ <- waitSubmitted dev maxBound submitted
+  pure ()
+
+-- | One command pool per queue the graph uses, for the whole run.
+allocateQueueTable
+  :: Vk.Device
+  -> Queues (QueueFamilyIndex, Vk.Queue)
+  -> Maybe Word32
+  -> ResourceT IO (FG.QueueId -> (Vk.Queue, Vk.CommandPool))
+allocateQueueTable dev queues async = do
   let (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
   graphicsPool <- allocateCommandPool dev graphicsFamily
   computeSlot <- forM async \computeFamily -> do
     pool <- allocateCommandPool dev computeFamily
     pure (snd (qCompute queues), pool)
-  let queueTable q = case computeSlot of
-        Just slot | q == computeQueue -> slot
-        _ -> (graphicsQueue, graphicsPool)
-  submitted <- submitGraphQueued (submitConfig dev queueTable){hostQueue = Just hostQueue} graph
-  _ <- waitSubmitted dev maxBound submitted
-  pure ()
+  pure \q -> case computeSlot of
+    Just slot | q == computeQueue -> slot
+    _ -> (graphicsQueue, graphicsPool)
 
 ----------------------------------------------------------------
 -- Debug dumps (intermediate buffers)
