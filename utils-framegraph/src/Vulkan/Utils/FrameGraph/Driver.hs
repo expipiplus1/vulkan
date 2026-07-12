@@ -73,8 +73,6 @@ import Type.Reflection (eqTypeRep, typeRep, type (:~~:) (HRefl))
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
-import Vulkan.Core10 qualified as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
-import Vulkan.Core10 qualified as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import Vulkan.Core10 qualified as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (signalSemaphore, waitSemaphoresSafe)
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore qualified as SemaphoreSignalInfo (SemaphoreSignalInfo (..))

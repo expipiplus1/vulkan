@@ -38,7 +38,7 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits ((.|.))
 import Data.Foldable (for_)
-import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, modifyIORef', newIORef, readIORef, writeIORef)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as IntSet
 import Data.Vector (Vector)
