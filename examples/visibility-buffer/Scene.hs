@@ -895,8 +895,10 @@ addScenePasses
   -- ^ camera eye position
   -> Float
   -- ^ scene time (orb positions, and the reach the cull filters occluders by)
-  -> Maybe (Exposure.Meter, FG.QueueId)
-  -- ^ meter the exposure in-graph: a host pass on the given queue
+  -> Maybe (Float -> IO Float, FG.QueueId)
+  {- ^ meter the exposure in-graph: a host pass on the given queue maps this
+  frame's mean luminance to the exposure it tonemaps at
+  -}
   -> Word32
   -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao)
   -> ResourceT IO PassOutputs
@@ -1094,7 +1096,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t hostMeter debugM
             -- meters this frame's tonemap.
             FG.addPass graph "host.meter" (meterSetup hostQ lumWritten exposureH) \_ -> liftIO do
               lum <- readLuminance scene
-              setExposure scene (Exposure.target meter lum)
+              setExposure scene =<< meter lum
 
   forM_ scene.probe \probe -> do
     probeH <- importManagedImage graph "bloom.probe" probe

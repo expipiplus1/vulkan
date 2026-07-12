@@ -28,10 +28,11 @@ import Control.Exception (handle)
 import Control.Monad (forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, closeInternalState, createInternalState, register, runInternalState, runResourceT)
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
-import Data.List.NonEmpty (NonEmpty ((:|)))
+import Data.Foldable (for_)
+import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
 import qualified Data.Text.IO as TIO
 import Data.Vector (Vector)
+import qualified Data.Vector as V
 import Data.Word (Word32)
 import qualified Fragr as FG
 import qualified Fragr.Dot as Dot
@@ -42,10 +43,10 @@ import UnliftIO.Exception (displayException)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
-import Vulkan.Utils.FrameGraph.Driver (allocatePrimary)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
+import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), SubmitExtras (..), Submitted (..), noExtras, submitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
-import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recordingCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
@@ -133,6 +134,10 @@ windowConfig =
           }
     }
 
+-- | The host queue: the meter pass runs on the frame's recycle thread.
+hostQueue :: FG.QueueId
+hostQueue = FG.QueueId 1
+
 -- | Console name of a presented view (the digit key / @--debug-mode@ value).
 viewName :: Word32 -> String
 viewName n = maybe (show n) (\name -> show n <> " " <> name) (lookup n Options.debugViews)
@@ -219,22 +224,25 @@ renderScene opts vc pls window controls startTime bindings f = do
     sc = fSwapchain f
     extent = sc.sExtent
 
-  -- Auto-exposure over the previous frame's mean luminance (the readback lags a
-  -- frame; the adaptation hides it — an in-graph host meter would stall the
-  -- loop mid-frame instead). Held while a debug view is up: the luminance
-  -- pass isn't even added then ("Scene"), so the readback would be stale.
-  -- The smoothed value lands in the metering buffer the tonemap reads.
-  liftIO $ do
-    e <- readIORef bindings.exposure
-    when (mode == 0) do
-      prevLum <- Scene.readLuminance bindings.scene
-      let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
-      writeIORef bindings.exposure e'
-      Scene.setExposure bindings.scene e'
+  -- Auto-exposure: the host meter pass maps this frame's own mean luminance
+  -- through the EMA — same-frame metering, no readback lag. It runs on the
+  -- frame's recycle thread ('fDeferredWork'), so the render loop never
+  -- blocks; only the tonemap's segment waits on the GPU.
+  let meterFn lum = do
+        e <- readIORef bindings.exposure
+        let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter lum)
+        writeIORef bindings.exposure e'
+        pure e'
 
   graph <- FG.newFrameGraph
+  -- Move the orbs ahead of the scene passes; the cull and the shadow refresh
+  -- consume the new positions, on the same queue (the pass's own barrier
+  -- covers them).
+  FG.addPass_ graph "orbs.upload" FG.setSideEffect do
+    cb <- recordingCommandBuffer
+    Scene.recordOrbUploads cb bindings.scene t
   -- Single-queue: the compute passes stay on the default (graphics) queue.
-  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t Nothing mode
+  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t (Just (meterFn, hostQueue)) mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
@@ -263,14 +271,27 @@ renderScene opts vc pls window controls startTime bindings f = do
     TIO.writeFile "visibility-buffer-live.dot" =<< Dot.dump graph
     sayErrString ("graph dumped to visibility-buffer-live.dot, presenting " <> viewName mode)
 
-  let dev = vcDevice vc
-  graphicsCb <- allocatePrimary dev (rrCommandPool f.fRecycled)
-  -- Move the orbs ahead of the graph; the cull and the shadow refresh that
-  -- consume the new positions are graph passes now ("Scene").
-  Scene.recordOrbUploads graphicsCb bindings.scene t
-  recordGraph (const graphicsCb) (graphicsCb :| []) graph
-
-  queueSubmitFrame vc f imageIndex [graphicsCb]
+  let
+    dev = vcDevice vc
+    renderFinished = sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex
+  _ <-
+    submitGraphQueued
+      (submitConfig dev (const (snd (qGraphics (vcQueues vc)), rrCommandPool f.fRecycled)))
+        { hostQueue = Just hostQueue
+        , extras = \q ->
+            if q == hostQueue
+              then noExtras
+              else
+                SubmitExtras
+                  { waits = [(rrImageAvailable f.fRecycled, Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0)]
+                  , signals = [(renderFinished, 0), (fHostTimeline f, fIndex f)]
+                  }
+        , register = \submitted ->
+            for_ submitted \s ->
+              atomicModifyIORef' (fGPUWork f) (\jobs -> ((s.semaphore, s.value) : jobs, ()))
+        , deferHost = Just (\hostTail -> modifyIORef' (fDeferredWork f) (hostTail :))
+        }
+      graph
   presentFrameImage vc f acquireResult imageIndex
   where
     blitSetup srcH swapchainH = do

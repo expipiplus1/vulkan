@@ -149,7 +149,7 @@ render opts allocator dev queues async = do
       -- one's pyramid (same camera), so the depth-void check covers the culling too.
       runMode debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 (Just (opts.meter, hostQueue)) debugMode
+        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 (Just (pure . Exposure.target opts.meter, hostQueue)) debugMode
         cpuH <- importScratchImage graph "cpu" cpuManaged
         cpuWritten <- FG.addPass graph "readback" (readbackSetup outs.displayOut cpuH) \_ -> do
           -- The declared accesses moved display to TRANSFER_SRC and the cpu

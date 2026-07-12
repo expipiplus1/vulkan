@@ -77,6 +77,12 @@ data Frame = Frame
   {- ^ (Timeline semaphore, value) pairs the host wait thread will block on.
   Appended to by 'queueSubmitFrame'.
   -}
+  , fDeferredWork :: IORef [IO ()]
+  {- ^ Host work the recycle thread runs before the 'fGPUWork' wait — e.g.
+  a frame graph's host-pass tail, which blocks on its own timeline values
+  and signals values listed in 'fGPUWork'. Runs in registration order, off
+  the render thread.
+  -}
   , fResources :: (ReleaseKey, InternalState)
   {- ^ ResourceT scope for frame-local allocations; closed when the frame
   retires. The 'ReleaseKey' lives in the outer ResourceT so the
@@ -126,6 +132,7 @@ initialFrame vc fSwapchain = do
   liftIO (vcRecycleBin vc spare)
   (_, fHostTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
+  fDeferredWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
   liftIO $ runInternalState (resourceTRefCount (sRelease fSwapchain)) (snd fResources)
   pure Frame{fIndex = 1, ..}
@@ -148,6 +155,7 @@ advanceFrame vc sc f = do
         Left block -> block
         Right rr -> pure rr
   fGPUWork <- liftIO $ newIORef mempty
+  fDeferredWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
   liftIO $ runInternalState (resourceTRefCount (sRelease sc)) (snd fResources)
   pure
@@ -157,6 +165,7 @@ advanceFrame vc sc f = do
       , fRecycled
       , fHostTimeline = fHostTimeline f
       , fGPUWork
+      , fDeferredWork
       , fResources
       }
 
@@ -165,8 +174,9 @@ advanceFrame vc sc f = do
 ----------------------------------------------------------------
 
 {- | Run a per-frame action against this frame's per-frame ResourceT scope,
-then asynchronously wait for the GPU work and recycle. The wait/recycle
-runs in a forked thread so the next frame can begin recording immediately.
+then asynchronously wait for the GPU work and recycle. The deferred host
+work and the wait/recycle run in a forked thread so the next frame can
+begin recording immediately.
 
 Anything 'allocate'd inside @action@ is freed when the frame retires.
 -}
@@ -178,7 +188,11 @@ runFrame vc f action =
 waitAndRecycle :: VulkanContext -> Frame -> IO ()
 waitAndRecycle vc f = do
   waits <- readIORef (fGPUWork f)
+  deferred <- readIORef (fDeferredWork f)
   void . forkIO $ do
+    -- The frame's host work first: it blocks on its own timeline values and
+    -- signals values the wait below (and in-flight submits) depend on.
+    sequence_ (reverse deferred)
     unless (null waits) $ do
       let waitInfo =
             zero
