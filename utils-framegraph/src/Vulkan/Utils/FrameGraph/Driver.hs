@@ -116,7 +116,8 @@ data SubmitConfig = SubmitConfig
   -- ^ the host queue: its passes execute on the CPU after the submits
   , extras :: FG.QueueId -> SubmitExtras
   , register :: [Submitted] -> IO ()
-  {- ^ Called with every queue's completion BEFORE anything is submitted:
+  {- ^ Called with every queue's completion once the graph is recorded and
+  before anything is submitted:
   wire it to the frame's GPU-work list ('Vulkan.Utils.Frame.fGPUWork') and
   reclamation waits the whole graph with no hand-rolled sync — and no race
   when a submit fails midway, since a registered-but-never-signalled value
@@ -266,9 +267,6 @@ submitGraphQueued config graph = do
           , let v = maximum [s.signal | s <- hostSyncs, s.queue == qid]
           ]
         done = deviceDone <> hostDone
-      -- Before anything records or submits: a value that never signals only
-      -- costs the recycler its wait timeout.
-      liftIO (config.register done)
 
       recorder <- newRecorder (NE.head buffers)
       deferredRef <- liftIO (newIORef [])
@@ -301,6 +299,12 @@ submitGraphQueued config graph = do
               }
       FG.executeQueued graph backend Nothing recorder ()
       traverse_ Vk.endCommandBuffer buffers
+
+      -- Recorded, nothing submitted yet: registering here means a failure while
+      -- recording never leaves the recycler waiting on timelines the unwinding
+      -- scope destroys, while a submit failing midway still only costs it the
+      -- wait timeout.
+      liftIO (config.register done)
 
       let
         firstSeg = Map.fromListWith (\_ old -> old) [(seg.queue, ix) | (ix, (seg, _, _)) <- zip [0 :: Int ..] segmentSlots]

@@ -19,6 +19,7 @@ module Vulkan.Utils.FrameGraph.Buffer
   , importManagedBuffer
   , importScratchBuffer
   , describedAs
+  , sharedAcrossQueues
   , BufferState (..)
   , freshState
   , Usage (..)
@@ -38,14 +39,21 @@ import Data.Vector qualified as V
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, eventedNode, flushBarriers, queueBufferBarrier, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, eventedNode, flushBarriers, queueBufferBarrier, recorderHost, recorderQueue)
 import Vulkan.Zero (zero)
 
 -- | A buffer whose stage/access the frame graph tracks and barriers.
 data ManagedBuffer = ManagedBuffer
   { buffer :: Vk.Buffer
   , stateRef :: IORef BufferState
-  , queueRef :: IORef FG.QueueId
+  , queueRef :: IORef (Maybe FG.QueueId)
+  -- ^ The device queue that last accessed it; 'Nothing' until one has.
+  , shared :: Bool
+  {- ^ The allocation is @SHARING_MODE_CONCURRENT@ across the families the
+  graph uses it on ('sharedAcrossQueues'). An unmarked resource accessed
+  across queues is fatal: no ownership transfer is emitted, so its contents
+  would be undefined on the new family.
+  -}
   , info :: Text
   -- ^ Human-readable summary shown by visualization output; attach with 'describedAs'.
   }
@@ -55,12 +63,22 @@ data ManagedBuffer = ManagedBuffer
 newManagedBuffer :: (MonadIO m) => Vk.Buffer -> m ManagedBuffer
 newManagedBuffer buffer = liftIO do
   stateRef <- newIORef freshState
-  queueRef <- newIORef (FG.QueueId 0)
-  pure ManagedBuffer{buffer, stateRef, queueRef, info = ""}
+  queueRef <- newIORef Nothing
+  pure ManagedBuffer{buffer, stateRef, queueRef, shared = False, info = ""}
 
 -- | Attach a summary shown next to the resource's name in visualization output.
 describedAs :: Text -> ManagedBuffer -> ManagedBuffer
 describedAs t mb = mb{info = t}
+
+{- | Mark the allocation as @SHARING_MODE_CONCURRENT@ across the families it
+is used on.
+
+Required before any cross-queue access: the adapters emit no ownership
+transfer, so an @EXCLUSIVE@ resource's contents are undefined on the new
+family. Crossing queues without this is fatal, not silent.
+-}
+sharedAcrossQueues :: ManagedBuffer -> ManagedBuffer
+sharedAcrossQueues mb = mb{shared = True}
 
 instance FG.Resource ManagedBuffer where
   type Desc ManagedBuffer = BufferDesc
@@ -158,7 +176,7 @@ transitionBuffersTo cb accesses = do
   where
     collect acc@(srcs, dsts, barriers) (mb, usage) = do
       lastQueue <- liftIO (readIORef mb.queueRef)
-      nextTransition lastQueue False mb usage >>= \case
+      nextTransition (maybe HostAccess DeviceQueue lastQueue) False mb usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
 
@@ -173,7 +191,8 @@ queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedBuffer -> Usage -> m
 queueTransition rec node mb usage = do
   queue <- recorderQueue rec
   evented <- eventedNode rec node
-  nextTransition queue evented mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  hosted <- recorderHost rec
+  nextTransition (if hosted then HostAccess else DeviceQueue queue) evented mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBufferBarrier rec srcStage dstStage barrier
 
 {- | Diff the tracked state against the 'Usage''s target and advance it.
@@ -184,25 +203,38 @@ of an already-matching state skips it.
 -}
 nextTransition
   :: (MonadIO m)
-  => FG.QueueId
+  => Accessor
   -> Bool
   -- ^ the access rides a split-barrier event ('eventedNode')
   -> ManagedBuffer
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.BufferMemoryBarrier))
-nextTransition queue evented mb usage = liftIO do
+nextTransition accessor evented mb usage = liftIO do
   cur <- readIORef mb.stateRef
   lastQueue <- readIORef mb.queueRef
   let
     next = usageState usage
-    cross = queue /= lastQueue
+    -- A first access owns nothing yet, and the host is not a queue family (its
+    -- accesses order through the schedule's timeline and the producer's
+    -- release barrier), so neither crosses ownership.
+    cross = case (accessor, lastQueue) of
+      (DeviceQueue q, Just prev) -> q /= prev
+      _ -> False
     chained = cross || evented
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
     -- own; unchained writes need one even with the state unchanged.
     needed = cur /= next || (usageWrites usage && not chained)
-  when cross (writeIORef mb.queueRef queue)
+  when (cross && not mb.shared) $
+    error
+      ( "Vulkan.Utils.FrameGraph: cross-queue access to an unshared resource ("
+          <> show mb.info
+          <> "): mark it 'sharedAcrossQueues' (and allocate it CONCURRENT), or keep it on one queue"
+      )
+  case accessor of
+    DeviceQueue q -> writeIORef mb.queueRef (Just q)
+    HostAccess -> pure ()
   if needed
     then do
       writeIORef mb.stateRef next

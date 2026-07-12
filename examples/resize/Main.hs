@@ -57,7 +57,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, noExtras, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, sharedAcrossQueues)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -215,7 +215,11 @@ allocateBindings dev allocator jp sharedFamilies sc = do
   (poolKey, juliaSets) <-
     allocateJuliaDescriptorSets dev jp [view]
 
-  offscreen <- newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
+  -- CONCURRENT under an async topology (see 'offscreenImageInfo'), which is
+  -- also the only topology that accesses it across queues.
+  offscreen <-
+    maybe id (const sharedAcrossQueues) sharedFamilies
+      <$> newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
   swapImages <- newSwapchainImages sc
   lastConstants <- liftIO (newIORef Nothing)
   freshImages <- liftIO (newIORef IntSet.empty)

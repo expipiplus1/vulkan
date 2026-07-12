@@ -19,6 +19,8 @@ module Vulkan.Utils.FrameGraph.Recorder
   , setRecorderHost
   , setEventedNodes
   , eventedNode
+  , recorderHost
+  , Accessor (..)
   , recorderCommandBuffer
   , recorderQueue
   , queueBarrier
@@ -111,6 +113,21 @@ setEventedNodes rec nodes = liftIO (writeIORef rec.evented nodes)
 -- | Whether the node's dependency rides an event this pass waited on.
 eventedNode :: (MonadIO m) => Recorder -> Int -> m Bool
 eventedNode rec node = liftIO (IntSet.member node <$> readIORef rec.evented)
+
+{- | Who is performing an access: a device queue, or the host.
+
+The host is not a queue family — its accesses order through the schedule's
+timeline and the producer's release barrier, so they never transfer
+ownership.
+-}
+data Accessor
+  = DeviceQueue FG.QueueId
+  | HostAccess
+  deriving stock (Eq, Show)
+
+-- | Whether the current pass runs on the host ('setRecorderHost').
+recorderHost :: (MonadIO m) => Recorder -> m Bool
+recorderHost rec = liftIO (readIORef rec.host)
 
 -- | The command buffer currently selected.
 recorderCommandBuffer :: (MonadIO m) => Recorder -> m Vk.CommandBuffer

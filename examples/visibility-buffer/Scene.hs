@@ -73,7 +73,7 @@ import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, transitionImageTo, transitionImagesTo)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, sharedAcrossQueues, transitionImageTo, transitionImagesTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.Pipeline (Pipeline)
 import qualified Vulkan.Utils.Pipeline as Pipeline
@@ -479,7 +479,7 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- graph and the debug dumps pick up from the state it left.
   let
     staticCubes = Lights.slots - Lights.orbCount
-    momentsSlice = describedSlice shadowFormat (Vk.Extent2D shadowRes shadowRes) shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT
+    momentsSlice base n = sharedAcrossQueues <$> describedSlice shadowFormat (Vk.Extent2D shadowRes shadowRes) shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT base n
   bakedMoments <-
     if staticCubes == 0
       then pure Nothing
@@ -531,12 +531,12 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
 
   -- Wrap the cull's working set for graph tracking. The buffers start fresh:
   -- the setup submit above was fenced.
-  lightsMB <- Buf.describedAs "lights" <$> Buf.newManagedBuffer lights
-  viewProjMB <- Buf.describedAs "shadow view-projections" <$> Buf.newManagedBuffer viewProjBuffer
-  objectsMB <- Buf.describedAs "object table" <$> Buf.newManagedBuffer objectsBuffer
-  indirectMB <- Buf.describedAs "draw commands" <$> Buf.newManagedBuffer indirect
-  visMainMB <- Buf.describedAs "camera instance remap" <$> Buf.newManagedBuffer visMain
-  visOccMB <- Buf.describedAs "occluder instance remap" <$> Buf.newManagedBuffer visOcc
+  lightsMB <- Buf.sharedAcrossQueues . Buf.describedAs "lights" <$> Buf.newManagedBuffer lights
+  viewProjMB <- Buf.sharedAcrossQueues . Buf.describedAs "shadow view-projections" <$> Buf.newManagedBuffer viewProjBuffer
+  objectsMB <- Buf.sharedAcrossQueues . Buf.describedAs "object table" <$> Buf.newManagedBuffer objectsBuffer
+  indirectMB <- Buf.sharedAcrossQueues . Buf.describedAs "draw commands" <$> Buf.newManagedBuffer indirect
+  visMainMB <- Buf.sharedAcrossQueues . Buf.describedAs "camera instance remap" <$> Buf.newManagedBuffer visMain
+  visOccMB <- Buf.sharedAcrossQueues . Buf.describedAs "occluder instance remap" <$> Buf.newManagedBuffer visOcc
 
   pure
     SceneStatic
@@ -608,12 +608,13 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   (_, (toneImage, toneView)) <-
     allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "tone"
   (_, (displayImage, displayView)) <-
-    allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
-  vis <- describedImage visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
+    -- Read by the headless readback copy on the graphics queue.
+    allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "display"
+  vis <- sharedAcrossQueues <$> describedImage visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
   depth <- describedImage depthFormat extent depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   colorHDR <- describedImage hdrFormat extent colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
   tone <- describedImage hdrFormat extent toneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  display <- describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
+  display <- sharedAcrossQueues <$> describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
 
   -- Bloom pyramid: one mipped image (base = half the scene extent); each mip is a
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).
@@ -698,7 +699,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   (_, (aoBlurImage, aoBlurView)) <-
     allocateTarget allocator dev aoFormat halfExtent Vk.IMAGE_USAGE_STORAGE_BIT Vk.IMAGE_ASPECT_COLOR_BIT Nothing "aoBlur"
   normals <- describedImage normalsFormat halfExtent normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
-  ao <- describedImage aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
+  ao <- sharedAcrossQueues <$> describedImage aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
   aoBlur <- describedImage aoFormat halfExtent aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
   normalsSet <- Ssao.allocateNormalsSet dev pls.ssao.normals visView normalsView static.vertexBuffer static.objectsBuffer static.meshTableBuffer
   aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hizFullView normalsView aoView
