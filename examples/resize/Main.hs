@@ -6,13 +6,14 @@
 {-| Julia-set viewer, driven by a per-frame 'FG.FrameGraph' the same way
 regardless of queue topology.
 
-The fractal only changes when the window resizes or the cursor moves; its
-steady state is "re-present the same image". Each frame declares a graph of up
-to three passes — @julia@ (compute → offscreen), @blit@ (offscreen → swapchain)
-and a terminal 'presentSwapchain' (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
-parameters changed and @blit@ only when the acquired swapchain image does not
-already hold the current fractal. fragr places exactly the barriers the
-surviving passes need: a fully idle frame records /nothing/ and just re-presents.
+The fractal only changes when the window resizes or the cursor moves. Each frame
+declares a graph of up to three passes — @julia@ (compute → offscreen), @blit@
+(offscreen → swapchain) and a terminal 'presentSwapchain' (swapchain →
+PRESENT_SRC) — adding @julia@ only when the fractal parameters changed. The blit
+runs every frame: a presented image's contents are not preserved for the next
+acquire (on MoltenVK each acquire drops the image's @CAMetalDrawable@), so every
+acquired image has to be painted. fragr places exactly the barriers the surviving
+passes need: an idle frame is blit-and-present, with no compute and no handover.
 
 The one topology-dependent line is @'FG.setQueue' computeQueueId@ on the
 @julia@ pass, where @computeQueueId@ is chosen once at startup: the graphics
@@ -39,8 +40,6 @@ import Control.Monad.Trans.Resource
 import Data.Bits ((.|.))
 import Data.Foldable (for_)
 import Data.IORef (IORef, modifyIORef', newIORef, readIORef, writeIORef)
-import Data.IntSet (IntSet)
-import qualified Data.IntSet as IntSet
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Word (Word32, Word64)
@@ -195,8 +194,6 @@ data Bindings = Bindings
   -- ^ One layout-tracked wrapper per swapchain image.
   , lastConstants :: IORef (Maybe JuliaConstants)
   -- ^ Fractal parameters last computed; a change makes the frame dirty.
-  , freshImages :: IORef IntSet
-  -- ^ Swapchain image indices that already hold the current fractal.
   }
 
 allocateBindings
@@ -224,7 +221,6 @@ allocateBindings dev allocator jp sharedFamilies sc = do
       <$> newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
   swapImages <- newSwapchainImages sc
   lastConstants <- liftIO (newIORef Nothing)
-  freshImages <- liftIO (newIORef IntSet.empty)
 
   -- runWindowLoop fires exactly one release key on resize: free the pool (and
   -- its sets) first, then the view, then the image. The swapchain images belong
@@ -237,7 +233,6 @@ allocateBindings dev allocator jp sharedFamilies sc = do
         , juliaDescriptorSet = V.head juliaSets
         , swapImages
         , lastConstants
-        , freshImages
         }
     , bindingsKey
     )
@@ -305,12 +300,6 @@ renderJulia vc jp topology colorRef bindings f = do
   let dirty = Just constants /= lastConstants
 
   (acquireResult, imageIndex) <- acquireFrameImage vc f
-  freshImages <- liftIO (readIORef bindings.freshImages)
-  let
-    ix = fromIntegral imageIndex :: Int
-    -- Compute only on a parameter change; blit unless this image already holds
-    -- the current fractal (a dirty frame invalidates every other image).
-    needBlit = dirty || not (IntSet.member ix freshImages)
 
   graph <- FG.newFrameGraph
   offscreenH <- importManagedImage graph "offscreen" bindings.offscreen
@@ -324,29 +313,25 @@ renderJulia vc jp topology colorRef bindings f = do
         dispatchJulia jp (sExtent sc) constants colorPhase bindings.juliaDescriptorSet cb
       else pure offscreenH
 
+  -- Every acquired image is repainted: a presented image's contents do not
+  -- carry over to its next acquire.
   swapchainReady <-
-    if needBlit
-      then FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted -> do
-        cb <- recordingCommandBuffer
-        blitImage (sExtent sc) bindings.offscreen.image swapManaged.image cb
-      else pure swapchainH
+    FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted -> do
+      cb <- recordingCommandBuffer
+      blitImage (sExtent sc) bindings.offscreen.image swapManaged.image cb
 
-  -- Always present, even when every render pass got culled (an idle re-present).
   presentSwapchain graph swapchainReady
 
   FG.compile graph
-  executeAdaptive vc f imageIndex topology dirty needBlit graph
+  executeAdaptive vc f imageIndex topology dirty graph
   presentFrameImage vc f acquireResult imageIndex
 
-  liftIO $ do
+  liftIO $
     when dirty $ do
       writeIORef bindings.lastConstants (Just constants)
       -- Advance the colour phase once per recompute, so the palette visibly
       -- rotates exactly on the frames that render (and freezes when idle).
       modifyIORef' colorRef (+ colorStep)
-    when needBlit $
-      modifyIORef' bindings.freshImages $
-        if dirty then const (IntSet.singleton ix) else IntSet.insert ix
   where
     sc = fSwapchain f
     juliaSetup offscreenH = do
@@ -376,18 +361,16 @@ executeAdaptive
   -> Maybe AsyncSetup
   -> Bool
   -- ^ whether the julia (compute) pass ran this frame
-  -> Bool
-  -- ^ whether this frame blits (reads the offscreen image) — for the WAR fence
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
-executeAdaptive vc f imageIndex topology dirty didBlit graph = do
+executeAdaptive vc f imageIndex topology dirty graph = do
   let dev = vcDevice vc
 
-  -- The julia pass is the only compute-queue pass, added iff @dirty@ (and dirty
-  -- implies needBlit, so it always survives culling): compute runs exactly when
-  -- an async topology is present and the frame is dirty. Its buffer comes from
-  -- the frame's compute pool (recycled with the frame, never rebuilt); the WAR
-  -- read travels with the slot so the compute extras can never lose it.
+  -- The julia pass is the only compute-queue pass, added iff @dirty@ (and the
+  -- blit always reads it, so it always survives culling): compute runs exactly
+  -- when an async topology is present and the frame is dirty. Its buffer comes
+  -- from the frame's compute pool (recycled with the frame, never rebuilt); the
+  -- WAR read travels with the slot so the compute extras can never lose it.
   computeSlot <- case topology of
     Just as | dirty -> do
       prevBlitDone <- liftIO (readIORef as.lastBlitDone)
@@ -419,12 +402,10 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
     -- anything submits, so the recycler waits the whole graph — even a mid-way
     -- submit failure only costs it the wait timeout.
     _ <- submitGraphQueued base{extras = extrasFor} graph
-    liftIO do
-      -- The WAR fence must see every blit, not just dirty frames': a clean frame
-      -- re-blitting a stale swapchain image still reads the offscreen image, and
-      -- the next compute waits the timeline only up to the last recorded value.
+    liftIO $
+      -- Every frame blits, so every frame is the WAR fence's new floor.
       for_ topology \as ->
-        when didBlit $ writeIORef as.lastBlitDone (fIndex f)
+        writeIORef as.lastBlitDone (fIndex f)
 
 ----------------------------------------------------------------
 -- Julia dispatch
