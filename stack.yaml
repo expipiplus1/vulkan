@@ -24,6 +24,8 @@ extra-deps:
 - webcolor-labels-0.1.0.0
 - git: https://gitlab.com/dpwiz/fragr
   commit: 95c4c5a03f3bda984557b68fa7c0383d5a54f7ff
+- git: https://github.com/bsl/bindings-GLFW
+  commit: b37d10453b23c77ff4cf2ce02ebb960d06ea4b0a
 
 # use ghcup, nix, setup actions
 system-ghc: true
