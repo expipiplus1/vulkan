@@ -11,13 +11,13 @@ the top-row digits retarget the presentation (@0@ beauty, @1@–@6@ the debug
 channels, as @--debug-mode@); @g@ dumps the live frame's graph — as culled by the
 current view — to @visibility-buffer-live.dot@.
 
-Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, across the
-same queue topology: the shade/post passes go to 'computeQueue' on hardware with
+Runs the /same/ 'Rendering.Passes.addScenePasses' graph as the headless driver, across the
+same queue topology: the shade/post passes go to 'Rendering.Passes.computeQueue' on hardware with
 an async family, and the graph collapses to one graphics submit otherwise. The
 blit (colour → swapchain, finalized to PRESENT_SRC) and present always stay on
 graphics, so the WSI semaphores ride one queue; the framegraph derives the
 cross-queue handshake for the blit's read of the compute-written target. The
-graph is always built whole; the blit reads one 'Scene.PassOutputs' handle —
+graph is always built whole; the blit reads one 'Rendering.Passes.PassOutputs' handle —
 picked by the swapchain format ('srgbEncoding') and the selected view — and the
 graph culls whatever the presentation doesn't demand (a debug view drops the
 whole bloom/tonemap machinery, luminance metering included).
@@ -68,9 +68,12 @@ import Blit (blitImage)
 import qualified Exposure
 import Options (Options)
 import qualified Options
+import qualified Rendering.Passes as Passes
+import qualified Rendering.Pipelines as Pipelines
+import qualified Rendering.Static as Static
+import Rendering.Targets (Scene)
+import qualified Rendering.Targets as Targets
 import Requirements (deviceRequirements)
-import Scene (Scene)
-import qualified Scene
 import qualified Scene.Camera as Camera
 
 main :: Options -> IO ()
@@ -92,10 +95,10 @@ main opts = prettyError . runResourceT $ do
       | graphicsFamily == computeFamily = Nothing
       | otherwise = Just (graphicsFamily, computeFamily)
 
-  pls <- Scene.allocatePipelines dev
+  pls <- Pipelines.allocatePipelines dev
   -- The geometry, tables and baked shadows are extent-independent: build them once
   -- (a one-shot generation submit) so resize only rebuilds the render targets.
-  sceneStatic <- Scene.allocateStatic vma dev genQueue pls sharedFamilies
+  sceneStatic <- Static.allocateStatic vma dev genQueue pls sharedFamilies
   -- Animation clock, seeded once so resize (which rebuilds the targets) doesn't reset it.
   startTime <- liftIO getMonotonicTime
   -- Swapchain generation, bumped per (re)build so the per-frame slots rebuild their targets.
@@ -158,16 +161,6 @@ viewName n = maybe (show n) (\name -> show n <> " " <> name) (lookup n Options.d
 prettyError :: IO () -> IO ()
 prettyError = handle (\e@(VulkanException _) -> sayErrString (displayException e))
 
--- | The queue the shade/post passes run on under an async topology.
-computeQueue :: FG.QueueId
-computeQueue = FG.QueueId 1
-
-{- | The queue id for the shade/post passes: 'computeQueue' when async, else the
-default (graphics) queue, which collapses the graph to a single submit.
--}
-computeQueueId :: Maybe a -> FG.QueueId
-computeQueueId = maybe FG.defaultQueue (const computeQueue)
-
 -- | Interactive state shared between the key callback and the render loop.
 data Controls = Controls
   { camera :: IORef Camera.Orbit
@@ -190,7 +183,7 @@ data Bindings = Bindings
   -- ^ Auto-exposure, smoothed from the luminance readback across frames.
   , generation :: Word64
   -- ^ Bumped per swapchain (re)build; a slot rebuilds its targets on a change.
-  , sharedHiZ :: Scene.SharedHiZ
+  , sharedHiZ :: Targets.SharedHiZ
   -- ^ The one depth pyramid both frames' targets bind, for 1-frame occlusion history.
   }
 
@@ -200,7 +193,7 @@ The render targets are /not/ here — they are per-frame-in-flight ('SceneSlot')
 one set each, so a multi-queue split can't race them across frames. This holds
 what the ping-pong must /not/ double-buffer: the swapchain wrappers (acquire hands
 out an idle image), the generation the slots rebuild against, and the hi-Z pyramid
-(shared so the cull reads last frame's, not two frames back — 'Scene.SharedHiZ').
+(shared so the cull reads last frame's, not two frames back — 'Rendering.Targets.SharedHiZ').
 The internal state (via the returned key) frees these when the swapchain is
 recreated; the static geometry/shadows are untouched.
 -}
@@ -213,7 +206,7 @@ allocateBindings allocator dev genRef sc = do
   bindings <-
     liftIO $ flip ResourceT.runInternalState st do
       swapImages <- newSwapchainImages sc
-      sharedHiZ <- Scene.allocateSharedHiZ allocator dev sc.sExtent
+      sharedHiZ <- Targets.allocateSharedHiZ allocator dev sc.sExtent
       pure Bindings{swapImages, exposure, generation, sharedHiZ}
   key <- ResourceT.register $ ResourceT.closeInternalState st
   pure (bindings, key)
@@ -263,9 +256,9 @@ and builds a fresh set at the current extent.
 reconcileScene
   :: VMA.Allocator
   -> Vk.Device
-  -> Scene.ScenePipelines
-  -> Scene.SceneStatic
-  -> Scene.SharedHiZ
+  -> Pipelines.ScenePipelines
+  -> Static.SceneStatic
+  -> Targets.SharedHiZ
   -> Maybe (Word32, Word32)
   -> Word64
   -> Vk.Extent2D
@@ -279,7 +272,7 @@ reconcileScene allocator dev pls static sharedHiZ sharedFamilies generation exte
       owned <- ResourceT.createInternalState
       scene <-
         flip ResourceT.runInternalState owned $
-          Scene.allocateTargets allocator dev pls static extent sharedHiZ sharedFamilies False
+          Targets.allocateTargets allocator dev pls static extent sharedHiZ sharedFamilies False
       writeIORef slot.current (Just SlotState{generation, scene, owned})
       pure scene
 
@@ -291,8 +284,8 @@ renderScene
   :: Options
   -> VulkanContext SceneSlot
   -> VMA.Allocator
-  -> Scene.ScenePipelines
-  -> Scene.SceneStatic
+  -> Pipelines.ScenePipelines
+  -> Static.SceneStatic
   -> Maybe (Word32, Word32)
   -> GLFW.Window
   -> Controls
@@ -326,27 +319,27 @@ renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
   -- behind a host signal that is not yet submitted when we present, which WSI
   -- forbids (VUID-vkQueuePresentKHR-pWaitSemaphores-03268) — and running the
   -- tail inline would stall the loop mid-frame. Held on debug views: the
-  -- luminance pass isn't added then ("Scene"), so the readback would be stale.
+  -- luminance pass isn't added then ("Rendering.Passes"), so the readback would be stale.
   liftIO $ do
     e <- readIORef bindings.exposure
     when (mode == 0) do
-      prevLum <- Scene.readLuminance scene
+      prevLum <- Targets.readLuminance scene
       let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
       writeIORef bindings.exposure e'
-      Scene.setExposure scene e'
+      Targets.setExposure scene e'
 
   graph <- FG.newFrameGraph
-  -- The shade/post passes run on 'computeQueue' under an async topology, else on
-  -- the default (graphics) queue; the blit and present stay on graphics either
-  -- way. The orbs' table refresh is a scene pass now ("Scene").
-  outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId sharedFamilies) extent eye t Nothing mode
+  -- The shade/post passes run on 'Rendering.Passes.computeQueue' under an async
+  -- topology, else on the default (graphics) queue; the blit and present stay
+  -- on graphics either way.
+  outs <- Passes.addScenePasses graph pls opts.tweaks scene (Passes.computeQueueId sharedFamilies) extent eye t Nothing mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
   -- output and beauty the linear @tone@ target; a UNORM pick blits the gamma
   -- pass's @display@ target verbatim for every view. Reading only one output
-  -- lets the graph cull the rest ("Scene" — a debug view drops the whole
-  -- bloom/tonemap machinery either way).
+  -- lets the graph cull the rest ("Rendering.Passes" — a debug view drops the
+  -- whole bloom/tonemap machinery either way).
   let (blitSrc, blitSrcImage)
         | not (srgbEncoding sc.sFormat) = (outs.displayOut, scene.targets.display.image)
         | mode /= 0 = (outs.colorOut, scene.targets.colorHDR.image)
@@ -376,11 +369,12 @@ renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
         , family = let QueueFamilyIndex fam = fst (qGraphics (vcQueues vc)) in fam
         , pool = qGraphics (rrCommandPools f.fRecycled)
         }
-    -- Route 'computeQueue' to the async family (its own pool, recycled with the
-    -- frame); every other id — geometry, blit, present — lands on graphics.
+    -- Route 'Rendering.Passes.computeQueue' to the async family (its own pool,
+    -- recycled with the frame); every other id — geometry, blit, present —
+    -- lands on graphics.
     queueTable q = case sharedFamilies of
       Just (_, computeFamily)
-        | q == computeQueue ->
+        | q == Passes.computeQueue ->
             QueueSlot
               { queue = snd (qCompute (vcQueues vc))
               , family = computeFamily

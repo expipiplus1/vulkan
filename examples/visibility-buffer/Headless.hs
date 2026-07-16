@@ -52,8 +52,12 @@ import qualified Exposure
 import Options (Options)
 import qualified Options
 import qualified Pipeline.Mesh as Mesh
+import qualified Rendering.Passes as Passes
+import qualified Rendering.Pipelines as Pipelines
+import qualified Rendering.Shadows as Shadows
+import qualified Rendering.Static as Static
+import qualified Rendering.Targets as Targets
 import Requirements (deviceRequirements)
-import qualified Scene
 import qualified Scene.Camera as Camera
 
 main :: Options -> IO ()
@@ -137,11 +141,11 @@ render opts allocator dev queues async = do
     (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
     sharedFamilies = fmap (graphicsFamily,) async
 
-  pls <- Scene.allocatePipelines dev
-  sceneStatic <- Scene.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
-  sharedHiZ <- Scene.allocateSharedHiZ allocator dev extent
-  scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedHiZ sharedFamilies True
-  (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat extent
+  pls <- Pipelines.allocatePipelines dev
+  sceneStatic <- Static.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
+  sharedHiZ <- Targets.allocateSharedHiZ allocator dev extent
+  scene <- Targets.allocateTargets allocator dev pls sceneStatic extent sharedHiZ sharedFamilies True
+  (cpuImage, readback) <- makeReadbackImage allocator dev Pipelines.colorFormat extent
   cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
   -- Pools once, for every graph run below; only the buffers are per-run.
   queueTable <- allocateQueueTable dev queues async
@@ -153,7 +157,7 @@ render opts allocator dev queues async = do
       -- one's pyramid (same camera), so the depth-void check covers the culling too.
       runMode debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye 0 (Just (pure . Exposure.target opts.meter, hostQueue)) debugMode
+        outs <- Passes.addScenePasses graph pls opts.tweaks scene (Passes.computeQueueId async) extent eye 0 (Just (pure . Exposure.target opts.meter, hostQueue)) debugMode
         cpuH <- importScratchImage graph "cpu" cpuManaged
         cpuWritten <- FG.addPass graph "readback" (readbackSetup outs.displayOut cpuH) \_ -> do
           -- The declared accesses moved display to TRANSFER_SRC and the cpu
@@ -184,9 +188,9 @@ render opts allocator dev queues async = do
   -- frame tonemaps at its own metered exposure (the old meter-then-re-render
   -- double run is gone).
   img <- runMode 0
-  lum <- Scene.readLuminance scene
+  lum <- Targets.readLuminance scene
   -- Before the debug modes below overwrite the HDR target (and thus the probe).
-  forM_ (Scene.lumProbe scene) $ uncurry (dumpLumProbe allocator dev (graphicsQueue, graphicsFamily))
+  forM_ (Targets.lumProbe scene) $ uncurry (dumpLumProbe allocator dev (graphicsQueue, graphicsFamily))
   -- Material/geometry debug views (each re-runs the graph with a debug mode).
   forM_ (zip [1 :: Word32 ..] ["albedo", "metalness", "roughness", "normal"]) \(mode, name) -> do
     dbg <- runMode mode
@@ -196,8 +200,8 @@ render opts allocator dev queues async = do
   saved <- if opts.debugMode == 0 then pure img else runMode opts.debugMode
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
   -- it after this).
-  forM_ (Scene.shadowImage scene) $ dumpShadowFace allocator dev (graphicsQueue, graphicsFamily)
-  let (visImage, depthImage) = Scene.debugImages scene
+  forM_ (Targets.shadowImage scene) $ dumpShadowFace allocator dev (graphicsQueue, graphicsFamily)
+  let (visImage, depthImage) = Targets.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where
     -- On the graphics queue, sandwiching the compute chain: on async hardware
@@ -211,17 +215,9 @@ render opts allocator dev queues async = do
       FG.setSideEffect
       FG.readWith cpuWritten HostRead
 
--- | The compute-and-readback queue (async family, or the graphics queue).
-computeQueue :: FG.QueueId
-computeQueue = FG.QueueId 1
-
 -- | The host queue: its passes run on the CPU, after the submits.
 hostQueue :: FG.QueueId
 hostQueue = FG.QueueId 2
-
--- | The queue the shade/readback passes run on (async family, or graphics).
-computeQueueId :: Maybe Word32 -> FG.QueueId
-computeQueueId = maybe FG.defaultQueue (const computeQueue)
 
 {- | Record the graph across its queues, submit and wait for completion.
 
@@ -256,7 +252,7 @@ allocateQueueTable dev queues async = do
     pool <- allocateCommandPool dev computeFamily
     pure QueueSlot{queue = snd (qCompute queues), family = computeFamily, pool}
   pure \q -> case computeSlot of
-    Just slot | q == computeQueue -> slot
+    Just slot | q == Passes.computeQueue -> slot
     _ -> QueueSlot{queue = graphicsQueue, family = graphicsFamily, pool = graphicsPool}
 
 ----------------------------------------------------------------
@@ -352,8 +348,8 @@ Reconstruct the light-space distance from the first moment (@ln(m.r)/C@) as grey
 -}
 dumpShadowFace :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> ResourceT IO ()
 dumpShadowFace allocator dev qf moments = do
-  let res = fromIntegral Scene.shadowRes
-  ptr <- copyImageToHostBuffer allocator dev qf moments (Vk.Extent2D Scene.shadowRes Scene.shadowRes) 16
+  let res = fromIntegral Shadows.resolution
+  ptr <- copyImageToHostBuffer allocator dev qf moments (Vk.Extent2D Shadows.resolution Shadows.resolution) 16
   liftIO $
     savePng "debug-shadow.png"
       =<< JP.withImage res res \x y -> do

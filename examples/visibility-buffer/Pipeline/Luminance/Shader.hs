@@ -3,7 +3,7 @@
 {-| The luminance-reduction compute shader.
 
 The scene's average log-luminance, for auto-exposure. A single workgroup strides over
-a bloom mip ('Scene.lumMipIndex') — already downsampled and blurred, so a bright
+a bloom mip ('Rendering.Targets.lumMipFor') — already downsampled and blurred, so a bright
 emitter's scatter veils the frame and pulls the exposure down — sums @log(luminance)@
 into shared memory, reduces, and writes the average + its geometric mean to a small
 buffer the CPU reads back.

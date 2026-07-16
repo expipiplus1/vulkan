@@ -4,8 +4,8 @@
 
 Display-linear → sRGB. A separate pass because it is target-dependent: an sRGB
 swapchain encodes in
-hardware, while a plain @UNORM@ target or a PNG needs this. See "Scene" @PassOutputs@
-for how the graph selects it.
+hardware, while a plain @UNORM@ target or a PNG needs this. See
+'Rendering.Passes.PassOutputs' for how the graph selects it.
 -}
 module Pipeline.Gamma.Shader
   ( code

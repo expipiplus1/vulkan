@@ -6,7 +6,7 @@
 Every runtime tweakable of the demo, fully resolved at parse time (the
 @--outside@ preset folded into the camera and output defaults). Defaults come
 from the modules that own the values ('Camera.initial', 'Exposure.defaults',
-'Scene.defaultTweaks'), so a bare @visibility-buffer@ renders the same demo as
+'Rendering.Passes.defaultTweaks'), so a bare @visibility-buffer@ renders the same demo as
 before.
 -}
 module Options
@@ -23,7 +23,7 @@ import qualified Vulkan.Core10 as Vk
 
 import qualified Exposure
 import qualified Pipeline.Shade as Shade
-import qualified Scene
+import qualified Rendering.Passes as Passes
 import qualified Scene.Camera as Camera
 
 data Options = Options
@@ -38,7 +38,7 @@ data Options = Options
   , height :: Int
   , debugMode :: Word32
   , meter :: Exposure.Meter
-  , tweaks :: Scene.Tweaks
+  , tweaks :: Passes.Tweaks
   }
   deriving (Show)
 
@@ -110,9 +110,9 @@ meterP =
   where
     d = Exposure.defaults
 
-tweaksP :: Parser Scene.Tweaks
+tweaksP :: Parser Passes.Tweaks
 tweaksP =
-  Scene.Tweaks
+  Passes.Tweaks
     <$> tuningP
     <*> knob "bloom-strength" d.bloomStrength "Bloom mix bias toward the pyramid"
     <*> knob "bloom-radius" d.bloomRadius "Bloom upsample tent radius"
@@ -121,7 +121,7 @@ tweaksP =
     <*> knob "ao-bias" d.aoBias "SSAO horizon bias against self-occlusion"
     <*> knob "ao-sharpness" d.aoSharpness "AO blur edge-stop (higher keeps edges crisper)"
   where
-    d = Scene.defaultTweaks
+    d = Passes.defaultTweaks
 
 tuningP :: Parser Shade.Tuning
 tuningP =

@@ -4,7 +4,7 @@ Seven chambers hollowed from a ball of rock: a central stage holding the knot an
 orb that lights it, and six dim backrooms on the axes at 'sideDistance', each with its
 own glowstone ("Lights"), reached by axis-aligned halls.
 
-Shared by "Scene" (which pushes these to "Pipeline.Voxels.Gen") and "Lights" (whose
+Shared by "Rendering.Static" (which pushes these to "Pipeline.Voxels.Gen") and "Lights" (whose
 glowstones must land at 'sideCentres'), so the rooms and their lamps cannot drift.
 -}
 module Scene.Cave

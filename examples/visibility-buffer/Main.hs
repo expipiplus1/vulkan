@@ -2,7 +2,7 @@
 
 {-| Visibility-buffer deferred-shading showcase.
 
-Two front-ends over one 'Scene.addScenePasses' frame-graph description:
+Two front-ends over one 'Rendering.Passes.addScenePasses' frame-graph description:
 
   * @visibility-buffer@ — windowed (GLFW) viewer, presenting every frame;
   * @visibility-buffer --headless@ — one render to a PNG plus deterministic

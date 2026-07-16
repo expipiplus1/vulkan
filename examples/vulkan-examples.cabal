@@ -1011,8 +1011,12 @@ executable visibility-buffer
       Pipeline.Tonemap.Shader
       Pipeline.Voxels
       Pipeline.Voxels.Gen
+      Rendering.Passes
+      Rendering.Pipelines
+      Rendering.Shadows
+      Rendering.Static
+      Rendering.Targets
       Requirements
-      Scene
       Scene.Camera
       Scene.Cave
       Scene.Lights

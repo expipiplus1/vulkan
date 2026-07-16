@@ -13,7 +13,7 @@
 Wraps the "Pipeline.Cull.Shader" compute pass: 'reset' rewinds the camera and
 per-orb occluder cube draws, 'record' refills them (and their instance remaps)
 with the cave cubes that pass this frame's tests. Two graph passes at the top of the frame
-("Scene"); the barriers between the fills, the dispatch and the draws that
+("Rendering.Passes"); the barriers between the fills, the dispatch and the draws that
 consume the refill are the graph tracker's.
 -}
 module Pipeline.Cull
