@@ -33,6 +33,8 @@ module Scene
   , defaultTweaks
   , allocatePipelines
   , allocateStatic
+  , SharedHiZ (..)
+  , allocateSharedHiZ
   , allocateTargets
   , addScenePasses
   , recordOrbUploads
@@ -574,11 +576,58 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , caveCount
       }
 
+-- | Level sizes of a half-extent-based pyramid (bloom and hiz alike).
+halfPyramidExtents :: Vk.Extent2D -> Int -> V.Vector Vk.Extent2D
+halfPyramidExtents (Vk.Extent2D w0 h0) n =
+  V.generate n \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
+
+{- | The depth pyramid, shared across the frames in flight.
+
+Graphics-only history: built from a frame's depth, sampled by the /next/ frame's
+cull. One shared pyramid keeps that a 1-frame loop; a per-frame copy would read
+two-frame-stale occlusion and pop harder. Extent-dependent, so 'allocateSharedHiZ'
+reruns on resize and its owner frees it; the reduce/cull sets that bind it stay
+per-target ('allocateTargets').
+-}
+data SharedHiZ = SharedHiZ
+  { pyramidMips :: V.Vector ManagedImage
+  -- ^ Depth-pyramid mips, each a tracked subresource.
+  , pyramidReduceExtents :: V.Vector Vk.Extent2D
+  -- ^ Dispatch extents of the per-level reduces only; the tail sizes itself.
+  , pyramidViews :: V.Vector Vk.ImageView
+  -- ^ Per-mip views, for the reduce descriptor sets.
+  , pyramidFullView :: Vk.ImageView
+  -- ^ Whole-chain view, sampled by the cull ('textureLod').
+  , pyramidPrimed :: IORef Bool
+  {- ^ False until the first cull pass records; gates the occlusion test off the
+  not-yet-built pyramid.
+  -}
+  }
+
+-- | Allocate the shared depth pyramid at a scene extent (half-res base to 1×1).
+allocateSharedHiZ :: VMA.Allocator -> Vk.Device -> Vk.Extent2D -> ResourceT IO SharedHiZ
+allocateSharedHiZ allocator dev extent = do
+  let
+    halfExtent = halfExtentOf extent
+    mipCount = HiZ.mipCount halfExtent
+    allExtents = halfPyramidExtents extent mipCount
+    reduceCount = 1 + V.length (V.takeWhile (not . HiZ.tailFits) allExtents)
+  (_, (hizImage, pyramidViews)) <-
+    allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral mipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
+  pyramidMips <- V.generateM mipCount \i -> describedMip HiZ.format (allExtents V.! i) hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  pyramidFullView <- HiZ.allocateChainView dev hizImage mipCount
+  pyramidPrimed <- liftIO (newIORef False)
+  pure SharedHiZ{pyramidMips, pyramidReduceExtents = V.take reduceCount allExtents, pyramidViews, pyramidFullView, pyramidPrimed}
+
 {- | Allocate the extent-dependent scene over a shared 'SceneStatic'.
 
 The render targets, the bloom pyramid, and the descriptor sets binding extent-sized
 views. No GPU submit — cheap enough to rerun on every resize. The visibility buffer is
 CONCURRENT across @sharedFamilies@ (the async graphics + compute pair).
+
+The hi-Z pyramid ('SharedHiZ') is passed in, not allocated here, so both frames in
+flight share one pyramid (1-frame occlusion history); only the reduce/cull sets that
+bind it are per-target.
 
 @wantProbe@ adds the debug-only luminance probe ('lumProbe'), which costs a copy per
 frame; the windowed driver never reads it.
@@ -589,10 +638,11 @@ allocateTargets
   -> ScenePipelines
   -> SceneStatic
   -> Vk.Extent2D
+  -> SharedHiZ
   -> Maybe (Word32, Word32)
   -> Bool
   -> ResourceT IO Scene
-allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
+allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = do
   -- vis + depth also get TRANSFER_SRC so the headless driver can dump them.
   (_, (visImage, visView)) <-
     allocateTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
@@ -621,10 +671,8 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- Bloom pyramid: one mipped image (base = half the scene extent); each mip is a
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).
   let
-    Vk.Extent2D w0 h0 = extent
     halfExtent = halfExtentOf extent
-    -- Level sizes of a 'halfExtent'-based pyramid (bloom and hiz alike).
-    mipExtents n = V.generate n \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
+    mipExtents = halfPyramidExtents extent
     mipCount = bloomMipCount extent
     bloomExtents = mipExtents mipCount
     -- The probe copies off the metered mip, so the chain needs TRANSFER_SRC for it.
@@ -646,22 +694,13 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   downSets <- V.generateM mipCount \i -> Bloom.allocateSet dev pls.bloom.down static.sampler (if i == 0 then colorHDRView else bloomViews V.! (i - 1)) (bloomViews V.! i)
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
-  -- Depth pyramid for the cull's occlusion test: half-res base, min-reduced to 1×1
-  -- ('HiZ.mipCount'). Fed by the passes in 'addScenePasses' — per-level reduces
-  -- down to the first tail-sized mip, one fused dispatch for the rest — and
-  -- sampled by the next frame's cull pass.
+  -- The cull's occlusion test reads the shared pyramid ('SharedHiZ'); only the
+  -- reduce/cull descriptor sets are per-target (reduce mip 0 reads this depthView,
+  -- so those sets can't be shared). Fed by the passes in 'addScenePasses'.
   let
-    hizMipCount = HiZ.mipCount halfExtent
-    hizAllExtents = mipExtents hizMipCount
-    -- All the non-fitting levels, plus the first fitting one (1×1 always fits).
-    hizReduceCount = 1 + V.length (V.takeWhile (not . HiZ.tailFits) hizAllExtents)
-    hizExtents = V.take hizReduceCount hizAllExtents
-    hizTailCount = hizMipCount - hizReduceCount
-  (_, (hizImage, hizViews)) <-
-    allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral hizMipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
-  hizMips <- V.generateM hizMipCount \i -> describedMip HiZ.format (hizAllExtents V.! i) hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
-  -- The cull samples across levels ('textureLod'), so it gets a whole-chain view.
-  hizFullView <- HiZ.allocateChainView dev hizImage hizMipCount
+    hizViews = hiz.pyramidViews
+    hizReduceCount = V.length hiz.pyramidReduceExtents
+    hizTailCount = V.length hiz.pyramidMips - hizReduceCount
   hizSets <- V.generateM hizReduceCount \i ->
     HiZ.allocateSet dev pls.hiz.reduce static.nearestSampler (if i == 0 then depthView else hizViews V.! (i - 1)) (hizViews V.! i)
   hizTailSet <-
@@ -687,8 +726,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
         , Cull.lights = static.lightsBuffer
         }
       static.nearestSampler
-      hizFullView
-  hizPrimed <- liftIO (newIORef False)
+      hiz.pyramidFullView
 
   -- The SSAO chain ("Pipeline.Ssao"): half-res DAIS normals, the AO gather over
   -- the depth pyramid, and the two-axis bilateral blur ping-ponging ao → aoBlur
@@ -704,7 +742,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   ao <- sharedAcrossQueues <$> describedImage aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
   aoBlur <- describedImage aoFormat halfExtent aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
   normalsSet <- Ssao.allocateNormalsSet dev pls.ssao.normals visView normalsView static.vertexBuffer static.objectsBuffer static.meshTableBuffer
-  aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hizFullView normalsView aoView
+  aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hiz.pyramidFullView normalsView aoView
   aoBlurXSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoView aoBlurView
   aoBlurYSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoBlurView aoView
 
@@ -732,12 +770,12 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , downSets
       , upSets
       , probe
-      , hizMips
-      , hizExtents
+      , hizMips = hiz.pyramidMips
+      , hizExtents = hiz.pyramidReduceExtents
       , hizSets
       , hizTailSet
       , cullSet
-      , hizPrimed
+      , hizPrimed = hiz.pyramidPrimed
       }
 
 -- | The tracked visibility and depth images after a frame, for headless debug dumps.

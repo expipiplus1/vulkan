@@ -199,10 +199,10 @@ The graph must have at least one device pass.
 -}
 submitGraphQueued
   :: (MonadResource m)
-  => SubmitConfig
-  -> FG.FrameGraph Recorder ()
+  => FG.FrameGraph Recorder ()
+  -> SubmitConfig
   -> m [Submitted]
-submitGraphQueued config graph = do
+submitGraphQueued graph config = do
   let
     dev = config.device
     queueTable = config.queues

@@ -139,7 +139,8 @@ render opts allocator dev queues async = do
 
   pls <- Scene.allocatePipelines dev
   sceneStatic <- Scene.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
-  scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedFamilies True
+  sharedHiZ <- Scene.allocateSharedHiZ allocator dev extent
+  scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedHiZ sharedFamilies True
   (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat extent
   cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
   -- Pools once, for every graph run below; only the buffers are per-run.
@@ -238,7 +239,7 @@ runGraph
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
 runGraph dev queueTable graph = do
-  submitted <- submitGraphQueued (submitConfig dev queueTable){hostQueue = Just hostQueue} graph
+  submitted <- submitGraphQueued graph (submitConfig dev queueTable){hostQueue = Just hostQueue}
   _ <- waitSubmitted dev maxBound submitted
   pure ()
 

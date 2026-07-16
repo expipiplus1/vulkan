@@ -401,7 +401,7 @@ executeAdaptive vc f imageIndex topology dirty graph = do
     -- The base config registers every queue's completion into fGPUWork before
     -- anything submits, so the recycler waits the whole graph — even a mid-way
     -- submit failure only costs it the wait timeout.
-    _ <- submitGraphQueued base{extras = extrasFor} graph
+    _ <- submitGraphQueued graph base{extras = extrasFor}
     liftIO $
       -- Every frame blits, so every frame is the WAR fence's new floor.
       for_ topology \as ->

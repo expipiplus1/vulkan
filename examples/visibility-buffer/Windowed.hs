@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoFieldSelectors #-}
 
 {-| Windowed driver (GLFW).
 
@@ -10,15 +11,21 @@ the top-row digits retarget the presentation (@0@ beauty, @1@–@6@ the debug
 channels, as @--debug-mode@); @g@ dumps the live frame's graph — as culled by the
 current view — to @visibility-buffer-live.dot@.
 
-Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, but keeps it
-single-queue — @cbFor@ maps every pass (geometry, shade) to the graphics command
-buffer, so 'FG.executeQueued' degenerates to one buffer and one submit — then
-appends a @blit@ (colour → swapchain) finalized to PRESENT_SRC. The graph is
-always built whole; the blit reads one 'Scene.PassOutputs' handle — picked by
-the swapchain format ('srgbEncoding') and the selected view — and the graph
-culls whatever the presentation doesn't demand (a debug view drops the whole
-bloom/tonemap machinery, luminance metering included). The per-swapchain scene
-targets are recreated on resize by 'runWindowLoop'.
+Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, across the
+same queue topology: the shade/post passes go to 'computeQueue' on hardware with
+an async family, and the graph collapses to one graphics submit otherwise. The
+blit (colour → swapchain, finalized to PRESENT_SRC) and present always stay on
+graphics, so the WSI semaphores ride one queue; the framegraph derives the
+cross-queue handshake for the blit's read of the compute-written target. The
+graph is always built whole; the blit reads one 'Scene.PassOutputs' handle —
+picked by the swapchain format ('srgbEncoding') and the selected view — and the
+graph culls whatever the presentation doesn't demand (a debug view drops the
+whole bloom/tonemap machinery, luminance metering included).
+
+The render targets are per-frame-in-flight ('SceneSlot', the frame's 'rrData'),
+one set each so the two in-flight frames never share a target across the queue
+split; a slot rebuilds its targets when the swapchain generation moves
+('reconcileScene').
 -}
 module Windowed
   ( main
@@ -27,11 +34,12 @@ module Windowed
 import Control.Exception (handle)
 import Control.Monad (forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, closeInternalState, createInternalState, register, runInternalState, runResourceT)
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, runResourceT)
+import qualified Control.Monad.Trans.Resource as ResourceT
+import Data.IORef (IORef, atomicModifyIORef', newIORef, readIORef, writeIORef)
 import qualified Data.Text.IO as TIO
 import Data.Vector (Vector)
-import Data.Word (Word32)
+import Data.Word (Word32, Word64)
 import qualified Fragr as FG
 import qualified Fragr.Dot as Dot
 import GHC.Clock (getMonotonicTime)
@@ -41,7 +49,7 @@ import UnliftIO.Exception (displayException)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage)
+import Vulkan.Utils.Frame (Frame (..), InitRecycledResources, acquireFrameImage, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), frameSubmitConfig, submitGraphQueued)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
 import Vulkan.Utils.FrameGraph.Recorder (recordingCommandBuffer)
@@ -51,7 +59,7 @@ import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, srgbEncoding)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, noRecycledResources, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
@@ -61,6 +69,7 @@ import qualified Exposure
 import Options (Options)
 import qualified Options
 import Requirements (deviceRequirements)
+import Scene (Scene)
 import qualified Scene
 import qualified Scene.Camera as Camera
 
@@ -74,14 +83,23 @@ main opts = prettyError . runResourceT $ do
   let
     dev = vcDevice vc
     QueueFamilyIndex graphicsFamily = fst (qGraphics (vcQueues vc))
+    QueueFamilyIndex computeFamily = fst (qCompute (vcQueues vc))
     genQueue = (snd (qGraphics (vcQueues vc)), graphicsFamily)
+    -- Async compute when the compute family is distinct: the shade/post passes
+    -- then run on 'computeQueue' and the cross-queue resources are CONCURRENT
+    -- across the pair. 'Nothing' collapses the graph onto the graphics queue.
+    sharedFamilies
+      | graphicsFamily == computeFamily = Nothing
+      | otherwise = Just (graphicsFamily, computeFamily)
 
   pls <- Scene.allocatePipelines dev
   -- The geometry, tables and baked shadows are extent-independent: build them once
   -- (a one-shot generation submit) so resize only rebuilds the render targets.
-  sceneStatic <- Scene.allocateStatic vma dev genQueue pls Nothing
+  sceneStatic <- Scene.allocateStatic vma dev genQueue pls sharedFamilies
   -- Animation clock, seeded once so resize (which rebuilds the targets) doesn't reset it.
   startTime <- liftIO getMonotonicTime
+  -- Swapchain generation, bumped per (re)build so the per-frame slots rebuild their targets.
+  genRef <- liftIO (newIORef (0 :: Word64))
   -- Interactive state, program-lifetime so resize keeps it.
   controls <- liftIO do
     camera <- newIORef opts.orbit
@@ -108,9 +126,9 @@ main opts = prettyError . runResourceT $ do
     (Window.drawableSize window)
     (Window.shouldQuit window)
     WindowLoop
-      { wlMkState = allocateBindings vma dev pls sceneStatic
-      , wlMkRecycled = noRecycledResources
-      , wlRender = renderScene opts vc pls window controls startTime
+      { wlMkState = allocateBindings vma dev genRef
+      , wlMkRecycled = allocateSceneSlot
+      , wlRender = renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
       }
@@ -140,6 +158,16 @@ viewName n = maybe (show n) (\name -> show n <> " " <> name) (lookup n Options.d
 prettyError :: IO () -> IO ()
 prettyError = handle (\e@(VulkanException _) -> sayErrString (displayException e))
 
+-- | The queue the shade/post passes run on under an async topology.
+computeQueue :: FG.QueueId
+computeQueue = FG.QueueId 1
+
+{- | The queue id for the shade/post passes: 'computeQueue' when async, else the
+default (graphics) queue, which collapses the graph to a single submit.
+-}
+computeQueueId :: Maybe a -> FG.QueueId
+computeQueueId = maybe FG.defaultQueue (const computeQueue)
+
 -- | Interactive state shared between the key callback and the render loop.
 data Controls = Controls
   { camera :: IORef Camera.Orbit
@@ -156,38 +184,104 @@ data Controls = Controls
 ----------------------------------------------------------------
 
 data Bindings = Bindings
-  { scene :: Scene.Scene
-  -- ^ Scene targets at the current swapchain extent (native resolution).
-  , swapImages :: Vector ManagedImage
+  { swapImages :: Vector ManagedImage
   -- ^ One layout-tracked wrapper per swapchain image.
   , exposure :: IORef Float
   -- ^ Auto-exposure, smoothed from the luminance readback across frames.
+  , generation :: Word64
+  -- ^ Bumped per swapchain (re)build; a slot rebuilds its targets on a change.
+  , sharedHiZ :: Scene.SharedHiZ
+  -- ^ The one depth pyramid both frames' targets bind, for 1-frame occlusion history.
   }
 
-{- | Build the per-swapchain render targets over the shared 'Scene.SceneStatic'.
+{- | Per-swapchain bindings: swapchain wrappers, exposure EMA, and the shared hi-Z.
 
-Registered in an internal resource state (via the returned key) so recreating the
-swapchain frees the old extent's targets instead of leaking them; the static
-geometry/shadows are untouched.
+The render targets are /not/ here — they are per-frame-in-flight ('SceneSlot'),
+one set each, so a multi-queue split can't race them across frames. This holds
+what the ping-pong must /not/ double-buffer: the swapchain wrappers (acquire hands
+out an idle image), the generation the slots rebuild against, and the hi-Z pyramid
+(shared so the cull reads last frame's, not two frames back — 'Scene.SharedHiZ').
+The internal state (via the returned key) frees these when the swapchain is
+recreated; the static geometry/shadows are untouched.
 -}
-allocateBindings
+allocateBindings :: VMA.Allocator -> Vk.Device -> IORef Word64 -> Swapchain -> ResourceT IO (Bindings, ReleaseKey)
+allocateBindings allocator dev genRef sc = do
+  sayErrString $ "swapchain " <> show sc.sFormat <> if srgbEncoding sc.sFormat then " (blit encodes)" else " (gamma pass encodes)"
+  exposure <- liftIO (newIORef 1.0)
+  generation <- liftIO $ atomicModifyIORef' genRef \g -> (g + 1, g + 1)
+  st <- ResourceT.createInternalState
+  bindings <-
+    liftIO $ flip ResourceT.runInternalState st do
+      swapImages <- newSwapchainImages sc
+      sharedHiZ <- Scene.allocateSharedHiZ allocator dev sc.sExtent
+      pure Bindings{swapImages, exposure, generation, sharedHiZ}
+  key <- ResourceT.register $ ResourceT.closeInternalState st
+  pure (bindings, key)
+
+----------------------------------------------------------------
+-- Per-frame-in-flight scene targets (rrData)
+----------------------------------------------------------------
+
+{- | One frame-in-flight's own copy of the extent-dependent scene.
+
+The render targets and the descriptor sets naming them are touched by both
+frames in flight — this frame records while the other executes — so each slot
+carries its own set as the frame's 'rrData'. Built lazily on first use and
+rebuilt when the swapchain generation moves ('reconcileScene').
+-}
+newtype SceneSlot = SceneSlot
+  { current :: IORef (Maybe SlotState)
+  }
+
+data SlotState = SlotState
+  { generation :: Word64
+  , scene :: Scene
+  , owned :: ResourceT.InternalState
+  -- ^ Holds this slot's targets; closed to free them (on reconcile or exit).
+  }
+
+{- | Allocate an empty slot, freeing whatever it holds at program exit.
+
+Runs once per frame-in-flight at boot ('wlMkRecycled'); the swapchain extent is
+not known here, so the scene is built on the slot's first 'reconcileScene'.
+-}
+allocateSceneSlot :: InitRecycledResources (ResourceT IO) SceneSlot
+allocateSceneSlot _vc _ix _pools = do
+  current <- liftIO (newIORef Nothing)
+  _ <-
+    ResourceT.register $
+      readIORef current >>= mapM_ (ResourceT.closeInternalState . (.owned))
+  pure SceneSlot{current}
+
+{- | This slot's scene at the current generation, rebuilding a stale one.
+
+A generation match is the steady-state path: one 'IORef' read. A miss (first use,
+or a resize bumped the generation) frees the old targets — safe with no device
+wait, since the ring waited this slot's previous frame before handing it back —
+and builds a fresh set at the current extent.
+-}
+reconcileScene
   :: VMA.Allocator
   -> Vk.Device
   -> Scene.ScenePipelines
   -> Scene.SceneStatic
-  -> Swapchain
-  -> ResourceT IO (Bindings, ReleaseKey)
-allocateBindings allocator dev pls sceneStatic sc = do
-  sayErrString $ "swapchain " <> show sc.sFormat <> if srgbEncoding sc.sFormat then " (blit encodes)" else " (gamma pass encodes)"
-  exposure <- liftIO (newIORef 1.0)
-  st <- createInternalState
-  bindings <-
-    liftIO . flip runInternalState st $ do
-      scene <- Scene.allocateTargets allocator dev pls sceneStatic sc.sExtent Nothing False
-      swapImages <- newSwapchainImages sc
-      pure Bindings{scene, swapImages, exposure}
-  key <- register (closeInternalState st)
-  pure (bindings, key)
+  -> Scene.SharedHiZ
+  -> Maybe (Word32, Word32)
+  -> Word64
+  -> Vk.Extent2D
+  -> SceneSlot
+  -> IO Scene
+reconcileScene allocator dev pls static sharedHiZ sharedFamilies generation extent slot =
+  readIORef slot.current >>= \case
+    Just s | s.generation == generation -> pure s.scene
+    prev -> do
+      mapM_ (ResourceT.closeInternalState . (.owned)) prev
+      owned <- ResourceT.createInternalState
+      scene <-
+        flip ResourceT.runInternalState owned $
+          Scene.allocateTargets allocator dev pls static extent sharedHiZ sharedFamilies False
+      writeIORef slot.current (Just SlotState{generation, scene, owned})
+      pure scene
 
 ----------------------------------------------------------------
 -- Per-frame rendering
@@ -195,15 +289,18 @@ allocateBindings allocator dev pls sceneStatic sc = do
 
 renderScene
   :: Options
-  -> VulkanContext rr
+  -> VulkanContext SceneSlot
+  -> VMA.Allocator
   -> Scene.ScenePipelines
+  -> Scene.SceneStatic
+  -> Maybe (Word32, Word32)
   -> GLFW.Window
   -> Controls
   -> Double
   -> Bindings
-  -> Frame rr
+  -> Frame SceneSlot
   -> ResourceT IO ()
-renderScene opts vc pls window controls startTime bindings f = do
+renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime bindings f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   now <- liftIO getMonotonicTime
   let t = realToFrac (now - startTime) :: Float
@@ -219,6 +316,10 @@ renderScene opts vc pls window controls startTime bindings f = do
     sc = fSwapchain f
     extent = sc.sExtent
 
+  -- This frame-in-flight's own targets, rebuilt only when the swapchain
+  -- generation moved (resize); otherwise the cached set.
+  scene <- liftIO $ reconcileScene vma (vcDevice vc) pls sceneStatic bindings.sharedHiZ sharedFamilies bindings.generation extent f.fRecycled.rrData
+
   -- Auto-exposure over the previous frame's mean luminance, pre-written into
   -- the metering buffer (the readback lags a frame; the adaptation hides it).
   -- NOT an in-graph host meter: a deferred host pass would gate renderFinished
@@ -229,15 +330,16 @@ renderScene opts vc pls window controls startTime bindings f = do
   liftIO $ do
     e <- readIORef bindings.exposure
     when (mode == 0) do
-      prevLum <- Scene.readLuminance bindings.scene
+      prevLum <- Scene.readLuminance scene
       let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
       writeIORef bindings.exposure e'
-      Scene.setExposure bindings.scene e'
+      Scene.setExposure scene e'
 
   graph <- FG.newFrameGraph
-  -- Single-queue: the compute passes stay on the default (graphics) queue.
-  -- The orbs' table refresh is a scene pass now ("Scene").
-  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye t Nothing mode
+  -- The shade/post passes run on 'computeQueue' under an async topology, else on
+  -- the default (graphics) queue; the blit and present stay on graphics either
+  -- way. The orbs' table refresh is a scene pass now ("Scene").
+  outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId sharedFamilies) extent eye t Nothing mode
   (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   -- An sRGB swapchain encodes on the blit, so debug views present the raw shade
@@ -246,9 +348,9 @@ renderScene opts vc pls window controls startTime bindings f = do
   -- lets the graph cull the rest ("Scene" — a debug view drops the whole
   -- bloom/tonemap machinery either way).
   let (blitSrc, blitSrcImage)
-        | not (srgbEncoding sc.sFormat) = (outs.displayOut, bindings.scene.targets.display.image)
-        | mode /= 0 = (outs.colorOut, bindings.scene.targets.colorHDR.image)
-        | otherwise = (outs.toneOut, bindings.scene.targets.tone.image)
+        | not (srgbEncoding sc.sFormat) = (outs.displayOut, scene.targets.display.image)
+        | mode /= 0 = (outs.colorOut, scene.targets.colorHDR.image)
+        | otherwise = (outs.toneOut, scene.targets.tone.image)
 
   blitted <-
     FG.addPass graph "blit" (blitSetup blitSrc swapchainH) \_ -> do
@@ -266,17 +368,26 @@ renderScene opts vc pls window controls startTime bindings f = do
     TIO.writeFile "visibility-buffer-live.dot" =<< Dot.dump graph
     sayErrString ("graph dumped to visibility-buffer-live.dot, presenting " <> viewName mode)
 
-  let dev = vcDevice vc
-  _ <-
-    submitGraphQueued
-      ( frameSubmitConfig dev f imageIndex \_ ->
-          QueueSlot
-            { queue = snd (qGraphics (vcQueues vc))
-            , family = let QueueFamilyIndex fam = fst (qGraphics (vcQueues vc)) in fam
-            , pool = qGraphics (rrCommandPools f.fRecycled)
-            }
-      )
-      graph
+  let
+    dev = vcDevice vc
+    graphicsSlot =
+      QueueSlot
+        { queue = snd (qGraphics (vcQueues vc))
+        , family = let QueueFamilyIndex fam = fst (qGraphics (vcQueues vc)) in fam
+        , pool = qGraphics (rrCommandPools f.fRecycled)
+        }
+    -- Route 'computeQueue' to the async family (its own pool, recycled with the
+    -- frame); every other id — geometry, blit, present — lands on graphics.
+    queueTable q = case sharedFamilies of
+      Just (_, computeFamily)
+        | q == computeQueue ->
+            QueueSlot
+              { queue = snd (qCompute (vcQueues vc))
+              , family = computeFamily
+              , pool = qCompute (rrCommandPools f.fRecycled)
+              }
+      _ -> graphicsSlot
+  _ <- submitGraphQueued graph $ frameSubmitConfig dev f imageIndex queueTable
   presentFrameImage vc f acquireResult imageIndex
   where
     blitSetup srcH swapchainH = do
