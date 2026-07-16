@@ -31,7 +31,7 @@ module Windowed
   ( main
   ) where
 
-import Control.Exception (handle)
+import Control.Exception (handle, onException)
 import Control.Monad (forM_, unless, when)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, runResourceT)
@@ -51,9 +51,9 @@ import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), InitRecycledResources, acquireFrameImage, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), frameSubmitConfig, submitGraphQueued)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..))
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), SliceRegistry, Usage (..), newSliceRegistry)
 import Vulkan.Utils.FrameGraph.Recorder (recordingCommandBuffer)
-import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
+import Vulkan.Utils.FrameGraph.Swapchain (forgetSwapchainImages, importSwapchain, newSwapchainImages, presentSwapchain)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -94,11 +94,15 @@ main opts = prettyError . runResourceT $ do
     sharedFamilies
       | graphicsFamily == computeFamily = Nothing
       | otherwise = Just (graphicsFamily, computeFamily)
+  sayErrString $ case sharedFamilies of
+    Nothing -> "single queue, family " <> show graphicsFamily
+    Just (gf, cf) -> "async compute, graphics family " <> show gf <> " + compute family " <> show cf
 
   pls <- Pipelines.allocatePipelines dev
+  registry <- newSliceRegistry
   -- The geometry, tables and baked shadows are extent-independent: build them once
   -- (a one-shot generation submit) so resize only rebuilds the render targets.
-  sceneStatic <- Static.allocateStatic vma dev genQueue pls sharedFamilies
+  sceneStatic <- Static.allocateStatic vma dev registry genQueue pls sharedFamilies
   -- Animation clock, seeded once so resize (which rebuilds the targets) doesn't reset it.
   startTime <- liftIO getMonotonicTime
   -- Swapchain generation, bumped per (re)build so the per-frame slots rebuild their targets.
@@ -123,18 +127,44 @@ main opts = prettyError . runResourceT $ do
         writeIORef controls.mode mode
         unless (prev == mode) $ sayErrString ("presenting " <> viewName mode)
 
+  onFrame <- liftIO (exerciseResize opts window)
   runWindowLoop
     vc
     initialSC
     (Window.drawableSize window)
     (Window.shouldQuit window)
     WindowLoop
-      { wlMkState = allocateBindings vma dev genRef
+      { wlMkState = allocateBindings vma dev registry genRef
       , wlMkRecycled = allocateSceneSlot
-      , wlRender = renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
-      , wlOnFrame = noOnFrame
+      , wlRender = renderScene opts vc vma registry pls sceneStatic sharedFamilies window controls startTime
+      , wlOnFrame = onFrame
       , wlOnExit = noOnExit
       }
+
+{- | The @--exercise-resize@ soak: a per-frame hook stepping through the
+resizes, then quitting.
+
+Every step lands on a different extent, so each retires the swapchain and
+rebuilds the per-swapchain state — driving the path a window manager
+otherwise would, without a hand on the window.
+-}
+exerciseResize :: Options -> GLFW.Window -> IO (Word64 -> Word64 -> ResourceT IO ())
+exerciseResize opts window = case opts.exerciseResize of
+  0 -> pure noOnFrame
+  n -> do
+    counter <- newIORef (0 :: Int)
+    pure \_ _ -> liftIO do
+      k <- atomicModifyIORef' counter \c -> (c + 1, c + 1)
+      let (step, r) = k `divMod` settleFrames
+      when (r == 0) $
+        if step <= n
+          then uncurry (GLFW.setWindowSize window) (extents !! ((step - 1) `mod` length extents))
+          else GLFW.setWindowShouldClose window True
+  where
+    -- Consecutive steps differ (cyclically too), so none is a no-op resize.
+    extents :: [(Int, Int)]
+    extents = [(1800, 1100), (640, 480), (2200, 1300), (1024, 768)]
+    settleFrames = 90
 
 windowConfig :: WindowedConfig
 windowConfig =
@@ -197,18 +227,27 @@ out an idle image), the generation the slots rebuild against, and the hi-Z pyram
 The internal state (via the returned key) frees these when the swapchain is
 recreated; the static geometry/shadows are untouched.
 -}
-allocateBindings :: VMA.Allocator -> Vk.Device -> IORef Word64 -> Swapchain -> ResourceT IO (Bindings, ReleaseKey)
-allocateBindings allocator dev genRef sc = do
-  sayErrString $ "swapchain " <> show sc.sFormat <> if srgbEncoding sc.sFormat then " (blit encodes)" else " (gamma pass encodes)"
+allocateBindings :: VMA.Allocator -> Vk.Device -> SliceRegistry -> IORef Word64 -> Swapchain -> ResourceT IO (Bindings, ReleaseKey)
+allocateBindings allocator dev registry genRef sc = do
+  sayErrString $ "swapchain " <> show sc.sExtent.width <> "x" <> show sc.sExtent.height <> " " <> show sc.sFormat <> if srgbEncoding sc.sFormat then " (blit encodes)" else " (gamma pass encodes)"
   exposure <- liftIO (newIORef 1.0)
   generation <- liftIO $ atomicModifyIORef' genRef \g -> (g + 1, g + 1)
-  st <- ResourceT.createInternalState
+  -- Registered before running: a mid-build failure then unwinds through
+  -- ResourceT's own cleanup, so partial allocations can't leak past this scope
+  -- (surfacing as a VMA leak abort that masks the actual error).
+  (key, st) <- ResourceT.allocate ResourceT.createInternalState ResourceT.closeInternalState
   bindings <-
-    liftIO $ flip ResourceT.runInternalState st do
-      swapImages <- newSwapchainImages sc
-      sharedHiZ <- Targets.allocateSharedHiZ allocator dev sc.sExtent
-      pure Bindings{swapImages, exposure, generation, sharedHiZ}
-  key <- ResourceT.register $ ResourceT.closeInternalState st
+    liftIO $
+      ResourceT.runInternalState
+        do
+          -- Recreation hands the retired swapchain's image handles back to the
+          -- driver: purge their wrappers with this state, so the next
+          -- generation's images can re-wrap recycled handles.
+          _ <- ResourceT.register (forgetSwapchainImages registry sc)
+          swapImages <- newSwapchainImages registry sc
+          sharedHiZ <- Targets.allocateSharedHiZ allocator dev registry sc.sExtent
+          pure Bindings{swapImages, exposure, generation, sharedHiZ}
+        st
   pure (bindings, key)
 
 ----------------------------------------------------------------
@@ -256,6 +295,7 @@ and builds a fresh set at the current extent.
 reconcileScene
   :: VMA.Allocator
   -> Vk.Device
+  -> SliceRegistry
   -> Pipelines.ScenePipelines
   -> Static.SceneStatic
   -> Targets.SharedHiZ
@@ -264,15 +304,24 @@ reconcileScene
   -> Vk.Extent2D
   -> SceneSlot
   -> IO Scene
-reconcileScene allocator dev pls static sharedHiZ sharedFamilies generation extent slot =
+reconcileScene allocator dev registry pls static sharedHiZ sharedFamilies generation extent slot =
   readIORef slot.current >>= \case
     Just s | s.generation == generation -> pure s.scene
     prev -> do
       mapM_ (ResourceT.closeInternalState . (.owned)) prev
+      -- Drop the stale reference before re-wrapping: the rebuilt targets may
+      -- recycle the just-destroyed image handles, and the slice registry only
+      -- forgets the old wrappers once nothing reachable holds them.
+      writeIORef slot.current Nothing
       owned <- ResourceT.createInternalState
+      -- 'owned' is parked in the slot rather than registered into an enclosing
+      -- ResourceT scope, so a mid-build failure needs its own close here or it
+      -- leaks past every scope.
       scene <-
-        flip ResourceT.runInternalState owned $
-          Targets.allocateTargets allocator dev pls static extent sharedHiZ sharedFamilies False
+        ResourceT.runInternalState
+          (Targets.allocateTargets allocator dev registry pls static extent sharedHiZ sharedFamilies False)
+          owned
+          `onException` ResourceT.closeInternalState owned
       writeIORef slot.current (Just SlotState{generation, scene, owned})
       pure scene
 
@@ -284,6 +333,7 @@ renderScene
   :: Options
   -> VulkanContext SceneSlot
   -> VMA.Allocator
+  -> SliceRegistry
   -> Pipelines.ScenePipelines
   -> Static.SceneStatic
   -> Maybe (Word32, Word32)
@@ -293,7 +343,7 @@ renderScene
   -> Bindings
   -> Frame SceneSlot
   -> ResourceT IO ()
-renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime bindings f = do
+renderScene opts vc vma registry pls sceneStatic sharedFamilies window controls startTime bindings f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   now <- liftIO getMonotonicTime
   let t = realToFrac (now - startTime) :: Float
@@ -311,7 +361,7 @@ renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
 
   -- This frame-in-flight's own targets, rebuilt only when the swapchain
   -- generation moved (resize); otherwise the cached set.
-  scene <- liftIO $ reconcileScene vma (vcDevice vc) pls sceneStatic bindings.sharedHiZ sharedFamilies bindings.generation extent f.fRecycled.rrData
+  scene <- liftIO $ reconcileScene vma (vcDevice vc) registry pls sceneStatic bindings.sharedHiZ sharedFamilies bindings.generation extent f.fRecycled.rrData
 
   -- Auto-exposure over the previous frame's mean luminance, pre-written into
   -- the metering buffer (the readback lags a frame; the adaptation hides it).
@@ -351,7 +401,9 @@ renderScene opts vc vma pls sceneStatic sharedFamilies window controls startTime
       blitImage extent blitSrcImage swapManaged.image cb
   presentSwapchain graph blitted
 
-  FG.compile graph
+  -- The family partition mirrors 'queueTable' below, so the schedule already
+  -- dedups ownership hand-offs per family (and rejects two-family releases).
+  FG.compileWith (Passes.familyPartition sharedFamilies) graph
 
   -- A requested 'g' dump captures this frame's compiled graph — including
   -- which passes the current view's demand culled.

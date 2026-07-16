@@ -25,12 +25,13 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Ptr (Ptr, castPtr)
 import Foreign.Storable (peek, poke)
+import qualified Fragr as FG
 import Say (sayErrString)
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (..), describedSlice, newManagedImage, sharedAcrossQueues, transitionImageTo, transitionImagesTo)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), SliceRegistry, Usage (..), claimOwnership, describedSlice, newManagedImage, transitionImageTo, transitionImagesTo)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -168,12 +169,13 @@ async graphics + compute pair); 'Nothing' leaves them EXCLUSIVE.
 allocateStatic
   :: VMA.Allocator
   -> Vk.Device
+  -> SliceRegistry
   -> (Vk.Queue, Word32)
   -- ^ queue + family for the one-shot generation submit
   -> ScenePipelines
   -> Maybe (Word32, Word32)
   -> ResourceT IO SceneStatic
-allocateStatic allocator dev genQueue pls sharedFamilies = do
+allocateStatic allocator dev registry genQueue pls sharedFamilies = do
   -- Buffers the async compute resolve reads are CONCURRENT across the graphics +
   -- compute families.
   let
@@ -216,9 +218,12 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   (_, nearestSampler) <- allocateNearestSampler dev
 
   -- EVSM shadow cube array: one cube per light (moments) + a shared depth cube.
-  -- The resolve (async compute) samples the moments, so the array is CONCURRENT.
+  -- The resolve (async compute) samples the moments, but the array stays
+  -- EXCLUSIVE — the one cross-queue image without STORAGE usage, so CONCURRENT
+  -- would cost its DCC. The graph hands the slices across with real ownership
+  -- transfers instead ('importOwnedImage' in "Rendering.Passes").
   (_, (shadowMoments, shadowCubeView, shadowRenderViews)) <-
-    allocateCubeArray allocator dev Shadows.format Shadows.resolution Lights.slots (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) shared "shadow-moments"
+    allocateCubeArray allocator dev Shadows.format Shadows.resolution Lights.slots (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Nothing "shadow-moments"
   (_, (shadowDepthImage, shadowDepthView)) <-
     allocateArrayTarget allocator dev depthFormat Shadows.resolution 6 Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT Vk.IMAGE_ASPECT_DEPTH_BIT "shadow-depth"
   (_, viewProjBuffer) <- deviceBuffer allocator (fromIntegral (Lights.slots * Shadows.cubeFaces) * fromIntegral Shadows.viewProjBytes) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
@@ -233,12 +238,12 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- graph and the debug dumps pick up from the state it left.
   let
     staticCubes = Lights.slots - Lights.orbCount
-    momentsSlice base n = sharedAcrossQueues <$> describedSlice Shadows.format (Vk.Extent2D Shadows.resolution Shadows.resolution) shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT base n
+    momentsSlice base n = describedSlice registry Shadows.format (Vk.Extent2D Shadows.resolution Shadows.resolution) shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT base n
   bakedMoments <-
     if staticCubes == 0
       then pure Nothing
       else Just <$> momentsSlice 0 (staticCubes * Shadows.cubeFaces)
-  shadowDepth <- newManagedImage shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+  shadowDepth <- newManagedImage registry shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   orbShadow <-
     if Lights.orbCount == 0
       then pure Nothing
@@ -276,6 +281,12 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       []
     Vk.cmdCopyBuffer cb indirect countBuffer [Vk.BufferCopy Objects.mainCubeCountOffset 0 4]
     recordShadows cb pls shadowSet bakedMoments (fmap (.moments) orbShadow) shadowDepth shadowRenderViews shadowDepthView indirect
+
+  -- The fenced bake left the EXCLUSIVE moments on the generation queue's family
+  -- (the graph's default queue): claim them, so 'importOwnedImage' has an owner
+  -- to derive the first cross-family hand-off from.
+  forM_ (catMaybes [bakedMoments, fmap (.moments) orbShadow]) $
+    claimOwnership FG.defaultQueue
 
   caveCount <- liftIO do
     VMA.invalidateAllocation allocator countAlloc 0 Vk.WHOLE_SIZE

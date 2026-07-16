@@ -22,6 +22,7 @@ module Rendering.Passes
   , PassOutputs (..)
   , computeQueue
   , computeQueueId
+  , familyPartition
   , addScenePasses
   ) where
 
@@ -43,7 +44,7 @@ import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, importScratchImage, transitionImageTo)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, importOwnedImage, importScratchImage, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.Pipeline (Pipeline)
 import qualified Vulkan.Utils.Pipeline as Pipeline
@@ -91,6 +92,17 @@ default (graphics) queue, which collapses the graph to a single submit.
 -}
 computeQueueId :: Maybe a -> FG.QueueId
 computeQueueId = maybe FG.defaultQueue (const computeQueue)
+
+{- | The family partition 'FG.compileWith' schedules against.
+
+Mirrors the drivers' queue tables; the host queue is deliberately outside
+it (the host owns nothing).
+-}
+familyPartition :: Maybe (Word32, Word32) -> [(FG.QueueId, FG.FamilyId)]
+familyPartition = maybe [] \(gfx, comp) ->
+  [ (FG.defaultQueue, FG.FamilyId (fromIntegral gfx))
+  , (computeQueue, FG.FamilyId (fromIntegral comp))
+  ]
 
 {- | The @orbs.upload@ pass body: refresh the three per-frame tables.
 
@@ -223,11 +235,17 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
       Cull.record pls.cull scene.cullSet (cullParams hizValid) cb
       liftIO (writeIORef scene.hiz.pyramidPrimed True)
 
+  -- The EVSM moments are EXCLUSIVE ("Rendering.Static"), so their slices import
+  -- owned: the schedule derives the release/acquire pairs crossing to the
+  -- resolve's queue — including the frame-boundary half, since the resolve's
+  -- family still owns the slices when the next graph starts.
+  bakedMoments <- forM scene.static.bakedMoments (importOwnedImage graph "shadow.baked")
+
   -- Refresh the orbs' shadow slices, drawing the occluder set the cull just
   -- compacted for the same @t@ (an out-of-graph refresh would draw a set
   -- filtered for another orb time). See 'recordOrbShadows'.
   orbMoments <- forM scene.static.orbShadow \orb -> do
-    momentsH <- importScratchImage graph "shadow.orbMoments" orb.moments
+    momentsH <- importOwnedImage graph "shadow.orbMoments" orb.moments
     orbDepthH <- importScratchImage graph "shadow.orbDepth" orb.depth
     let orbSetup = do
           FG.readWith indirectCulled Buf.IndirectRead
@@ -310,7 +328,7 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
   aoBlurred <- blurPass "ssao.blur.y" scene.aoBlurYSet (0, 1) aoBlurredX aoWritten
 
   colorWritten <-
-    FG.addPass graph "shade" (shadeSetup visWritten aoBlurred orbMoments lights objects colorH) \_ -> do
+    FG.addPass graph "shade" (shadeSetup visWritten aoBlurred bakedMoments orbMoments lights objects colorH) \_ -> do
       cb <- recordingCommandBuffer
       Pipeline.bind cb pls.shade
       pushResolve cb pls.shade tweaks.tuning viewProj eye debugMode
@@ -454,12 +472,13 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
       FG.readWith visWritten (StorageRead shadeStage)
       FG.readWith objects (Buf.StorageRead shadeStage)
       FG.writeWith normalsH (StorageWrite shadeStage)
-    shadeSetup visWritten aoWritten orbMoments lights objects colorH = do
+    shadeSetup visWritten aoWritten bakedMoments orbMoments lights objects colorH = do
       FG.setQueue queue
       FG.readWith lights (Buf.StorageRead shadeStage)
       FG.readWith objects (Buf.StorageRead shadeStage)
       FG.readWith visWritten (StorageRead shadeStage)
       FG.readWith aoWritten (StorageRead shadeStage)
+      forM_ bakedMoments \bakedH -> FG.readWith bakedH (Sampled shadeStage)
       forM_ orbMoments \momentsH -> FG.readWith momentsH (Sampled shadeStage)
       FG.writeWith colorH (StorageWrite shadeStage)
     -- The SSAO passes' shared shape: storage reads in, one storage write out,

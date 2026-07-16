@@ -18,6 +18,7 @@ module Vulkan.Utils.FrameGraph.Buffer
   , BufferDesc (..)
   , importManagedBuffer
   , importScratchBuffer
+  , importOwnedBuffer
   , describedAs
   , sharedAcrossQueues
   , BufferState (..)
@@ -26,6 +27,8 @@ module Vulkan.Utils.FrameGraph.Buffer
   , usageState
   , transitionBufferTo
   , transitionBuffersTo
+  , queueTransition
+  , transferOwnership
   ) where
 
 import Control.Monad (foldM, unless, when)
@@ -33,14 +36,14 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, isNothing)
 import Data.Text (Text)
 import Data.Vector qualified as V
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, chainedNode, flushBarriers, markChained, queueBufferBarrier, recorderFamily, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, TransferSide (..), chainedNode, flushBarriers, markChained, queueBufferBarrier, recorderFamily, recorderHost, recorderQueue, recorderSameFamily)
 import Vulkan.Zero (zero)
 
 -- | A buffer whose stage/access the frame graph tracks and barriers.
@@ -79,9 +82,11 @@ describedAs t mb = mb{info = t}
 {- | Mark the allocation as @SHARING_MODE_CONCURRENT@ across the families it
 is used on.
 
-Required before any cross-queue access: the adapters emit no ownership
-transfer, so an @EXCLUSIVE@ resource's contents are undefined on the new
-family. Crossing queues without this is fatal, not silent.
+Required before any cross-family access the graph cannot transfer
+ownership for: an @EXCLUSIVE@ resource's contents are undefined on the new
+family, so crossing without this is fatal, not silent. Apply before
+importing — imports read it through 'FG.isShared', exempting the buffer
+from the schedule's single-owner validation.
 -}
 sharedAcrossQueues :: ManagedBuffer -> ManagedBuffer
 sharedAcrossQueues mb = mb{shared = True}
@@ -103,6 +108,8 @@ instance FG.Resource ManagedBuffer where
   -- The two halves of a cross-queue hand-off, as in the image adapter.
   preRelease h _ usage peer rec mb = transferOwnership Release rec (FG.handleId h) peer mb usage
   preAcquire h _ usage peer rec mb = transferOwnership Acquire rec (FG.handleId h) peer mb usage
+
+  isShared mb = mb.shared
 
   describeDesc d = d.info
 
@@ -183,27 +190,25 @@ transitionBuffersTo cb accesses = do
   where
     collect acc@(srcs, dsts, barriers) (mb, usage) = do
       lastQueue <- liftIO (readIORef mb.queueRef)
-      nextTransition (maybe HostAccess DeviceQueue lastQueue) False mb usage >>= \case
+      nextTransition (maybe HostAccess DeviceQueue lastQueue) (\_ _ -> True) False mb usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
 
 {- | The hook path: 'transitionBufferTo' rules, but queued and queue-aware.
 
 Queue hops chain to the driver's semaphore, like the image adapter's: the
-prior synchronization's scope must cover the usage's stage, and cross-family
-access needs CONCURRENT sharing.
+prior synchronization's scope must cover the usage's stage. Same-family
+queues share freely; crossing to another /family/ needs CONCURRENT sharing
+or an ownership acquire this pass performed.
 -}
 queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedBuffer -> Usage -> m ()
 queueTransition rec node mb usage = do
   queue <- recorderQueue rec
   chained0 <- chainedNode rec node
   hosted <- recorderHost rec
-  nextTransition (if hosted then HostAccess else DeviceQueue queue) chained0 mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  sameFamily <- recorderSameFamily rec
+  nextTransition (if hosted then HostAccess else DeviceQueue queue) sameFamily chained0 mb usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBufferBarrier rec srcStage dstStage barrier
-
--- | Which half of a cross-queue hand-off a barrier is.
-data TransferSide = Release | Acquire
-  deriving stock (Eq, Show)
 
 {- | The producer- and consumer-side halves of a cross-queue hand-off.
 
@@ -268,13 +273,27 @@ transferOwnership side rec node peer mb usage = do
       when (owned || toHost) $ queueBufferBarrier rec srcStage dstStage barrier
       liftIO (writeIORef mb.releasedRef (Just cur))
     Acquire -> do
+      -- An owned acquire without its armed release half would record an
+      -- unmatched barrier from a guessed state: a schedule bug, not a
+      -- recoverable condition.
+      when (owned && isNothing released) $
+        error
+          ( "Vulkan.Utils.FrameGraph: ownership acquire of "
+              <> show mb.info
+              <> " without a pending release; the schedule must pair the halves"
+          )
       when owned $ queueBufferBarrier rec srcStage dstStage barrier
       liftIO do
-        writeIORef mb.stateRef next
         -- The host is not a device queue: recording it as the last one would
-        -- make the next device access look cross-queue (cf. 'nextTransition').
-        unless hosted $ writeIORef mb.queueRef (Just queue)
-        writeIORef mb.releasedRef Nothing
+        -- make the next device access look cross-queue (cf. 'nextTransition'),
+        -- and the driver defers host passes — a late write here would rewind
+        -- the device-side tracking.
+        unless hosted do
+          writeIORef mb.stateRef next
+          writeIORef mb.queueRef (Just queue)
+        -- Only the owned half consumed the hand-off; a melted acquire (host,
+        -- shared, same family) must leave the slot for a pending owned one.
+        when owned $ writeIORef mb.releasedRef Nothing
       markChained rec node
 
 {- | Diff the tracked state against the 'Usage''s target and advance it.
@@ -286,12 +305,14 @@ of an already-matching state skips it.
 nextTransition
   :: (MonadIO m)
   => Accessor
+  -> (FG.QueueId -> FG.QueueId -> Bool)
+  -- ^ whether two queues belong to one family (share ownership)
   -> Bool
   -- ^ an ownership acquire already synchronized it ('chainedNode')
   -> ManagedBuffer
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.BufferMemoryBarrier))
-nextTransition accessor marked mb usage = liftIO do
+nextTransition accessor sameFamily marked mb usage = liftIO do
   cur <- readIORef mb.stateRef
   lastQueue <- readIORef mb.queueRef
   let
@@ -299,10 +320,15 @@ nextTransition accessor marked mb usage = liftIO do
     -- A first access owns nothing yet, and the host is not a queue family (its
     -- accesses order through the schedule's timeline and the producer's
     -- release barrier), so neither crosses ownership.
-    cross = case (accessor, lastQueue) of
+    crossQueue = case (accessor, lastQueue) of
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
-    chained = cross || marked
+    crossFamily =
+      crossQueue && case (accessor, lastQueue) of
+        (DeviceQueue q, Just prev) -> not (sameFamily q prev)
+        _ -> False
+    -- A cross-queue hop rides the driver's semaphore even within one family.
+    chained = crossQueue || marked
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
@@ -312,11 +338,11 @@ nextTransition accessor marked mb usage = liftIO do
   -- ownership transfer ('transferOwnership') has undefined contents there. A
   -- write that does not read them is still fine — it acquires by discarding
   -- them — but a read would see garbage, so it is fatal.
-  when (cross && not mb.shared && not (usageWrites usage)) $
+  when (crossFamily && not mb.shared && not (usageWrites usage)) $
     error
-      ( "Vulkan.Utils.FrameGraph: cross-queue read of an unshared resource ("
+      ( "Vulkan.Utils.FrameGraph: cross-family read of an unshared resource ("
           <> show mb.info
-          <> ") the graph never handed over: it must be produced on the reading queue, "
+          <> ") the graph never handed over: it must be produced on the reading family, "
           <> "marked 'sharedAcrossQueues' (CONCURRENT), or written by a pass the graph "
           <> "can transfer ownership from"
       )
@@ -341,7 +367,8 @@ nextTransition accessor marked mb usage = liftIO do
                 , Vk.size = Vk.WHOLE_SIZE
                 }
           )
-    else pure Nothing
+    else
+      pure Nothing
 
 {- | Descriptor for a 'ManagedBuffer'; carries the buffer's 'describedAs'
 summary for visualization output (the resource name travels separately).
@@ -357,10 +384,29 @@ replacing it.
 importManagedBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m (FG.Handle ManagedBuffer)
 importManagedBuffer graph name mb = do
   FG.addPreExec graph flushBarriers
+  disarmHandOff mb
   FG.importResource graph name (BufferDesc mb.info) mb
+
+-- | 'Vulkan.Utils.FrameGraph.Image.disarmHandOff' for the buffer lane.
+disarmHandOff :: (MonadIO m) => ManagedBuffer -> m ()
+disarmHandOff mb = liftIO (writeIORef mb.releasedRef Nothing)
 
 -- | 'importManagedBuffer' via 'FG.importScratch', keeping writers subject to demand culling.
 importScratchBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m (FG.Handle ManagedBuffer)
 importScratchBuffer graph name mb = do
   FG.addPreExec graph flushBarriers
+  disarmHandOff mb
   FG.importScratch graph name (BufferDesc mb.info) mb
+
+{- | The buffer counterpart of 'Vulkan.Utils.FrameGraph.Image.importOwnedImage':
+'FG.importOwned' under the wrapper's tracked last queue, so a cross-family
+first touch gets its release / acquire pair across the frame boundary.
+-}
+importOwnedBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m (FG.Handle ManagedBuffer)
+importOwnedBuffer graph name mb =
+  liftIO (readIORef mb.queueRef) >>= \case
+    Nothing -> importManagedBuffer graph name mb
+    Just owner -> do
+      FG.addPreExec graph flushBarriers
+      disarmHandOff mb
+      FG.importOwned graph name (BufferDesc mb.info) mb owner

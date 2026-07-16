@@ -18,9 +18,14 @@ module Vulkan.Utils.FrameGraph.Image
   , newManagedImageMip
   , newManagedImageLayer
   , newManagedImageSlice
+  , SliceRegistry
+  , newSliceRegistry
+  , forgetImage
+  , claimOwnership
   , ImageDesc (..)
   , importManagedImage
   , importScratchImage
+  , importOwnedImage
   , describedAs
   , sharedAcrossQueues
   , imageInfo
@@ -33,25 +38,32 @@ module Vulkan.Utils.FrameGraph.Image
   , usageState
   , transitionImageTo
   , transitionImagesTo
+  , queueTransition
+  , transferOwnership
   , sliceLayers
   , copyManagedImageToHost
   ) where
 
-import Control.Monad (foldM, unless, when)
+import Control.Monad (filterM, foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
-import Data.Maybe (fromMaybe)
+import Data.IORef (IORef, atomicModifyIORef', mkWeakIORef, newIORef, readIORef, writeIORef)
+import Data.Map.Strict (Map)
+import Data.Map.Strict qualified as Map
+import Data.Maybe (fromMaybe, isJust, isNothing)
 import Data.Text (Text)
 import Data.Text qualified as Text
 import Data.Vector qualified as V
 import Data.Word (Word32)
+import GHC.Stack (HasCallStack)
+import System.Mem (performGC)
+import System.Mem.Weak (Weak, deRefWeak)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, chainedNode, flushBarriers, markChained, queueBarrier, recorderFamily, recorderHost, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Accessor (..), Recorder, TransferSide (..), chainedNode, flushBarriers, markChained, overlappingRanges, queueBarrier, recorderFamily, recorderHost, recorderQueue, recorderSameFamily)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -63,7 +75,9 @@ intra-image barriers fall out of that. A whole-image wrapper ('newManagedImage')
 covers all mips+layers as one unit (e.g. a multiview render); per-mip
 ('newManagedImageMip', a bloom pyramid) or per-layer ('newManagedImageLayer', a
 cubemap face / array element) wrappers give finer control. Slices tracked
-separately must not overlap.
+separately must not overlap — wrapping checks that against the image's live
+wrappers in the renderer's 'SliceRegistry' and fails fast, since two trackers
+over one subresource diverge silently (wrong old layouts, missed barriers).
 -}
 data ManagedImage = ManagedImage
   { image :: Vk.Image
@@ -88,33 +102,102 @@ data ManagedImage = ManagedImage
   }
 
 -- | Wrap a whole image (all mips + layers, monolithic), starting from 'undefinedState'.
-newManagedImage :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
+newManagedImage :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
 {-# INLINE newManagedImage #-}
-newManagedImage image aspect = newManaged image (Vk.ImageSubresourceRange aspect 0 Vk.REMAINING_MIP_LEVELS 0 Vk.REMAINING_ARRAY_LAYERS)
+newManagedImage reg image aspect = newManaged reg image (Vk.ImageSubresourceRange aspect 0 Vk.REMAINING_MIP_LEVELS 0 Vk.REMAINING_ARRAY_LAYERS)
 
 -- | Wrap a single mip level (all its layers), tracked independently of the others.
-newManagedImageMip :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+newManagedImageMip :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
 {-# INLINE newManagedImageMip #-}
-newManagedImageMip image aspect mip = newManaged image (Vk.ImageSubresourceRange aspect mip 1 0 1)
+newManagedImageMip reg image aspect mip = newManaged reg image (Vk.ImageSubresourceRange aspect mip 1 0 1)
 
 -- | Wrap a single array layer / cubemap face (mip 0), tracked independently.
-newManagedImageLayer :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+newManagedImageLayer :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
 {-# INLINE newManagedImageLayer #-}
-newManagedImageLayer image aspect layer = newManaged image (Vk.ImageSubresourceRange aspect 0 1 layer 1)
+newManagedImageLayer reg image aspect layer = newManaged reg image (Vk.ImageSubresourceRange aspect 0 1 layer 1)
 
 -- | Wrap an arbitrary @(mip × layer)@ slice (e.g. one light's 6 cube faces in an array).
-newManagedImageSlice :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> Word32 -> Word32 -> m ManagedImage
+newManagedImageSlice :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> Word32 -> Word32 -> m ManagedImage
 {-# INLINE newManagedImageSlice #-}
-newManagedImageSlice image aspect baseMip levelCount baseLayer layerCount =
-  newManaged image (Vk.ImageSubresourceRange aspect baseMip levelCount baseLayer layerCount)
+newManagedImageSlice reg image aspect baseMip levelCount baseLayer layerCount =
+  newManaged reg image (Vk.ImageSubresourceRange aspect baseMip levelCount baseLayer layerCount)
 
-newManaged :: (MonadIO m) => Vk.Image -> Vk.ImageSubresourceRange -> m ManagedImage
+newManaged :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Image -> Vk.ImageSubresourceRange -> m ManagedImage
 {-# INLINE newManaged #-}
-newManaged image range = do
-  stateRef <- liftIO (newIORef undefinedState)
-  queueRef <- liftIO (newIORef Nothing)
-  releasedRef <- liftIO (newIORef Nothing)
+newManaged reg image range = liftIO do
+  stateRef <- newIORef undefinedState
+  registerSlice reg image range stateRef
+  queueRef <- newIORef Nothing
+  releasedRef <- newIORef Nothing
   pure ManagedImage{releasedRef, image, range, stateRef, queueRef, shared = False, info = ""}
+
+{- | A registry of live wrappers per image, enforcing the non-overlap
+contract at wrap time ('registerSlice').
+
+One per renderer, created where the images' owning scope begins (the
+@ResourceT@ the render loop runs in): replacing the renderer replaces the
+registry, so a dead scope's wrappers cannot poison the next one's over the
+persisting Vulkan context.
+-}
+newtype SliceRegistry = SliceRegistry (IORef (Map Vk.Image [SliceEntry]))
+
+-- | One live wrapper's range in a 'SliceRegistry' bucket.
+data SliceEntry = SliceEntry
+  { range :: Vk.ImageSubresourceRange
+  , weak :: Weak (IORef ImageState)
+  }
+
+newSliceRegistry :: (MonadIO m) => m SliceRegistry
+newSliceRegistry = liftIO (SliceRegistry <$> newIORef Map.empty)
+
+{- | Check the range against the image's live wrappers and record it, fatally
+on overlap.
+
+Entries are weak, keyed on each wrapper's 'stateRef': a dropped wrapper's
+tracker can never diverge again, so its range frees on collection. That also
+keeps a recycled 'Vk.Image' handle (destroy, then create getting the same
+value) from clashing with the destroyed image's wrappers.
+-}
+registerSlice :: (HasCallStack) => SliceRegistry -> Vk.Image -> Vk.ImageSubresourceRange -> IORef ImageState -> IO ()
+registerSlice (SliceRegistry registry) image range stateRef = do
+  live0 <- pruneLive
+  -- A clash may be a dropped wrapper the GC has not reached yet: collect
+  -- before accusing.
+  live <- if any clash live0 then performGC *> pruneLive else pure live0
+  case filter clash live of
+    [] -> pure ()
+    clashes ->
+      error
+        ( "Vulkan.Utils.FrameGraph: wrapping "
+            <> show range
+            <> " of "
+            <> show image
+            <> " overlaps a live ManagedImage over "
+            <> show (map (.range) clashes)
+            <> "; slices tracked separately must not overlap"
+        )
+  -- No finalizer: dead entries are pruned on the image's next wrap (or by
+  -- 'forgetImage'), keeping this insert the map's only writer — a finalizer
+  -- racing it could resurrect the entry it just removed.
+  weak <- mkWeakIORef stateRef (pure ())
+  atomicModifyIORef' registry \m -> (Map.insert image (SliceEntry{range, weak} : live) m, ())
+  where
+    clash e = overlappingRanges range e.range
+    pruneLive = do
+      m <- readIORef registry
+      filterM (fmap isJust . deRefWeak . (.weak)) (Map.findWithDefault [] image m)
+
+{- | Drop every wrapper registered over the image, reachable or not.
+
+The deterministic half of deregistration: weak entries only free once
+nothing holds the wrapper, but a destroyed image's wrappers may stay
+reachable through scopes that outlive it (another in-flight frame's slot).
+Register this next to the image's destruction so a recycled handle cannot
+clash with them.
+-}
+forgetImage :: (MonadIO m) => SliceRegistry -> Vk.Image -> m ()
+forgetImage (SliceRegistry registry) image =
+  liftIO (atomicModifyIORef' registry \m -> (Map.delete image m, ()))
 
 {- | Attach a summary (e.g. 'imageInfo') shown next to the resource's name
 in visualization output.
@@ -125,9 +208,11 @@ describedAs t ManagedImage{..} = ManagedImage{info = t, ..}
 {- | Mark the allocation as @SHARING_MODE_CONCURRENT@ across the families it
 is used on.
 
-Required before any cross-queue access: the adapters emit no ownership
-transfer, so an @EXCLUSIVE@ image's contents are undefined on the new
-family. Crossing queues without this is fatal, not silent.
+Required before any cross-family access the graph cannot transfer
+ownership for: an @EXCLUSIVE@ image's contents are undefined on the new
+family, so crossing without this is fatal, not silent. Apply before
+importing — imports read it through 'FG.isShared', exempting the image
+from the schedule's single-owner validation.
 -}
 sharedAcrossQueues :: ManagedImage -> ManagedImage
 sharedAcrossQueues mi = mi{shared = True}
@@ -140,16 +225,16 @@ imageInfo format (Vk.Extent2D w h) =
 {- | 'newManagedImage' with the 'imageInfo' description attached, stating the
 allocation's format/extent once.
 -}
-describedImage :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
-describedImage format ext image aspect = describedAs (imageInfo format ext) <$> newManagedImage image aspect
+describedImage :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
+describedImage reg format ext image aspect = describedAs (imageInfo format ext) <$> newManagedImage reg image aspect
 
 -- | 'newManagedImageMip' with the mip's 'imageInfo' description attached.
-describedMip :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
-describedMip format ext image aspect mip = describedAs (imageInfo format ext) <$> newManagedImageMip image aspect mip
+describedMip :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+describedMip reg format ext image aspect mip = describedAs (imageInfo format ext) <$> newManagedImageMip reg image aspect mip
 
 -- | A mip-0 layer range via 'newManagedImageSlice', with the 'imageInfo' description attached.
-describedSlice :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> m ManagedImage
-describedSlice format ext image aspect baseLayer layerCount = describedAs (imageInfo format ext) <$> newManagedImageSlice image aspect 0 1 baseLayer layerCount
+describedSlice :: (HasCallStack, MonadIO m) => SliceRegistry -> Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> m ManagedImage
+describedSlice reg format ext image aspect baseLayer layerCount = describedAs (imageInfo format ext) <$> newManagedImageSlice reg image aspect 0 1 baseLayer layerCount
 
 instance FG.Resource ManagedImage where
   type Desc ManagedImage = ImageDesc
@@ -169,6 +254,8 @@ instance FG.Resource ManagedImage where
   -- consuming side of each data edge.
   preRelease h _ usage peer rec mi = transferOwnership Release rec (FG.handleId h) peer mi usage
   preAcquire h _ usage peer rec mi = transferOwnership Acquire rec (FG.handleId h) peer mi usage
+
+  isShared mi = mi.shared
 
   describeDesc d = d.info
 
@@ -287,7 +374,7 @@ transitionImagesTo cb accesses = do
   where
     collect acc@(srcs, dsts, barriers) (mi, usage) = do
       lastQueue <- liftIO (readIORef mi.queueRef)
-      nextTransition (maybe HostAccess DeviceQueue lastQueue) False mi usage >>= \case
+      nextTransition (maybe HostAccess DeviceQueue lastQueue) (\_ _ -> True) False mi usage >>= \case
         Nothing -> pure acc
         Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
 
@@ -323,21 +410,18 @@ waited on ('chainedNode') — it chains to it instead: source scope becomes
 the destination stage with no access mask, since the semaphore/event
 already provides execution ordering and memory availability. The driver's
 wait @dstStageMask@ / event scope must cover the usage's stage (both then
-chain), and cross-family access needs CONCURRENT sharing: no ownership
-release/acquire pair is emitted, so an EXCLUSIVE image's contents are
-undefined on the new family.
+chain). Same-family queues share freely; crossing to another /family/
+needs CONCURRENT sharing or an ownership acquire this pass performed —
+otherwise an EXCLUSIVE image's contents are undefined there.
 -}
 queueTransition :: (MonadIO m) => Recorder -> Int -> ManagedImage -> Usage -> m ()
 queueTransition rec node mi usage = do
   queue <- recorderQueue rec
   chained0 <- chainedNode rec node
   hosted <- recorderHost rec
-  nextTransition (if hosted then HostAccess else DeviceQueue queue) chained0 mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+  sameFamily <- recorderSameFamily rec
+  nextTransition (if hosted then HostAccess else DeviceQueue queue) sameFamily chained0 mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
     queueBarrier rec srcStage dstStage barrier
-
--- | Which half of a cross-queue hand-off a barrier is.
-data TransferSide = Release | Acquire
-  deriving stock (Eq, Show)
 
 {- | The producer- and consumer-side halves of a cross-queue hand-off.
 
@@ -421,13 +505,28 @@ transferOwnership side rec node peer mi usage = do
         liftIO (writeIORef mi.stateRef next)
       liftIO (writeIORef mi.releasedRef (Just cur))
     Acquire -> do
+      -- An owned acquire without its armed release half would record an
+      -- unmatched barrier from a guessed state: a schedule bug, not a
+      -- recoverable condition.
+      when (owned && isNothing released) $
+        error
+          ( "Vulkan.Utils.FrameGraph: ownership acquire of "
+              <> show mi.info
+              <> " without a pending release; the schedule must pair the halves"
+          )
       when owned $ queueBarrier rec srcStage dstStage barrier
       liftIO do
-        writeIORef mi.stateRef next
         -- The host is not a device queue: recording it as the last one would
-        -- make the next device access look cross-queue (cf. 'nextTransition').
-        unless hosted $ writeIORef mi.queueRef (Just queue)
-        writeIORef mi.releasedRef Nothing
+        -- make the next device access look cross-queue (cf. 'nextTransition'),
+        -- and its release already advanced the state (the @toHost@ arm) — the
+        -- driver defers host passes, so a late write here would rewind the
+        -- device-side tracking.
+        unless hosted do
+          writeIORef mi.stateRef next
+          writeIORef mi.queueRef (Just queue)
+        -- Only the owned half consumed the hand-off; a melted acquire (host,
+        -- shared, same family) must leave the slot for a pending owned one.
+        when owned $ writeIORef mi.releasedRef Nothing
       markChained rec node
 
 {- | Diff the tracked state against the 'Usage''s target and advance it.
@@ -439,12 +538,14 @@ runs.
 nextTransition
   :: (MonadIO m)
   => Accessor
+  -> (FG.QueueId -> FG.QueueId -> Bool)
+  -- ^ whether two queues belong to one family (share ownership)
   -> Bool
   -- ^ an ownership acquire already synchronized it ('chainedNode')
   -> ManagedImage
   -> Usage
   -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.ImageMemoryBarrier))
-nextTransition accessor marked mi usage = liftIO do
+nextTransition accessor sameFamily marked mi usage = liftIO do
   cur <- readIORef mi.stateRef
   lastQueue <- readIORef mi.queueRef
   let
@@ -452,14 +553,19 @@ nextTransition accessor marked mi usage = liftIO do
     -- A first access owns nothing yet, and the host is not a queue family (its
     -- accesses order through the schedule's timeline and the producer's
     -- release barrier), so neither crosses ownership.
-    cross = case (accessor, lastQueue) of
+    crossQueue = case (accessor, lastQueue) of
       (DeviceQueue q, Just prev) -> q /= prev
       _ -> False
-    chained = cross || marked
+    crossFamily =
+      crossQueue && case (accessor, lastQueue) of
+        (DeviceQueue q, Just prev) -> not (sameFamily q prev)
+        _ -> False
+    -- A cross-queue hop rides the driver's semaphore even within one family.
+    chained = crossQueue || marked
     -- Crossing to a new family without a transfer: the contents are undefined
     -- there, so the access acquires by discarding them (it writes — the guard
     -- below rejects a read).
-    discards = cross && not mi.shared
+    discards = crossFamily && not mi.shared
     srcStage = if chained then next.stage else cur.stage
     srcAccess = if chained then zero else cur.access
     -- Semaphore/event-ordered same-state accesses need no barrier of their
@@ -469,11 +575,11 @@ nextTransition accessor marked mi usage = liftIO do
   -- ownership transfer ('transferOwnership') has undefined contents there. A
   -- write that does not read them is still fine — it acquires by discarding
   -- (see 'discards') — but a read would see garbage, so it is fatal.
-  when (cross && not mi.shared && not (usageWrites usage)) $
+  when (crossFamily && not mi.shared && not (usageWrites usage)) $
     error
-      ( "Vulkan.Utils.FrameGraph: cross-queue read of an unshared resource ("
+      ( "Vulkan.Utils.FrameGraph: cross-family read of an unshared resource ("
           <> show mi.info
-          <> ") the graph never handed over: it must be produced on the reading queue, "
+          <> ") the graph never handed over: it must be produced on the reading family, "
           <> "marked 'sharedAcrossQueues' (CONCURRENT), or written by a pass the graph "
           <> "can transfer ownership from"
       )
@@ -501,7 +607,8 @@ nextTransition accessor marked mi usage = liftIO do
                 , Vk.subresourceRange = mi.range
                 }
           )
-    else pure Nothing
+    else
+      pure Nothing
 
 {- | Descriptor for a 'ManagedImage'; carries the image's 'describedAs'
 summary for visualization output (the resource name travels separately).
@@ -522,7 +629,17 @@ sampler). For targets only this graph's passes consume, use
 importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m (FG.Handle ManagedImage)
 importManagedImage graph name mi = do
   FG.addPreExec graph flushBarriers
+  disarmHandOff mi
   FG.importResource graph name (ImageDesc mi.info) mi
+
+{- | Drop a hand-off a previous graph's melted acquire left armed.
+
+Run at import, so the unpaired-acquire check sees only this graph's
+releases — a stale slot would let it pass and record a barrier from a
+frames-old state.
+-}
+disarmHandOff :: (MonadIO m) => ManagedImage -> m ()
+disarmHandOff mi = liftIO (writeIORef mi.releasedRef Nothing)
 
 {- | 'importManagedImage' via 'FG.importScratch', keeping writers subject to demand culling.
 
@@ -533,4 +650,30 @@ consumer must say 'FG.setSideEffect' themselves.
 importScratchImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m (FG.Handle ManagedImage)
 importScratchImage graph name mi = do
   FG.addPreExec graph flushBarriers
+  disarmHandOff mi
   FG.importScratch graph name (ImageDesc mi.info) mi
+
+{- | 'importManagedImage' declaring the queue that owns the image across the
+frame boundary ('FG.importOwned'), read off the wrapper's own tracking: a
+first touch on another family this frame derives a real release / acquire
+pair — the release recorded on the owning queue — instead of the fatal
+cross-family read. An image no device queue has touched yet imports
+plainly.
+-}
+importOwnedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m (FG.Handle ManagedImage)
+importOwnedImage graph name mi =
+  liftIO (readIORef mi.queueRef) >>= \case
+    Nothing -> importManagedImage graph name mi
+    Just owner -> do
+      FG.addPreExec graph flushBarriers
+      disarmHandOff mi
+      FG.importOwned graph name (ImageDesc mi.info) mi owner
+
+{- | Declare the queue that owns the image, established outside any graph.
+
+For producers the adapters cannot see — a fenced one-shot bake, an upload
+queue — so 'importOwnedImage' has an owner to derive the first hand-off
+from. In-graph accesses track this themselves.
+-}
+claimOwnership :: (MonadIO m) => FG.QueueId -> ManagedImage -> m ()
+claimOwnership queue mi = liftIO (writeIORef mi.queueRef (Just queue))

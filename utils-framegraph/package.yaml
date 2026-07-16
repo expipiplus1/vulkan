@@ -49,6 +49,7 @@ tests:
     - base
     - containers
     - vector
+    - vulkan
     - vulkan-utils-framegraph
     - fragr
     - tasty

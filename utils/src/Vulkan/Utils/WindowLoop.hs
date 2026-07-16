@@ -90,9 +90,13 @@ runWindowLoop vc initialSC getSize shouldQuit WindowLoop{..} = do
             -- one-shot wait is cheap.
             Vk.deviceWaitIdle (vcDevice vc)
             sc' <- recreateSwapchain (vcPhysicalDevice vc) (vcDevice vc) newSize currentSC
-            (newSt, newKey) <- wlMkState sc'
+            -- Free the old state before building its replacement: recreation
+            -- already retired the old swapchain's images, so the new state may
+            -- be handed their recycled handles — any bookkeeping the old state
+            -- keys on them must be gone before wlMkState re-wraps.
             (_, oldKey) <- liftIO $ readIORef stRef
             release oldKey
+            (newSt, newKey) <- wlMkState sc'
             liftIO $ writeIORef scRef sc'
             liftIO $ writeIORef stRef (newSt, newKey)
             pure sc'

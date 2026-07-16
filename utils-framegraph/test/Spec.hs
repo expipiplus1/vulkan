@@ -1,17 +1,411 @@
 module Main (main) where
 
+import Control.Exception (ErrorCall, try)
+import Control.Monad (void)
+import Data.IORef (IORef, modifyIORef', newIORef, readIORef)
 import Data.IntMap.Strict qualified as IntMap
 import Data.IntSet qualified as IntSet
 import Data.List (sort, subsequences)
-import Data.Word (Word64)
+import Data.Word (Word32, Word64)
 import Test.Tasty (TestTree, defaultMain, testGroup)
-import Test.Tasty.HUnit (assertBool, testCase, (@?=))
+import Test.Tasty.HUnit (assertBool, assertFailure, testCase, (@?=))
 
 import Fragr qualified as FG
+import Vulkan.CStruct.Extends (SomeStruct (..))
+import Vulkan.Core10 qualified as Vk
 import Vulkan.Utils.FrameGraph.Aliasing (Candidate (..), happensBefore, planAliases, scheduleOf)
+import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer (..), newManagedBuffer)
+import Vulkan.Utils.FrameGraph.Buffer qualified as Buffer
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), newManagedImage, newManagedImageLayer, newManagedImageMip, newSliceRegistry)
+import Vulkan.Utils.FrameGraph.Image qualified as Image
+import Vulkan.Utils.FrameGraph.Recorder (Barriers (..), Recorder, TransferSide (..), chainedNode, newRecorder, recorderQueue, recordingBackend, setRecorder, setRecorderFamilies, setRecorderHost, takeBarriers)
+import Vulkan.Zero (zero)
 
 main :: IO ()
-main = defaultMain (testGroup "vulkan-utils-framegraph" [ordering, aliasing, exhaustive])
+main = defaultMain (testGroup "vulkan-utils-framegraph" [ordering, aliasing, exhaustive, slices, transfers, boundary])
+
+----------------------------------------------------------------
+-- Slice wrap registry
+----------------------------------------------------------------
+
+{- | Expect the wrap to be rejected; touch @alive@ after, so the clashing
+wrapper stays reachable through the check's garbage collection.
+-}
+rejectedOver :: ManagedImage -> IO ManagedImage -> IO ()
+rejectedOver alive wrap =
+  try @ErrorCall wrap >>= \case
+    Left _ -> void (readIORef alive.stateRef)
+    Right _ -> assertFailure "overlapping wrap accepted"
+
+img :: Vk.Image
+img = Vk.Image 1
+
+slices :: TestTree
+slices =
+  testGroup
+    "slice wrap registry"
+    [ testCase "disjoint mips of one image wrap fine" do
+        reg <- newSliceRegistry
+        _ <- newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 0
+        void (newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 1)
+    , testCase "a second wrapper over a live mip is fatal" do
+        reg <- newSliceRegistry
+        a <- newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 0
+        rejectedOver a (newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 0)
+    , testCase "a whole-image wrapper clashes with a live mip" do
+        reg <- newSliceRegistry
+        a <- newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 3
+        rejectedOver a (newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT)
+    , testCase "disjoint aspects of one subresource wrap fine" do
+        reg <- newSliceRegistry
+        _ <- newManagedImage reg img Vk.IMAGE_ASPECT_DEPTH_BIT
+        void (newManagedImage reg img Vk.IMAGE_ASPECT_STENCIL_BIT)
+    , testCase "mip vs layer wrappers clash where they intersect" do
+        reg <- newSliceRegistry
+        -- Both cover (mip 0, layer 0).
+        a <- newManagedImageMip reg img Vk.IMAGE_ASPECT_COLOR_BIT 0
+        rejectedOver a (newManagedImageLayer reg img Vk.IMAGE_ASPECT_COLOR_BIT 0)
+    , testCase "dropping the old wrapper legalizes the re-wrap" do
+        reg <- newSliceRegistry
+        void (newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT)
+        -- The registry collects before accusing, so the dropped wrapper's
+        -- entry dies here instead of poisoning the image forever.
+        void (newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT)
+    , -- The renderer-scope semantics: a new scope's registry owes nothing to
+      -- the old one's wrappers, even while they are still reachable.
+      testCase "a fresh registry accepts a handle another one holds live" do
+        old <- newSliceRegistry
+        a <- newManagedImage old img Vk.IMAGE_ASPECT_COLOR_BIT
+        reg <- newSliceRegistry
+        _ <- newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT
+        void (readIORef a.stateRef)
+    ]
+
+----------------------------------------------------------------
+-- Ownership transfer: the QFOT pair semantics, no device
+----------------------------------------------------------------
+
+-- | Queues 0 and 2 share family 0; queue 1 is family 1; queue 3 is the host.
+family :: FG.QueueId -> Word32
+family (FG.QueueId q) = case q of
+  0 -> 0
+  1 -> 1
+  2 -> 0
+  _ -> Vk.QUEUE_FAMILY_IGNORED
+
+{- | A recorder over a null command buffer: the hooks' barriers are only ever
+drained with 'takeBarriers', never flushed into it — so every hook call is
+followed by a drain, keeping the batch's overlap flush unreachable.
+-}
+fakeRecorder :: IO Recorder
+fakeRecorder = do
+  rec <- newRecorder zero
+  setRecorderFamilies rec family
+  pure rec
+
+onQueue :: Recorder -> Int -> IO ()
+onQueue rec q = setRecorder rec (FG.QueueId q) zero
+
+-- | Freshly wrapped (through @wrap@), brought to 'Image.ColorAttachment' on queue 0.
+producedImageWith :: (ManagedImage -> ManagedImage) -> Recorder -> IO ManagedImage
+producedImageWith wrap rec = do
+  reg <- newSliceRegistry
+  mi <- wrap <$> newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT
+  onQueue rec 0
+  Image.queueTransition rec 0 mi Image.ColorAttachment
+  _ <- takeBarriers rec
+  pure mi
+
+producedImage :: Recorder -> IO ManagedImage
+producedImage = producedImageWith id
+
+-- | Freshly wrapped and storage-written on queue 0.
+producedBuffer :: Recorder -> IO ManagedBuffer
+producedBuffer rec = do
+  mb <- newManagedBuffer buf
+  onQueue rec 0
+  Buffer.queueTransition rec 0 mb storageWrite
+  _ <- takeBarriers rec
+  pure mb
+
+buf :: Vk.Buffer
+buf = Vk.Buffer 2
+
+-- | The batch's single image barrier: (families, layouts, access masks).
+imageHalf :: Barriers -> IO ((Word32, Word32), (Vk.ImageLayout, Vk.ImageLayout), (Vk.AccessFlags, Vk.AccessFlags))
+imageHalf b = case b.images of
+  [SomeStruct ib] ->
+    pure
+      ( (ib.srcQueueFamilyIndex, ib.dstQueueFamilyIndex)
+      , (ib.oldLayout, ib.newLayout)
+      , (ib.srcAccessMask, ib.dstAccessMask)
+      )
+  bs -> assertFailure ("expected one image barrier, got " <> show (length bs))
+
+-- | The batch's single buffer barrier: (families, access masks).
+bufferHalf :: Barriers -> IO ((Word32, Word32), (Vk.AccessFlags, Vk.AccessFlags))
+bufferHalf b = case b.buffers of
+  [SomeStruct bb] ->
+    pure
+      ( (bb.srcQueueFamilyIndex, bb.dstQueueFamilyIndex)
+      , (bb.srcAccessMask, bb.dstAccessMask)
+      )
+  bs -> assertFailure ("expected one buffer barrier, got " <> show (length bs))
+
+sampled :: Image.Usage
+sampled = Image.Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT
+
+storage :: Image.Usage
+storage = Image.StorageRead Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+
+storageWrite :: Buffer.Usage
+storageWrite = Buffer.StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+
+storageRead :: Buffer.Usage
+storageRead = Buffer.StorageRead Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+
+transfers :: TestTree
+transfers =
+  testGroup
+    "ownership transfer"
+    [ testCase "an owned hand-off records matching release/acquire halves" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        Image.transferOwnership Release rec 7 (FG.QueueId 1) mi sampled
+        (relFams, relLayouts, relAccess) <- imageHalf =<< takeBarriers rec
+        relFams @?= (0, 1)
+        relLayouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+        relAccess @?= (Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT, zero)
+        -- The release performs the transition; the slot keeps the state it saw.
+        readIORef mi.releasedRef >>= (@?= Just (Image.usageState Image.ColorAttachment))
+        readIORef mi.stateRef >>= (@?= Image.usageState sampled)
+        onQueue rec 1
+        Image.transferOwnership Acquire rec 7 (FG.QueueId 0) mi sampled
+        (acqFams, acqLayouts, acqAccess) <- imageHalf =<< takeBarriers rec
+        -- The spec wants the halves identical up to the ignored scopes.
+        acqFams @?= relFams
+        acqLayouts @?= relLayouts
+        acqAccess @?= (zero, Vk.ACCESS_SHADER_READ_BIT)
+        readIORef mi.releasedRef >>= (@?= Nothing)
+        readIORef mi.queueRef >>= (@?= Just (FG.QueueId 1))
+        chainedNode rec 7 >>= assertBool "the acquire marks the node chained"
+    , testCase "a melted acquire leaves the hand-off for a pending owned one" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        -- One version, two transfers: a host readback plus an owned hand-off
+        -- to family 1 — the shape a host + device fan-out compiles to.
+        Image.transferOwnership Release rec 7 (FG.QueueId 3) mi Image.HostRead
+        _ <- takeBarriers rec
+        Image.transferOwnership Release rec 8 (FG.QueueId 1) mi storage
+        (relFams, relLayouts, _) <- imageHalf =<< takeBarriers rec
+        relFams @?= (0, 1)
+        -- The host's melted acquire must not spend the slot the owned one needs.
+        setRecorderHost rec (FG.QueueId 3)
+        Image.transferOwnership Acquire rec 7 (FG.QueueId 0) mi Image.HostRead
+        readIORef mi.releasedRef >>= (@?= Just (Image.usageState Image.HostRead))
+        onQueue rec 1
+        Image.transferOwnership Acquire rec 8 (FG.QueueId 0) mi storage
+        (acqFams, acqLayouts, _) <- imageHalf =<< takeBarriers rec
+        acqFams @?= relFams
+        acqLayouts @?= relLayouts
+        readIORef mi.releasedRef >>= (@?= Nothing)
+    , testCase "a late host acquire does not rewind the device tracking" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        -- The same fan-out, but hooks in the Driver's real order: it defers
+        -- host passes, so the owned acquire lands before the host's melted one.
+        Image.transferOwnership Release rec 7 (FG.QueueId 3) mi Image.HostRead
+        _ <- takeBarriers rec
+        Image.transferOwnership Release rec 8 (FG.QueueId 1) mi storage
+        _ <- takeBarriers rec
+        onQueue rec 1
+        Image.transferOwnership Acquire rec 8 (FG.QueueId 0) mi storage
+        _ <- takeBarriers rec
+        setRecorderHost rec (FG.QueueId 3)
+        Image.transferOwnership Acquire rec 7 (FG.QueueId 0) mi Image.HostRead
+        readIORef mi.stateRef >>= (@?= Image.usageState storage)
+        readIORef mi.queueRef >>= (@?= Just (FG.QueueId 1))
+    , testCase "an owned acquire without its release half is fatal" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        Image.transferOwnership Release rec 7 (FG.QueueId 1) mi sampled
+        _ <- takeBarriers rec
+        onQueue rec 1
+        Image.transferOwnership Acquire rec 7 (FG.QueueId 0) mi sampled
+        _ <- takeBarriers rec
+        -- The slot is single-use: a duplicate acquire cannot replay the
+        -- consumed hand-off, and recording a guessed half would be worse.
+        try @ErrorCall (Image.transferOwnership Acquire rec 8 (FG.QueueId 0) mi sampled) >>= \case
+          Left _ -> pure ()
+          Right () -> assertFailure "an unpaired owned acquire was accepted"
+    , testCase "a CONCURRENT hand-off is a producer-side transition, no families named" do
+        rec <- fakeRecorder
+        mi <- producedImageWith Image.sharedAcrossQueues rec
+        Image.transferOwnership Release rec 7 (FG.QueueId 1) mi sampled
+        (fams, layouts, _) <- imageHalf =<< takeBarriers rec
+        fams @?= (Vk.QUEUE_FAMILY_IGNORED, Vk.QUEUE_FAMILY_IGNORED)
+        layouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+        onQueue rec 1
+        Image.transferOwnership Acquire rec 7 (FG.QueueId 0) mi sampled
+        acq <- takeBarriers rec
+        assertBool "the acquire half melts" (null acq.images)
+    , testCase "a same-family hop chains to the semaphore, keeping contents" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        onQueue rec 2
+        Image.queueTransition rec 1 mi sampled
+        (fams, layouts, access) <- imageHalf =<< takeBarriers rec
+        fams @?= (Vk.QUEUE_FAMILY_IGNORED, Vk.QUEUE_FAMILY_IGNORED)
+        layouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+        -- The semaphore already made the writes available.
+        fst access @?= zero
+    , testCase "a cross-family write acquires by discarding" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        onQueue rec 1
+        Image.queueTransition rec 1 mi Image.TransferDst
+        (fams, layouts, _) <- imageHalf =<< takeBarriers rec
+        fams @?= (Vk.QUEUE_FAMILY_IGNORED, Vk.QUEUE_FAMILY_IGNORED)
+        layouts @?= (Vk.IMAGE_LAYOUT_UNDEFINED, Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+    , testCase "a cross-family read of an unshared image is fatal" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        onQueue rec 1
+        try @ErrorCall (Image.queueTransition rec 1 mi sampled) >>= \case
+          Left _ -> pure ()
+          Right () -> assertFailure "an unhanded cross-family read was accepted"
+    , testCase "the buffer pair mirrors the image rules, minus layout" do
+        rec <- fakeRecorder
+        mb <- producedBuffer rec
+        Buffer.transferOwnership Release rec 7 (FG.QueueId 1) mb storageRead
+        (relFams, relAccess) <- bufferHalf =<< takeBarriers rec
+        relFams @?= (0, 1)
+        relAccess @?= (Vk.ACCESS_SHADER_WRITE_BIT, zero)
+        readIORef mb.releasedRef >>= (@?= Just (Buffer.usageState storageWrite))
+        onQueue rec 1
+        Buffer.transferOwnership Acquire rec 7 (FG.QueueId 0) mb storageRead
+        (acqFams, acqAccess) <- bufferHalf =<< takeBarriers rec
+        acqFams @?= relFams
+        acqAccess @?= (zero, Vk.ACCESS_SHADER_READ_BIT)
+        readIORef mb.releasedRef >>= (@?= Nothing)
+        readIORef mb.queueRef >>= (@?= Just (FG.QueueId 1))
+    , testCase "a melted buffer release records nothing but arms the slot" do
+        rec <- fakeRecorder
+        mb <- producedBuffer rec
+        -- No layout to move: a same-family release is pure bookkeeping.
+        Buffer.transferOwnership Release rec 7 (FG.QueueId 2) mb storageRead
+        melted <- takeBarriers rec
+        assertBool "a same-family release records no barrier" (null melted.buffers)
+        onQueue rec 2
+        Buffer.transferOwnership Acquire rec 7 (FG.QueueId 0) mb storageRead
+        readIORef mb.releasedRef >>= (@?= Just (Buffer.usageState storageWrite))
+    ]
+
+----------------------------------------------------------------
+-- Frame-boundary ownership: importOwned* driven end to end, no device
+----------------------------------------------------------------
+
+{- | A graph collecting every non-empty barrier batch as (queue, batch).
+The drains are installed /before/ the import claims the flush slot, so
+'Vulkan.Utils.FrameGraph.Recorder.flushBarriers' always finds an empty
+batch and the zero command buffer is never recorded into.
+-}
+drainingGraph :: IO (FG.FrameGraph Recorder (), IORef [(FG.QueueId, Barriers)])
+drainingGraph = do
+  g <- FG.newFrameGraph @Recorder @()
+  batches <- newIORef []
+  let drain r = do
+        q <- recorderQueue r
+        b <- takeBarriers r
+        case (b.images, b.buffers) of
+          ([], []) -> pure ()
+          _ -> modifyIORef' batches ((q, b) :)
+  FG.addPreExec g drain
+  FG.addPostExec g drain
+  pure (g, batches)
+
+runBoundary :: Recorder -> FG.FrameGraph Recorder () -> [(FG.QueueId, FG.FamilyId)] -> IO ()
+runBoundary rec g partition = do
+  FG.compileWith partition g
+  FG.executeQueued g (recordingBackend rec (const zero)) Nothing rec ()
+
+-- | The collected batches: an acquire on top of the release it consumed.
+boundaryPair :: IORef [(FG.QueueId, Barriers)] -> IO ((FG.QueueId, Barriers), (FG.QueueId, Barriers))
+boundaryPair batches =
+  readIORef batches >>= \case
+    [acq, rel] -> pure (rel, acq)
+    bs -> assertFailure ("expected the release and acquire halves, got " <> show (length bs))
+
+boundary :: TestTree
+boundary =
+  testGroup
+    "frame-boundary ownership"
+    [ testCase "an owned image import pairs a foreign first read across frames" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        (g, batches) <- drainingGraph
+        h <- Image.importOwnedImage g "ext" mi
+        _ <- FG.addPass g "Sample" (FG.setQueue (FG.QueueId 1) *> FG.readWith h sampled *> FG.setSideEffect) (\_ -> pure ())
+        runBoundary rec g [(FG.QueueId 0, FG.FamilyId 0), (FG.QueueId 1, FG.FamilyId 1)]
+        ((qr, rel), (qa, acq)) <- boundaryPair batches
+        qr @?= FG.QueueId 0
+        qa @?= FG.QueueId 1
+        (relFams, relLayouts, _) <- imageHalf rel
+        (acqFams, acqLayouts, _) <- imageHalf acq
+        relFams @?= (0, 1)
+        acqFams @?= relFams
+        relLayouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+        acqLayouts @?= relLayouts
+        readIORef mi.releasedRef >>= (@?= Nothing)
+        readIORef mi.queueRef >>= (@?= Just (FG.QueueId 1))
+    , testCase "the pair melts within the owner's family" do
+        rec <- fakeRecorder
+        mi <- producedImage rec
+        (g, batches) <- drainingGraph
+        h <- Image.importOwnedImage g "ext" mi
+        _ <- FG.addPass g "Sample" (FG.setQueue (FG.QueueId 2) *> FG.readWith h sampled *> FG.setSideEffect) (\_ -> pure ())
+        runBoundary rec g [(FG.QueueId 0, FG.FamilyId 0), (FG.QueueId 2, FG.FamilyId 0)]
+        readIORef batches >>= \case
+          [(q, rel)] -> do
+            q @?= FG.QueueId 0
+            (fams, layouts, _) <- imageHalf rel
+            -- A same-family hand-off is a producer-side transition, no QFOT.
+            fams @?= (Vk.QUEUE_FAMILY_IGNORED, Vk.QUEUE_FAMILY_IGNORED)
+            layouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+          bs -> assertFailure ("expected one melted release, got " <> show (length bs))
+    , testCase "an untouched wrapper imports plainly" do
+        rec <- fakeRecorder
+        reg <- newSliceRegistry
+        mi <- newManagedImage reg img Vk.IMAGE_ASPECT_COLOR_BIT
+        (g, batches) <- drainingGraph
+        h <- Image.importOwnedImage g "ext" mi
+        _ <- FG.addPass g "Draw" (FG.setQueue (FG.QueueId 1) *> FG.writeWith_ h Image.ColorAttachment) (\_ -> pure ())
+        runBoundary rec g [(FG.QueueId 0, FG.FamilyId 0), (FG.QueueId 1, FG.FamilyId 1)]
+        readIORef batches >>= \case
+          [(q, b)] -> do
+            q @?= FG.QueueId 1
+            (fams, layouts, _) <- imageHalf b
+            fams @?= (Vk.QUEUE_FAMILY_IGNORED, Vk.QUEUE_FAMILY_IGNORED)
+            layouts @?= (Vk.IMAGE_LAYOUT_UNDEFINED, Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+          bs -> assertFailure ("expected one plain transition, got " <> show (length bs))
+    , testCase "an owned buffer import pairs the same way, minus layout" do
+        rec <- fakeRecorder
+        mb <- producedBuffer rec
+        (g, batches) <- drainingGraph
+        h <- Buffer.importOwnedBuffer g "ext" mb
+        _ <- FG.addPass g "ReadBack" (FG.setQueue (FG.QueueId 1) *> FG.readWith h storageRead *> FG.setSideEffect) (\_ -> pure ())
+        runBoundary rec g [(FG.QueueId 0, FG.FamilyId 0), (FG.QueueId 1, FG.FamilyId 1)]
+        ((qr, rel), (qa, acq)) <- boundaryPair batches
+        qr @?= FG.QueueId 0
+        qa @?= FG.QueueId 1
+        (relFams, relAccess) <- bufferHalf rel
+        (acqFams, acqAccess) <- bufferHalf acq
+        relFams @?= (0, 1)
+        acqFams @?= relFams
+        relAccess @?= (Vk.ACCESS_SHADER_WRITE_BIT, zero)
+        acqAccess @?= (zero, Vk.ACCESS_SHADER_READ_BIT)
+        readIORef mb.queueRef >>= (@?= Just (FG.QueueId 1))
+    ]
 
 ----------------------------------------------------------------
 -- Exhaustive: every small schedule, against an independent oracle

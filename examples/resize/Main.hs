@@ -57,9 +57,9 @@ import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..))
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), SubmitExtras (..), acquireFrameImage, noExtras, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), SubmitConfig (..), frameSubmitConfig, submitGraphQueued)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, sharedAcrossQueues)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), SliceRegistry, Usage (..), forgetImage, importManagedImage, newManagedImage, newSliceRegistry, sharedAcrossQueues)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
-import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
+import Vulkan.Utils.FrameGraph.Swapchain (forgetSwapchainImages, importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.Pipeline (Pipeline)
 import qualified Vulkan.Utils.Pipeline as Pipeline
@@ -88,6 +88,7 @@ main = prettyError . runResourceT $ do
   let dev = vcDevice vc
 
   juliaPL <- allocateJuliaPipeline dev
+  registry <- newSliceRegistry
 
   -- One startup decision: does compute get its own queue family? If so, the
   -- julia pass runs on QueueId 1 and hands the offscreen image over with a
@@ -104,7 +105,7 @@ main = prettyError . runResourceT $ do
     (drawableSize sdlWindow)
     (shouldQuit sdlWindow)
     WindowLoop
-      { wlMkState = allocateBindings dev vma juliaPL sharedFamilies
+      { wlMkState = allocateBindings dev vma registry juliaPL sharedFamilies
       , wlMkRecycled = noRecycledResources
       , wlRender = \bindings f -> renderJulia vc juliaPL topology colorRef bindings f
       , wlOnFrame = \start end -> reportFrameTime (end - start)
@@ -199,12 +200,13 @@ data Bindings = Bindings
 allocateBindings
   :: Vk.Device
   -> VMA.Allocator
+  -> SliceRegistry
   -> Pipeline
   -> Maybe (Word32, Word32)
   -- ^ (graphics, compute) families to share the offscreen image across, if async.
   -> Swapchain
   -> ResourceT IO (Bindings, ReleaseKey)
-allocateBindings dev allocator jp sharedFamilies sc = do
+allocateBindings dev allocator registry jp sharedFamilies sc = do
   -- A single offscreen RGBA8 storage image (+ view). Compute writes here; a
   -- blit then copies (and converts RGBA→BGRA) to the acquired swapchain image.
   (imageKey, (image, _, _)) <-
@@ -218,14 +220,19 @@ allocateBindings dev allocator jp sharedFamilies sc = do
   -- also the only topology that accesses it across queues.
   offscreen <-
     maybe id (const sharedAcrossQueues) sharedFamilies
-      <$> newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
-  swapImages <- newSwapchainImages sc
+      <$> newManagedImage registry image Vk.IMAGE_ASPECT_COLOR_BIT
+  swapImages <- newSwapchainImages registry sc
   lastConstants <- liftIO (newIORef Nothing)
 
   -- runWindowLoop fires exactly one release key on resize: free the pool (and
   -- its sets) first, then the view, then the image. The swapchain images belong
-  -- to the swapchain, so their wrappers need no release.
-  bindingsKey <- register (mapM_ release ([poolKey, viewKey, imageKey] :: [ReleaseKey]))
+  -- to the swapchain, so their wrappers need no release — but the freed handles
+  -- may be recycled into the next state's images, so purge the wrappers from
+  -- the registry with them.
+  bindingsKey <- register do
+    mapM_ release ([poolKey, viewKey, imageKey] :: [ReleaseKey])
+    forgetSwapchainImages registry sc
+    forgetImage registry image
 
   pure
     ( Bindings

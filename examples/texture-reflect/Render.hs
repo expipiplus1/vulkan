@@ -44,7 +44,7 @@ import qualified Vulkan.Core13 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (..), copyManagedImageToHost, importManagedImage, newManagedImage)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, SliceRegistry, Usage (..), copyManagedImageToHost, importManagedImage, newManagedImage, newSliceRegistry)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
@@ -91,6 +91,7 @@ data Shared = Shared
   , set0 :: Set
   , set1 :: Set
   , graph :: FG.FrameGraph Recorder ()
+  , registry :: SliceRegistry
   }
 
 render
@@ -105,7 +106,8 @@ render allocator device graphicsQueueFamilyIndex = do
   globalsSet <- allocateGlobals allocator device set0
 
   graph <- FG.newFrameGraph
-  let shared = Shared{allocator, device, set0, set1, graph}
+  registry <- newSliceRegistry
+  let shared = Shared{allocator, device, set0, set1, graph, registry}
 
   -- Each pass owns its targets and pipeline; the offscreen handle and view flow
   -- into the cube pass (which samples the drawn image and reads it back).
@@ -115,7 +117,7 @@ render allocator device graphicsQueueFamilyIndex = do
   FG.compile graph
 
   (cpuImage, readback) <- makeReadbackImage allocator device colorFormat extent
-  cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
+  cpuManaged <- newManagedImage registry cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
   (_, commandPool) <-
     Vk.withCommandPool device zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex} Nothing allocate
   graphicsQueue <- Vk.getDeviceQueue device graphicsQueueFamilyIndex 0
@@ -142,7 +144,7 @@ offscreenTrianglePass :: Shared -> Vk.DescriptorSet -> ResourceT IO (Vk.ImageVie
 offscreenTrianglePass shared globalsSet = do
   (offscreenImage, offscreenView) <- createSampledColorTarget shared.allocator shared.device colorFormat extent
 
-  (_, offscreenH) <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
+  (_, offscreenH) <- importImage shared "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
   let mkHandle = FG.writeWith offscreenH ColorAttachment
 
   tri <- Tri.allocatePipeline shared.device colorFormat shared.set0
@@ -171,8 +173,8 @@ cubePass shared offscreenView offscreenColored = do
   (_, (sceneImage, sceneView)) <- createColorTarget shared.allocator shared.device colorFormat extent
   (_, (depthImage, depthView)) <- createDepthTarget shared.allocator shared.device depthFormat extent
 
-  (sceneManaged, sceneH) <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  (_, depthH) <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+  (sceneManaged, sceneH) <- importImage shared "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
+  (_, depthH) <- importImage shared "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   let cubeSetup = do
         FG.readWith offscreenColored (Sampled Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
         FG.writeWith_ sceneH ColorAttachment
@@ -199,10 +201,10 @@ cubePass shared offscreenView offscreenColored = do
   pure sceneManaged
 
 -- | Import a raw image into the graph as a layout-tracked 'ManagedImage'.
-importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO (ManagedImage, FG.Handle ManagedImage)
-importImage graph name image aspect = do
-  managed <- newManagedImage image aspect
-  handle <- importManagedImage graph name managed
+importImage :: Shared -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO (ManagedImage, FG.Handle ManagedImage)
+importImage shared name image aspect = do
+  managed <- newManagedImage shared.registry image aspect
+  handle <- importManagedImage shared.graph name managed
   pure (managed, handle)
 
 {- | The set 0 (Globals UBO, all stages) and set 1 (sampler) layouts, merged

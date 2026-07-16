@@ -10,11 +10,13 @@ layout, with nothing in the types to catch it.
 -}
 module Vulkan.Utils.FrameGraph.Swapchain
   ( newSwapchainImages
+  , forgetSwapchainImages
   , importSwapchain
   , presentSwapchain
   ) where
 
 import Control.Monad.IO.Class (MonadIO)
+import Data.Foldable (traverse_)
 import Data.Vector (Vector)
 import Data.Vector qualified as V
 import Data.Word (Word32)
@@ -22,7 +24,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.Core10 qualified as Vk
 import Vulkan.Extensions.VK_KHR_surface qualified
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, Usage (Present), describedImage, importManagedImage)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, SliceRegistry, Usage (Present), describedImage, forgetImage, importManagedImage)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 
@@ -33,11 +35,20 @@ across frames — so build it once per (re)created swapchain, next to the other
 per-swapchain bindings. The images belong to the swapchain; the wrappers need
 no release.
 -}
-newSwapchainImages :: (MonadIO m) => Swapchain -> m (Vector ManagedImage)
-newSwapchainImages sc =
+newSwapchainImages :: (MonadIO m) => SliceRegistry -> Swapchain -> m (Vector ManagedImage)
+newSwapchainImages reg sc =
   traverse
-    (\image -> describedImage sc.sFormat.format sc.sExtent image Vk.IMAGE_ASPECT_COLOR_BIT)
+    (\image -> describedImage reg sc.sFormat.format sc.sExtent image Vk.IMAGE_ASPECT_COLOR_BIT)
     sc.sImages
+
+{- | Drop this swapchain's image wrappers from the registry.
+
+A retiring swapchain's handles may be recycled into the next one's images;
+call this next to 'newSwapchainImages' when recreating, so the old wrappers
+are gone before the new table re-wraps whatever handles come back.
+-}
+forgetSwapchainImages :: (MonadIO m) => SliceRegistry -> Swapchain -> m ()
+forgetSwapchainImages reg sc = traverse_ (forgetImage reg) sc.sImages
 
 {- | Import the acquired image (as @swapchain@) into this frame's graph.
 

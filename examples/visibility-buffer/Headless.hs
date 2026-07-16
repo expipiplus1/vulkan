@@ -24,6 +24,7 @@ import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import qualified Data.ByteString.Lazy as BSL
 import Data.IORef (newIORef, readIORef, writeIORef)
 import qualified Data.IntSet as IntSet
+import Data.Maybe (fromMaybe)
 import qualified Data.Text.IO as TIO
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -39,7 +40,7 @@ import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (allocateCommandPool)
 import Vulkan.Utils.FrameGraph.Driver (QueueSlot (..), SubmitConfig (..), submitConfig, submitGraphQueued, waitSubmitted)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, sliceLayers, transitionImageTo)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importScratchImage, newManagedImage, newSliceRegistry, sliceLayers, transitionImageTo)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -142,11 +143,12 @@ render opts allocator dev queues async = do
     sharedFamilies = fmap (graphicsFamily,) async
 
   pls <- Pipelines.allocatePipelines dev
-  sceneStatic <- Static.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
-  sharedHiZ <- Targets.allocateSharedHiZ allocator dev extent
-  scene <- Targets.allocateTargets allocator dev pls sceneStatic extent sharedHiZ sharedFamilies True
+  registry <- newSliceRegistry
+  sceneStatic <- Static.allocateStatic allocator dev registry (graphicsQueue, graphicsFamily) pls sharedFamilies
+  sharedHiZ <- Targets.allocateSharedHiZ allocator dev registry extent
+  scene <- Targets.allocateTargets allocator dev registry pls sceneStatic extent sharedHiZ sharedFamilies True
   (cpuImage, readback) <- makeReadbackImage allocator dev Pipelines.colorFormat extent
-  cpuManaged <- newManagedImage cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
+  cpuManaged <- newManagedImage registry cpuImage Vk.IMAGE_ASPECT_COLOR_BIT
   -- Pools once, for every graph run below; only the buffers are per-run.
   queueTable <- allocateQueueTable dev queues async
 
@@ -179,7 +181,8 @@ render opts allocator dev queues async = do
         FG.addPass_ graph "host.readback" (hostSetup cpuWritten) do
           img <- liftIO readback
           liftIO (writeIORef result (Just img))
-        FG.compile graph
+        -- The family partition mirrors 'allocateQueueTable'.
+        FG.compileWith (Passes.familyPartition sharedFamilies) graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
         runGraph dev queueTable graph
         liftIO (readIORef result) >>= maybe (error "headless: the host readback pass did not run") pure
@@ -199,8 +202,12 @@ render opts allocator dev queues async = do
   -- channel; the checks and the probe stay on the beauty render above.
   saved <- if opts.debugMode == 0 then pure img else runMode opts.debugMode
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
-  -- it after this).
-  forM_ (Targets.shadowImage scene) $ dumpShadowFace allocator dev (graphicsQueue, graphicsFamily)
+  -- it after this). The EXCLUSIVE moments end the runs on their owning family
+  -- (compute when async), so the out-of-graph copy submits there, not on graphics.
+  forM_ (Targets.shadowImage scene) \moments -> do
+    owner <- liftIO (readIORef moments.queueRef)
+    let slot = queueTable (fromMaybe FG.defaultQueue owner)
+    dumpShadowFace allocator dev (slot.queue, slot.family) moments
   let (visImage, depthImage) = Targets.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where

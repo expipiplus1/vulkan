@@ -36,6 +36,8 @@ data Options = Options
   -- ^ The headless render extent (square, @--size@).
   , width :: Int
   , height :: Int
+  , exerciseResize :: Int
+  -- ^ Windowed soak: this many programmatic resizes, then quit (0 = interactive).
   , debugMode :: Word32
   , meter :: Exposure.Meter
   , tweaks :: Passes.Tweaks
@@ -77,11 +79,12 @@ optionsP =
     <*> option auto (long "size" <> metavar "PX" <> value 256 <> showDefault <> help "Headless render size (square)")
     <*> option auto (long "width" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window width")
     <*> option auto (long "height" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window height")
+    <*> option auto (long "exercise-resize" <> metavar "N" <> value 0 <> help "Windowed soak: step through N programmatic resizes, then quit")
     <*> option auto (long "debug-mode" <> metavar "N" <> value 0 <> showDefault <> help ("Debug view (windowed and the headless PNG): " <> intercalate ", " [show i <> " " <> n | (i, n) <- debugViews]))
     <*> meterP
     <*> tweaksP
   where
-    resolve headless outside azimuth elevation distance output size width height debugMode meter tweaks =
+    resolve headless outside azimuth elevation distance output size width height exerciseResize debugMode meter tweaks =
       Options
         { headless
         , orbit =
@@ -94,6 +97,7 @@ optionsP =
         , extent = Vk.Extent2D size size
         , width
         , height
+        , exerciseResize
         , debugMode
         , meter
         , tweaks

@@ -27,7 +27,7 @@ module Rendering.Targets
 
 import Control.Applicative ((<|>))
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Resource (ResourceT)
+import Control.Monad.Trans.Resource (ResourceT, register)
 import Data.Bits (shiftR, (.|.))
 import Data.IORef (IORef, newIORef)
 import qualified Data.Vector as V
@@ -36,7 +36,7 @@ import Foreign.Ptr (castPtr, plusPtr)
 import Foreign.Storable (peek, poke)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.FrameGraph.Buffer
-import Vulkan.Utils.FrameGraph.Image (ManagedImage, describedImage, describedMip, sharedAcrossQueues)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage, SliceRegistry, describedImage, describedMip, forgetImage, sharedAcrossQueues)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -146,8 +146,8 @@ data SharedHiZ = SharedHiZ
   }
 
 -- | Allocate the shared depth pyramid at a scene extent (half-res base to 1×1).
-allocateSharedHiZ :: VMA.Allocator -> Vk.Device -> Vk.Extent2D -> ResourceT IO SharedHiZ
-allocateSharedHiZ allocator dev extent = do
+allocateSharedHiZ :: VMA.Allocator -> Vk.Device -> SliceRegistry -> Vk.Extent2D -> ResourceT IO SharedHiZ
+allocateSharedHiZ allocator dev registry extent = do
   let
     halfExtent = halfExtentOf extent
     mipCount = HiZ.mipCount halfExtent
@@ -155,7 +155,10 @@ allocateSharedHiZ allocator dev extent = do
     reduceCount = 1 + V.length (V.takeWhile (not . HiZ.tailFits) allExtents)
   (_, (hizImage, pyramidViews)) <-
     allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral mipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
-  pyramidMips <- V.generateM mipCount \i -> describedMip HiZ.format (allExtents V.! i) hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  -- Resize destroys the pyramid while the not-yet-reconciled frame slots still
+  -- reach its wrappers: purge them with the image, or a recycled handle clashes.
+  _ <- register (forgetImage registry hizImage)
+  pyramidMips <- V.generateM mipCount \i -> describedMip registry HiZ.format (allExtents V.! i) hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   pyramidFullView <- HiZ.allocateChainView dev hizImage mipCount
   pyramidPrimed <- liftIO (newIORef False)
   pure SharedHiZ{pyramidMips, pyramidReduceExtents = V.take reduceCount allExtents, pyramidViews, pyramidFullView, pyramidPrimed}
@@ -176,6 +179,7 @@ frame; the windowed driver never reads it.
 allocateTargets
   :: VMA.Allocator
   -> Vk.Device
+  -> SliceRegistry
   -> ScenePipelines
   -> SceneStatic
   -> Vk.Extent2D
@@ -183,7 +187,7 @@ allocateTargets
   -> Maybe (Word32, Word32)
   -> Bool
   -> ResourceT IO Scene
-allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = do
+allocateTargets allocator dev registry pls static extent hiz sharedFamilies wantProbe = do
   -- vis + depth also get TRANSFER_SRC so the headless driver can dump them.
   (_, (visImage, visView)) <-
     allocateTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
@@ -203,11 +207,11 @@ allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = d
     -- the headless readback copy reads it on graphics, so the graph hands it
     -- over with a real queue-family ownership transfer.
     allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
-  vis <- sharedAcrossQueues <$> describedImage visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
-  depth <- describedImage depthFormat extent depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
-  colorHDR <- describedImage hdrFormat extent colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
-  tone <- describedImage hdrFormat extent toneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  display <- describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
+  vis <- sharedAcrossQueues <$> describedImage registry visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
+  depth <- describedImage registry depthFormat extent depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+  colorHDR <- describedImage registry hdrFormat extent colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
+  tone <- describedImage registry hdrFormat extent toneImage Vk.IMAGE_ASPECT_COLOR_BIT
+  display <- describedImage registry colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
 
   -- Bloom pyramid: one mipped image (base = half the scene extent); each mip is a
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).
@@ -221,7 +225,7 @@ allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = d
     lumMip = lumMipFor mipCount
   (_, (bloomImage, bloomViews)) <-
     allocateMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) bloomUsage "bloom"
-  bloomMips <- V.generateM mipCount \i -> describedMip hdrFormat (bloomExtents V.! i) bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  bloomMips <- V.generateM mipCount \i -> describedMip registry hdrFormat (bloomExtents V.! i) bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   -- The luminance probe: a snapshot of the metered mip, taken before the upsample
   -- overwrites it. Written on the compute queue and read back on the graphics one, so
   -- it is CONCURRENT — the graph places plain transitions, never ownership transfers.
@@ -231,7 +235,7 @@ allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = d
       else do
         (_, probeImage) <-
           allocateImage allocator dev hdrFormat (bloomExtents V.! lumMip) (Vk.IMAGE_USAGE_TRANSFER_DST_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) (fmap (\(g, c) -> [g, c]) sharedFamilies) "lumProbe"
-        Just <$> describedImage hdrFormat (bloomExtents V.! lumMip) probeImage Vk.IMAGE_ASPECT_COLOR_BIT
+        Just <$> describedImage registry hdrFormat (bloomExtents V.! lumMip) probeImage Vk.IMAGE_ASPECT_COLOR_BIT
   downSets <- V.generateM mipCount \i -> Bloom.allocateSet dev pls.bloom.down static.sampler (if i == 0 then colorHDRView else bloomViews V.! (i - 1)) (bloomViews V.! i)
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
@@ -279,9 +283,9 @@ allocateTargets allocator dev pls static extent hiz sharedFamilies wantProbe = d
     allocateTarget allocator dev aoFormat halfExtent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "ao"
   (_, (aoBlurImage, aoBlurView)) <-
     allocateTarget allocator dev aoFormat halfExtent Vk.IMAGE_USAGE_STORAGE_BIT Vk.IMAGE_ASPECT_COLOR_BIT Nothing "aoBlur"
-  normals <- describedImage normalsFormat halfExtent normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
-  ao <- sharedAcrossQueues <$> describedImage aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
-  aoBlur <- describedImage aoFormat halfExtent aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
+  normals <- describedImage registry normalsFormat halfExtent normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
+  ao <- sharedAcrossQueues <$> describedImage registry aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
+  aoBlur <- describedImage registry aoFormat halfExtent aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
   normalsSet <- Ssao.allocateNormalsSet dev pls.ssao.normals visView normalsView static.vertexBuffer static.objectsBuffer static.meshTableBuffer
   aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hiz.pyramidFullView normalsView aoView
   aoBlurXSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoView aoBlurView

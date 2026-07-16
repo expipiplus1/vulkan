@@ -23,12 +23,17 @@ module Vulkan.Utils.FrameGraph.Recorder
   , recorderHost
   , setRecorderFamilies
   , recorderFamily
+  , recorderSameFamily
   , Accessor (..)
+  , TransferSide (..)
   , recorderCommandBuffer
   , recorderQueue
+  , Barriers (..)
   , queueBarrier
   , queueBufferBarrier
+  , overlappingRanges
   , flushBarriers
+  , takeBarriers
   , recordingCommandBuffer
   , recordingBackend
   , recordGraph
@@ -39,7 +44,7 @@ import Control.Monad (unless, void, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Foldable (traverse_)
-import Data.IORef (IORef, modifyIORef', newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
 import Data.IntSet (IntSet)
 import Data.IntSet qualified as IntSet
 import Data.List.NonEmpty (NonEmpty)
@@ -68,8 +73,11 @@ data Recorder = Recorder
   {- ^ Nodes whose dependency this pass already synchronized: a split-barrier
   event it waited on, or an ownership acquire it performed.
   -}
-  , familyOf :: IORef (FG.QueueId -> Word32)
-  -- ^ The queue family behind each 'FG.QueueId' ('setRecorderFamilies').
+  , familyOf :: IORef (Maybe (FG.QueueId -> Word32))
+  {- ^ The queue family behind each 'FG.QueueId' ('setRecorderFamilies');
+  'Nothing' until a driver provides one, when distinct queues are
+  conservatively treated as distinct families.
+  -}
   }
 
 -- | The barriers queued for the current pass, OR-ing the stage scopes.
@@ -92,7 +100,7 @@ newRecorder cb =
       <*> newIORef noBarriers
       <*> newIORef False
       <*> newIORef IntSet.empty
-      <*> newIORef (const Vk.QUEUE_FAMILY_IGNORED)
+      <*> newIORef Nothing
 
 -- | Point the recorder at the queue's command buffer the next passes record into.
 setRecorder :: (MonadIO m) => Recorder -> FG.QueueId -> Vk.CommandBuffer -> m ()
@@ -136,11 +144,24 @@ markChained rec node = liftIO (modifyIORef' rec.chained (IntSet.insert node))
 
 -- | The queue-family table an ownership transfer names its two sides from.
 setRecorderFamilies :: (MonadIO m) => Recorder -> (FG.QueueId -> Word32) -> m ()
-setRecorderFamilies rec families = liftIO (writeIORef rec.familyOf families)
+setRecorderFamilies rec families = liftIO (writeIORef rec.familyOf (Just families))
 
--- | The family behind a 'FG.QueueId'.
+{- | The family behind a 'FG.QueueId'.
+
+@QUEUE_FAMILY_IGNORED@ when no table was set: ownership transfers then melt
+to plain transitions, matching a driver that never crosses families.
+-}
 recorderFamily :: (MonadIO m) => Recorder -> FG.QueueId -> m Word32
-recorderFamily rec queue = liftIO (($ queue) <$> readIORef rec.familyOf)
+recorderFamily rec queue = liftIO (maybe Vk.QUEUE_FAMILY_IGNORED ($ queue) <$> readIORef rec.familyOf)
+
+{- | Whether two queues belong to one family, for per-access comparisons.
+
+Without a table ('setRecorderFamilies') this is queue identity: distinct
+queues must be assumed to be distinct families, or an EXCLUSIVE resource
+crossing them would silently lose the fatal unshared-read diagnostic.
+-}
+recorderSameFamily :: (MonadIO m) => Recorder -> m (FG.QueueId -> FG.QueueId -> Bool)
+recorderSameFamily rec = liftIO (maybe (==) (\f a b -> f a == f b) <$> readIORef rec.familyOf)
 
 {- | Who is performing an access: a device queue, or the host.
 
@@ -151,6 +172,10 @@ ownership.
 data Accessor
   = DeviceQueue FG.QueueId
   | HostAccess
+  deriving stock (Eq, Show)
+
+-- | Which half of a cross-queue hand-off a barrier is.
+data TransferSide = Release | Acquire
   deriving stock (Eq, Show)
 
 -- | Whether the current pass runs on the host ('setRecorderHost').
@@ -214,16 +239,27 @@ queueBufferBarrier rec src dst barrier@(SomeStruct new) = do
 -- | Whether two image barriers touch overlapping subresources.
 overlapping :: SomeStruct Vk.ImageMemoryBarrier -> SomeStruct Vk.ImageMemoryBarrier -> Bool
 overlapping (SomeStruct a) (SomeStruct b) =
-  a.image == b.image
-    && ra.aspectMask .&. rb.aspectMask /= zero
+  a.image == b.image && overlappingRanges a.subresourceRange b.subresourceRange
+
+-- | Whether two subresource ranges of one image intersect.
+overlappingRanges :: Vk.ImageSubresourceRange -> Vk.ImageSubresourceRange -> Bool
+overlappingRanges ra rb =
+  ra.aspectMask .&. rb.aspectMask /= zero
     && spans ra.baseMipLevel ra.levelCount rb.baseMipLevel rb.levelCount
     && spans ra.baseArrayLayer ra.layerCount rb.baseArrayLayer rb.layerCount
   where
-    ra = a.subresourceRange
-    rb = b.subresourceRange
     -- The REMAINING_* sentinels are maxBound: treat as extending to the end.
     spans baseA countA baseB countB = baseA < end baseB countB && baseB < end baseA countA
     end base count = if count == maxBound then maxBound else base + count
+
+{- | Drain the queued batch without recording it.
+
+What 'flushBarriers' would have emitted, handed to the caller instead: the
+seam for verifying the hooks' barriers without a device (see the test
+suite's ownership-transfer group).
+-}
+takeBarriers :: (MonadIO m) => Recorder -> m Barriers
+takeBarriers rec = liftIO (atomicModifyIORef' rec.pending \b -> (noBarriers, b))
 
 {- | Record the pending batch as one @vkCmdPipelineBarrier@ into the current
 buffer and clear it; a no-op when nothing is queued.
@@ -233,11 +269,13 @@ weaker) dependency than per-barrier commands, the price of batching.
 -}
 flushBarriers :: (MonadIO m) => Recorder -> m ()
 flushBarriers rec = liftIO do
-  Barriers{srcStage, dstStage, images, buffers} <- readIORef rec.pending
-  case (images, buffers) of
+  -- Peek before draining: this runs once per import per pass, nearly always
+  -- on an empty batch, so the empty case must stay a plain read.
+  peeked <- readIORef rec.pending
+  case (peeked.images, peeked.buffers) of
     ([], []) -> pure ()
     _ -> do
-      writeIORef rec.pending noBarriers
+      Barriers{srcStage, dstStage, images, buffers} <- takeBarriers rec
       (_queue, cb) <- readIORef rec.slot
       Vk.cmdPipelineBarrier cb srcStage dstStage zero [] (V.fromList buffers) (V.fromList images)
 
@@ -259,7 +297,10 @@ recording everything into one buffer.
 recordingBackend :: Recorder -> (FG.QueueId -> Vk.CommandBuffer) -> FG.QueueBackend
 recordingBackend recorder cbFor =
   FG.QueueBackend
-    { FG.beforePass = \psync -> setRecorder recorder psync.queue (cbFor psync.queue)
+    { FG.beforePass = \psync -> do
+        -- Chained marks are per-pass; a stale one would suppress a barrier.
+        clearChained recorder
+        setRecorder recorder psync.queue (cbFor psync.queue)
     , FG.afterPass = \_ -> pure ()
     , FG.invoke = \_ body -> body
     , FG.completed = pure []
