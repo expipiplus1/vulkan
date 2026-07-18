@@ -4,10 +4,11 @@
 {-| Extra device requirements.
 
 Multiview + cube-map arrays for the shadow pass (a light's six cube faces in one
-seam-free pass, one array element per light), and multi-draw-indirect for the
-unified mesh pass (one draw call across all meshes). The sync staples the graph
-driver submits with come from 'Vulkan.Utils.Frame.syncDeviceRequirements', which
-both boots already merge in.
+seam-free pass, one array element per light), multi-draw-indirect for the
+unified mesh pass (one draw call across all meshes), and non-zero
+@firstInstance@ in indirect commands ("Scene.Objects" bases, the late cull's
+GPU-written one). The sync staples the graph driver submits with come from
+'Vulkan.Utils.Frame.syncDeviceRequirements', which both boots already merge in.
 -}
 module Requirements
   ( deviceRequirements
@@ -24,4 +25,5 @@ deviceRequirements =
     PhysicalDeviceMultiviewFeatures.multiview
     PhysicalDeviceFeatures.imageCubeArray
     PhysicalDeviceFeatures.multiDrawIndirect
+    PhysicalDeviceFeatures.drawIndirectFirstInstance
   |]

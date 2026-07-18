@@ -299,11 +299,12 @@ data Usage
 -}
 usageState :: Usage -> ImageState
 usageState = \case
+  -- READ covers @LOAD_OP_LOAD@ and blending, as DepthAttachment's covers the depth test.
   ColorAttachment ->
     ImageState
       Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
       Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-      Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+      (Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
   DepthAttachment ->
     ImageState
       Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL

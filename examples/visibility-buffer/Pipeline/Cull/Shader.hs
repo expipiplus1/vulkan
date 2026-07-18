@@ -1,25 +1,31 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-{-| Per-frame cave-cube culling.
+{-| Two-phase cave-cube culling.
 
-One invocation per generated cave cube. Independent tests refill the compacted
-draws the caller just reset: the camera test (bounding sphere vs. the frustum, then
-vs. last frame's depth pyramid when @hizValid@) appends to the camera remap and
-bumps @mainCube.instanceCount@; each orb's shadow reach (sphere vs. sphere, the
-resolve's falloff window read from the lights SSBO) appends to that orb's own
-occluder range and bumps its draw's count — far-apart orbs don't inflate each
-other's sets. The other objects (glowstones, knot, orbs) are never culled — their
-remap entries are identity and their draw commands untouched.
+One invocation per generated cave cube in each phase. The early phase draws
+what was visible last frame: the camera test (bounding sphere vs. the frustum,
+then the visibility word, then vs. last frame's depth pyramid when @hizValid@)
+appends to the camera remap and bumps @mainCube.instanceCount@. The late phase
+runs after the pyramid is rebuilt from the early draws and re-tests every cube
+against it — the current camera vs. current depth, so the test is exact up to
+the pyramid's resolution: cubes visible now but not drawn early append past the
+early entries for the @lateCube@ draw, and every cube's visibility word is
+rewritten for the next frame's early phase (drawn-early cubes skip the pyramid
+test and keep their word — the next early phase re-derives their occlusion
+against the same pyramid anyway). A freshly disoccluded cube is caught the
+same frame; a cube the early phase drew on a stale word costs one frame of
+overdraw, not a pop.
 
-The pyramid lags a frame, so the occlusion test is conservative only for the
-camera that rendered it: a freshly disoccluded cube pops in one frame late, and
-camera motion can transiently cull a cube whose new screen rect still holds old,
-closer depths. Near-plane crossers and everything the pyramid can't prove hidden
-are kept.
+The early phase also refills each orb's shadow reach set (sphere vs. sphere,
+the resolve's falloff window read from the lights SSBO), appending to that
+orb's own occluder range and bumping its draw's count — far-apart orbs don't
+inflate each other's sets. The other objects (glowstones, knot, orbs) are never
+culled — their remap entries are identity and their draw commands untouched.
 -}
 module Pipeline.Cull.Shader
-  ( code
+  ( earlyCode
+  , lateCode
   ) where
 
 import Data.ByteString (ByteString)
@@ -27,10 +33,11 @@ import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
 
 import Pipeline.Common (lightReach2, lightStruct, objectStruct)
 import qualified Pipeline.Common as Common
-import Scene.Objects (orbOccCountWord0, orbOccCountWordStride)
+import Pipeline.Cull.Blocks (caveBounds, hizOccluded, sphereFrustum)
+import Scene.Objects (lateCountWord, lateFirstInstanceWord, orbOccCountWord0, orbOccCountWordStride)
 
-code :: ByteString
-code =
+earlyCode :: ByteString
+earlyCode =
   $( Common.comp
        [glsl|
     #version 450
@@ -50,8 +57,11 @@ code =
     // depth of its footprint ("Pipeline.HiZ.Shader"). NEAREST-sampled in GENERAL.
     layout(set = 0, binding = 4) uniform sampler2D hiz;
     layout(set = 0, binding = 5, std430) readonly buffer Lights { Light lights[]; };
+    // Per-cube visibility words: read as "was visible last frame", overwritten
+    // with this phase's draw decision for the late phase to read back.
+    layout(set = 0, binding = 6, std430) buffer VisBits { uint visBits[]; };
 
-    layout(push_constant, std430) uniform Params {
+    layout(push_constant, std430) uniform EarlyParams {
       mat4 viewProj;
       uint caveBase;
       uint caveCount;
@@ -62,68 +72,26 @@ code =
       uint orbOccCap;     // entries per orb range; appends beyond it are dropped
     } pc;
 
-    // Is the sphere entirely behind the (unnormalized) clip plane?
-    bool outside(vec4 plane, vec3 c, float r) {
-      return dot(plane.xyz, c) + plane.w < -r * length(plane.xyz);
-    }
-
-    // Is last frame's scene everywhere closer than the box's nearest point over
-    // its whole screen rect? (Reverse-Z: closer = larger.) @half_@ is the
-    // world-axis-aligned half-extent — exact for the gen's unrotated cubes.
-    bool occluded(vec3 centre, float half_) {
-      // Corner clips factor affinely: clip of centre ± half_ per axis is
-      // clipC ± half_ · matrix column.
-      vec4 clipC = pc.viewProj * vec4(centre, 1.0);
-      vec4 dx = half_ * pc.viewProj[0];
-      vec4 dy = half_ * pc.viewProj[1];
-      vec4 dz = half_ * pc.viewProj[2];
-      vec2 lo = vec2(1e30);
-      vec3 hi = vec3(-1e30);
-      for (int i = 0; i < 8; ++i) {
-        vec3 s = vec3(uvec3(i, i >> 1, i >> 2) & 1u) * 2.0 - 1.0;
-        vec4 clip = clipC + s.x * dx + s.y * dy + s.z * dz;
-        if (clip.w <= 1e-4) return false; // crosses the near plane: keep
-        vec3 ndc = clip.xyz / clip.w;
-        lo = min(lo, ndc.xy);
-        hi = max(hi, ndc);
-      }
-      vec2 uvLo = clamp(lo * 0.5 + 0.5, 0.0, 1.0);
-      vec2 uvHi = clamp(hi.xy * 0.5 + 0.5, 0.0, 1.0);
-      // The mip where the rect spans <= 2 texels, so its 4 corner samples cover it.
-      vec2 px = (uvHi - uvLo) * vec2(textureSize(hiz, 0));
-      float mip = clamp(ceil(log2(max(max(px.x, px.y), 1.0))), 0.0, float(textureQueryLevels(hiz) - 1));
-      float sceneFar = min(
-        min(textureLod(hiz, uvLo, mip).r, textureLod(hiz, uvHi, mip).r),
-        min(textureLod(hiz, vec2(uvLo.x, uvHi.y), mip).r, textureLod(hiz, vec2(uvHi.x, uvLo.y), mip).r));
-      return hi.z < sceneFar;
-    }
+    $caveBounds
+    $sphereFrustum
+    $hizOccluded
 
     void main() {
       uint i = gl_GlobalInvocationID.x;
       if (i >= pc.caveCount) return;
       uint slot = pc.caveBase + i;
 
-      mat4 m = objects[slot].transform;
-      vec3 centre = m[3].xyz;
-      float radius = m[0][0] * 1.7320508; // uniform cube scale × √3
+      vec3 centre; float half_; float radius;
+      caveBounds(slot, centre, half_, radius);
 
-      // Gribb-Hartmann planes from the view-projection rows, for the Vulkan clip
-      // volume (|x|,|y| <= w, 0 <= z <= w). Reverse-Z: near is z = w, and the
-      // infinite far plane z >= 0 is row 2 alone.
-      vec4 r0 = vec4(pc.viewProj[0][0], pc.viewProj[1][0], pc.viewProj[2][0], pc.viewProj[3][0]);
-      vec4 r1 = vec4(pc.viewProj[0][1], pc.viewProj[1][1], pc.viewProj[2][1], pc.viewProj[3][1]);
-      vec4 r2 = vec4(pc.viewProj[0][2], pc.viewProj[1][2], pc.viewProj[2][2], pc.viewProj[3][2]);
-      vec4 r3 = vec4(pc.viewProj[0][3], pc.viewProj[1][3], pc.viewProj[2][3], pc.viewProj[3][3]);
-      bool culled =
-           outside(r3 + r0, centre, radius) || outside(r3 - r0, centre, radius)
-        || outside(r3 + r1, centre, radius) || outside(r3 - r1, centre, radius)
-        || outside(r3 - r2, centre, radius) || outside(r2, centre, radius);
-      if (!culled && pc.hizValid != 0u)
-        culled = occluded(centre, m[0][0]);
-      if (!culled) {
+      bool drawn = !frustumCulled(centre, radius) && visBits[i] != 0u;
+      if (drawn && pc.hizValid != 0u)
+        drawn = !occluded(centre, half_);
+      if (drawn) {
         uint n = atomicAdd(cmd[1], 1u);
         visMain[n] = slot;
       }
+      visBits[i] = drawn ? 1u : 0u;
 
       for (uint o = 0u; o < pc.orbCount; ++o) {
         Light orb = lights[pc.orbBase + o];
@@ -137,6 +105,57 @@ code =
             visOcc[pc.orbOccBase + o * pc.orbOccCap + n] = slot;
         }
       }
+    }
+  |]
+   )
+
+lateCode :: ByteString
+lateCode =
+  $( Common.comp
+       [glsl|
+    #version 450
+    layout(local_size_x = 256) in;
+
+    $objectStruct
+    layout(set = 0, binding = 0, std430) readonly buffer Objects { Object objects[]; };
+    // cmd[1] (the early phase's final count) is stable during this dispatch:
+    // it is both the late draw's firstInstance and the append base in visMain.
+    // The late draw's own words are spliced from "Scene.Objects".
+    layout(set = 0, binding = 1, std430) buffer Indirect { uint cmd[]; };
+    layout(set = 0, binding = 2, std430) writeonly buffer VisibleMain { uint visMain[]; };
+    // This frame's pyramid, rebuilt from the early draws' depth.
+    layout(set = 0, binding = 3) uniform sampler2D hiz;
+    // Read as "drawn early", overwritten with the next early phase's predicate.
+    layout(set = 0, binding = 4, std430) buffer VisBits { uint visBits[]; };
+
+    layout(push_constant, std430) uniform LateParams {
+      mat4 viewProj;
+      uint caveBase;
+      uint caveCount;
+    } pc;
+
+    $caveBounds
+    $sphereFrustum
+    $hizOccluded
+
+    void main() {
+      uint i = gl_GlobalInvocationID.x;
+      if (i >= pc.caveCount) return;
+      if (i == 0u) cmd[$lateFirstInstanceWord] = cmd[1];
+      uint slot = pc.caveBase + i;
+
+      vec3 centre; float half_; float radius;
+      caveBounds(slot, centre, half_, radius);
+
+      // Drawn-early cubes skip the pyramid test: their append can't fire, and
+      // the next early phase re-tests the same pyramid itself.
+      bool visNow = !frustumCulled(centre, radius)
+        && (visBits[i] != 0u || !occluded(centre, half_));
+      if (visNow && visBits[i] == 0u) {
+        uint n = atomicAdd(cmd[$lateCountWord], 1u);
+        visMain[cmd[1] + n] = slot;
+      }
+      visBits[i] = visNow ? 1u : 0u;
     }
   |]
    )

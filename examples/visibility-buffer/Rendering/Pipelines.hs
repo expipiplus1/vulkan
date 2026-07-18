@@ -74,7 +74,7 @@ data ScenePipelines = ScenePipelines
   , shadow :: Pipeline
   , generator :: Pipeline
   , knot :: Pipeline
-  , cull :: Pipeline
+  , cull :: Cull.Cull
   , hiz :: HiZ.HiZ
   , ssao :: Ssao.Ssao
   }
@@ -90,7 +90,7 @@ allocatePipelines dev = do
   shadow <- Shadow.allocateShadow dev Shadows.params Shadows.format depthFormat
   generator <- Voxels.allocateGenerator dev
   knot <- Knot.allocateKnot dev
-  cull <- Cull.allocatePipeline dev
+  cull <- Cull.allocateCull dev
   hiz <- HiZ.allocateHiZ dev
   ssao <- Ssao.allocateSsao dev
   pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull, hiz, ssao}

@@ -144,10 +144,11 @@ recordOrbShadows cb pls scene orbShadow t = liftIO do
 
 {- | Add the whole scene graph.
 
-@cull@ (compact this frame's draws) → @shadow.orbs@ (refresh the orbs' shadow
-slices) → @geometry@ (raster → vis + depth) → @shade@ (resolve → HDR) →
-@luminance@ (auto-exposure readback) → @tonemap@ (exposure + curve) → @gamma@
-(sRGB encode). @queue@ is the queue the compute passes run on
+@cull.early@ (compact last frame's visible set) → @shadow.orbs@ (refresh the
+orbs' shadow slices) → @geometry.early@ (raster → vis + depth) → @hiz@ (depth
+pyramid) → @cull.late@ (re-test against it) → @geometry.late@ (raster the
+disoccluded remainder) → @shade@ (resolve → HDR) → @luminance@ (auto-exposure
+readback) → @tonemap@ (exposure + curve) → @gamma@ (sRGB encode). @queue@ is the queue the compute passes run on
 ('computeQueueId' picks it from the topology); @t@ places the orbs. The tonemap
 exposure comes from the metering buffer: with a host meter, a host pass
 between @luminance@ and @tonemap@ writes it from this frame's own luminance;
@@ -192,6 +193,9 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
   visMainH <- Buf.importScratchBuffer graph "cull.visMain" scene.static.visMain
   visOccH <- Buf.importScratchBuffer graph "cull.visOcc" scene.static.visOcc
   hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hiz.pyramidMips
+  -- The cave visibility words, the cull's only cross-frame state: managed, so
+  -- the late phase's write is observed by the next frame's early phase.
+  visBitsH <- Buf.importManagedBuffer graph "cull.visBits" scene.static.caveVisBits
   -- The per-frame tables the orbs move: tracked, so the upload's barriers (and
   -- the write-after-read against the previous frame) fall out of the declared
   -- accesses instead of a hand-maintained stage mask.
@@ -208,31 +212,32 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
         cb <- recordingCommandBuffer
         recordOrbUploads cb scene t
 
-  -- Compact this frame's draws: reset the two cube draw commands, then refill
-  -- them (and the instance remaps) from the frustum + occlusion tests for the
-  -- camera and the reach test around the orbs. The occlusion test samples the
-  -- previous frame's pyramid — the imported mip versions, read here before
-  -- this frame's rebuild renames them — and skips the first frame after
-  -- 'Rendering.Targets.allocateTargets' (nothing built the pyramid yet; a
-  -- resize resets this). Kept alive by the draws' declared reads, no side
-  -- effect needed.
+  -- Compact this frame's early draws: reset the cube draw commands, then
+  -- refill the camera draw with the cubes visible last frame (their visibility
+  -- word, trimmed by the frustum and — once primed — by last frame's pyramid:
+  -- the imported mip versions, read here before this frame's rebuild renames
+  -- them) and the per-orb occluder draws from the reach tests. A stale word
+  -- only costs overdraw or defers a cube to the late phase below — never a
+  -- lasting miss. Kept alive by the draws' declared reads, no side effect
+  -- needed.
   indirectReset <-
     FG.addPass graph "cull.reset" (FG.writeWith indirectH Buf.TransferDst) \_ -> do
       cb <- recordingCommandBuffer
       Cull.reset cb scene.static.indirect.buffer scene.static.objLayout.caveBase
-  let cullSetup = do
+  let cullEarlySetup = do
         V.forM_ hizHs \mipH -> FG.readWith mipH (StorageRead shadeStage)
         FG.readWith lights (Buf.StorageRead shadeStage)
         FG.readWith objects (Buf.StorageRead shadeStage)
         indirectCulled <- FG.writeWith indirectReset (Buf.StorageReadWrite shadeStage)
         visMainCulled <- FG.writeWith visMainH (Buf.StorageWrite shadeStage)
         visOccCulled <- FG.writeWith visOccH (Buf.StorageWrite shadeStage)
-        pure (indirectCulled, visMainCulled, visOccCulled)
-  (indirectCulled, visMainCulled, visOccCulled) <-
-    FG.addPass graph "cull" cullSetup \_ -> do
+        visBitsEarly <- FG.writeWith visBitsH (Buf.StorageReadWrite shadeStage)
+        pure (indirectCulled, visMainCulled, visOccCulled, visBitsEarly)
+  (indirectCulled, visMainCulled, visOccCulled, visBitsEarly) <-
+    FG.addPass graph "cull.early" cullEarlySetup \_ -> do
       cb <- recordingCommandBuffer
       hizValid <- liftIO (readIORef scene.hiz.pyramidPrimed)
-      Cull.record pls.cull scene.cullSet (cullParams hizValid) cb
+      Cull.recordEarly pls.cull.early scene.cullEarlySet (earlyParams hizValid) cb
       liftIO (writeIORef scene.hiz.pyramidPrimed True)
 
   -- The EVSM moments are EXCLUSIVE ("Rendering.Static"), so their slices import
@@ -258,25 +263,28 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
       cb <- recordingCommandBuffer
       recordOrbShadows cb pls scene orb t
 
-  (visWritten, depthWritten) <-
-    FG.addPass graph "geometry" (geometrySetup indirectCulled visMainCulled objects visH depthH) \_ -> do
-      cb <- recordingCommandBuffer
-      let
-        info = Dynamic.renderingInfo (fullScissor extent) [(visView, Vk.Uint32 0 0 0 0)] (Just (depthView, 0.0))
-        dyn = (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_GREATER}
-      Vk.cmdUseRendering cb info do
-        applyDynamicStates allDynamicStates cb dyn
-        -- Every mesh (glowstones + cave cubes, the knot, the orb sphere) in one
-        -- multi-draw: the pipeline pulls geometry + per-object transforms from the tables.
-        Pipeline.bind cb pls.mesh
-        pushCamera cb pls.mesh viewProj
-        Pipeline.bindSet cb pls.mesh 0 scene.static.meshSet
-        Vk.cmdDrawIndirect cb scene.static.indirect.buffer Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
+  -- One raster body for both geometry passes: the pipeline pulls geometry +
+  -- per-object transforms from the tables, so a pass is just its rendering
+  -- info (clear vs. load) and its slice of the draw commands.
+  let recordGeometry cb info offset count =
+        Vk.cmdUseRendering cb info do
+          applyDynamicStates allDynamicStates cb (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_GREATER}
+          Pipeline.bind cb pls.mesh
+          pushCamera cb pls.mesh viewProj
+          Pipeline.bindSet cb pls.mesh 0 scene.static.meshSet
+          Vk.cmdDrawIndirect cb scene.static.indirect.buffer offset count Objects.drawStride
 
-  -- Depth pyramid ("Pipeline.HiZ"): min-reduce the depth buffer right after the
+  -- Every mesh (glowstones + cave cubes, the knot, the orb sphere) in one multi-draw.
+  (visEarly, depthEarly) <-
+    FG.addPass graph "geometry.early" (geometrySetup indirectCulled visMainCulled objects visH depthH) \_ -> do
+      cb <- recordingCommandBuffer
+      let info = Dynamic.renderingInfo (fullScissor extent) [(visView, Vk.Uint32 0 0 0 0)] (Just (depthView, 0.0))
+      recordGeometry cb info Objects.mainDrawOffset Objects.mainDrawCount
+
+  -- Depth pyramid ("Pipeline.HiZ"): min-reduce the early depth right after the
   -- raster, on the default (graphics) queue — depth stays EXCLUSIVE to the family
-  -- that rendered it. Read by the SSAO gather below and, a frame later, by the
-  -- next graph's cull pass (hence the side effect: demand from a future graph).
+  -- that rendered it. Read by the late cull just below (which keeps the chain
+  -- demanded), the SSAO gather and, a frame later, the next graph's early cull.
   let
     nReduce = V.length scene.hizSets
     hizPass (src, ws) (i, dstH) = do
@@ -287,7 +295,7 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
           Pipeline.bindSet cb pls.hiz.reduce 0 (scene.hizSets V.! i)
           dispatchMip cb (scene.hiz.pyramidReduceExtents V.! i)
       pure (w, w : ws)
-  (hizLast, hizReduced) <- foldM hizPass (depthWritten, []) (V.toList (V.indexed (V.take nReduce hizHs)))
+  (hizLast, hizReduced) <- foldM hizPass (depthEarly, []) (V.toList (V.indexed (V.take nReduce hizHs)))
   -- The fused tail: every remaining mip from the last reduced level, one dispatch.
   hizTail <- case scene.hizTailSet of
     Nothing -> pure []
@@ -299,8 +307,35 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
         Pipeline.bindSet cb pls.hiz.tail 0 tailSet
         Vk.cmdDispatch cb 1 1 1
 
+  -- The late phase: re-test every cave cube against the pyramid just rebuilt —
+  -- this frame's camera vs. this frame's (early) depth — then draw the
+  -- disoccluded remainder over the early raster. The late draw's count and
+  -- firstInstance are the shader's; its instances continue the early entries
+  -- in visMain. The visibility words it leaves are next frame's early set.
+  let cullLateSetup = do
+        forM_ (hizReduced <> hizTail) \mipH -> FG.readWith mipH (StorageRead shadeStage)
+        FG.readWith objects (Buf.StorageRead shadeStage)
+        indirectLate <- FG.writeWith indirectCulled (Buf.StorageReadWrite shadeStage)
+        visMainLate <- FG.writeWith visMainCulled (Buf.StorageWrite shadeStage)
+        FG.writeWith_ visBitsEarly (Buf.StorageReadWrite shadeStage)
+        pure (indirectLate, visMainLate)
+  (indirectLate, visMainLate) <-
+    FG.addPass graph "cull.late" cullLateSetup \_ -> do
+      cb <- recordingCommandBuffer
+      Cull.recordLate pls.cull.late scene.cullLateSet lateParams cb
+
+  -- The late depth rename goes unconsumed: the pyramid reduced the early
+  -- depth, and the headless dumps read the tracked image outside the graph.
+  (visWritten, _depthLate) <-
+    FG.addPass graph "geometry.late" (geometrySetup indirectLate visMainLate objects visEarly depthEarly) \_ -> do
+      cb <- recordingCommandBuffer
+      let info = Dynamic.loadRenderingInfo (fullScissor extent) [visView] (Just depthView)
+      recordGeometry cb info Objects.lateDrawOffset 1
+
   -- SSAO ("Pipeline.Ssao"), also graphics-queue: resolve half-res DAIS normals
-  -- from the visibility buffer, then march the fresh pyramid for obscurance.
+  -- from the visibility buffer, then march the pyramid for obscurance. The
+  -- pyramid predates the late draws, so freshly disoccluded geometry goes
+  -- unoccluded for one frame — a second rebuild here isn't worth it.
   normalsWritten <-
     FG.addPass graph "ssao.normals" (normalsSetup visWritten objects normalsH) \_ -> do
       cb <- recordingCommandBuffer
@@ -443,8 +478,8 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
     groups n = (n + 7) `div` 8
     dispatchMip cb (Vk.Extent2D mw mh) = Vk.cmdDispatch cb (groups mw) (groups mh) 1
     hostVisible = zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_HOST_READ_BIT} :: Vk.MemoryBarrier
-    cullParams hizValid =
-      Cull.Params
+    earlyParams hizValid =
+      Cull.EarlyParams
         { Cull.viewProj = viewProj
         , Cull.caveBase = scene.static.objLayout.caveBase
         , Cull.caveCount = scene.static.caveCount
@@ -453,6 +488,12 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
         , Cull.orbCount = Lights.orbCount
         , Cull.orbOccBase = scene.static.objLayout.total
         , Cull.orbOccCap = Objects.orbOccCap scene.static.objLayout
+        }
+    lateParams =
+      Cull.LateParams
+        { Cull.viewProj = viewProj
+        , Cull.caveBase = scene.static.objLayout.caveBase
+        , Cull.caveCount = scene.static.caveCount
         }
     -- The orb refresh: three transfer writes, tracked.
     uploadSetup lightsH viewProjH objectsH = do
@@ -524,12 +565,12 @@ addScenePasses graph pls tweaks scene queue extent eye t hostMeter debugMode = d
       FG.setQueue queue
       FG.readWith srcH (StorageRead shadeStage)
       FG.writeWith displayH (StorageWrite shadeStage)
+    -- No side effect: the late cull (whose visibility-word write is observed)
+    -- reads every mip in-frame, so the chain is always demanded.
     hizSetup src dstH = do
-      FG.setSideEffect
       FG.readWith src (StorageRead shadeStage)
       FG.writeWith dstH (StorageWrite shadeStage)
     hizTailSetup src dstHs = do
-      FG.setSideEffect
       FG.readWith src (StorageRead shadeStage)
       forM (V.toList dstHs) \h ->
         FG.writeWith h (StorageWrite shadeStage)

@@ -113,8 +113,10 @@ data Scene = Scene
   -- ^ One per per-level reduce; the remaining mips are the fused tail's.
   , hizTailSet :: Maybe Vk.DescriptorSet
   -- ^ 'Nothing' when the chain ends at the last per-level reduce.
-  , cullSet :: Vk.DescriptorSet
-  -- ^ The cull's buffers + the whole pyramid, sampled ("Pipeline.Cull").
+  , cullEarlySet :: Vk.DescriptorSet
+  -- ^ The early cull's buffers + the whole pyramid, sampled ("Pipeline.Cull").
+  , cullLateSet :: Vk.DescriptorSet
+  -- ^ The late cull's buffers + the same pyramid, rebuilt this frame.
   }
 
 -- | Level sizes of a half-extent-based pyramid (bloom and hiz alike).
@@ -124,11 +126,12 @@ halfPyramidExtents (Vk.Extent2D w0 h0) n =
 
 {- | The depth pyramid, shared across the frames in flight.
 
-Graphics-only history: built from a frame's depth, sampled by the /next/ frame's
-cull. One shared pyramid keeps that a 1-frame loop; a per-frame copy would read
-two-frame-stale occlusion and pop harder. Extent-dependent, so 'allocateSharedHiZ'
-reruns on resize and its owner frees it; the reduce/cull sets that bind it stay
-per-target ('allocateTargets').
+Graphics-only: built from a frame's early-draw depth, sampled by the same
+frame's late cull (exact) and the /next/ frame's early cull (a 1-frame-stale
+overdraw trim). One shared pyramid keeps the early test's lag at one frame; a
+per-frame copy would read two-frame-stale occlusion. Extent-dependent, so
+'allocateSharedHiZ' reruns on resize and its owner frees it; the reduce/cull
+sets that bind it stay per-target ('allocateTargets').
 -}
 data SharedHiZ = SharedHiZ
   { pyramidMips :: V.Vector ManagedImage
@@ -140,8 +143,9 @@ data SharedHiZ = SharedHiZ
   , pyramidFullView :: Vk.ImageView
   -- ^ Whole-chain view, sampled by the cull ('textureLod').
   , pyramidPrimed :: IORef Bool
-  {- ^ False until the first cull pass records; gates the occlusion test off the
-  not-yet-built pyramid.
+  {- ^ False until the first early cull records; gates its occlusion test off
+  the not-yet-built pyramid. The late cull needs no gate — its pyramid is
+  rebuilt earlier in the same frame.
   -}
   }
 
@@ -170,8 +174,8 @@ views. No GPU submit — cheap enough to rerun on every resize. The visibility b
 CONCURRENT across @sharedFamilies@ (the async graphics + compute pair).
 
 The hi-Z pyramid ('SharedHiZ') is passed in, not allocated here, so both frames in
-flight share one pyramid (1-frame occlusion history); only the reduce/cull sets that
-bind it are per-target.
+flight share one pyramid (the early cull's 1-frame occlusion history); only the
+reduce/cull sets that bind it are per-target.
 
 @wantProbe@ adds the debug-only luminance probe ('lumProbe'), which costs a copy per
 frame; the windowed driver never reads it.
@@ -259,16 +263,29 @@ allocateTargets allocator dev registry pls static extent hiz sharedFamilies want
             static.nearestSampler
             (hizViews V.! (hizReduceCount - 1))
             (V.slice hizReduceCount hizTailCount hizViews)
-  cullSet <-
-    Cull.allocateSet
+  cullEarlySet <-
+    Cull.allocateEarlySet
       dev
-      pls.cull
-      Cull.CullBuffers
+      pls.cull.early
+      Cull.EarlyBuffers
         { Cull.objects = static.objectsBuffer
         , Cull.indirect = static.indirect.buffer
         , Cull.visMain = static.visMain.buffer
         , Cull.visOcc = static.visOcc.buffer
         , Cull.lights = static.lightsBuffer
+        , Cull.visBits = static.caveVisBits.buffer
+        }
+      static.nearestSampler
+      hiz.pyramidFullView
+  cullLateSet <-
+    Cull.allocateLateSet
+      dev
+      pls.cull.late
+      Cull.LateBuffers
+        { Cull.objects = static.objectsBuffer
+        , Cull.indirect = static.indirect.buffer
+        , Cull.visMain = static.visMain.buffer
+        , Cull.visBits = static.caveVisBits.buffer
         }
       static.nearestSampler
       hiz.pyramidFullView
@@ -318,7 +335,8 @@ allocateTargets allocator dev registry pls static extent hiz sharedFamilies want
       , hiz
       , hizSets
       , hizTailSet
-      , cullSet
+      , cullEarlySet
+      , cullLateSet
       }
 
 -- | The tracked visibility and depth images after a frame, for headless debug dumps.

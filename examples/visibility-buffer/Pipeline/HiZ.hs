@@ -8,7 +8,8 @@
 Wraps the "Pipeline.HiZ.Shader" min-reduces: one dispatch per mip while the levels
 are big, then 'tail' finishes everything from a ≤32×32 level in a single dispatch
 (a serial tail of tiny levels costs a pipeline drain each and no work). The
-finished pyramid feeds the next frame's occlusion test ("Pipeline.Cull").
+finished pyramid feeds the same frame's late occlusion test and the next
+frame's early one ("Pipeline.Cull").
 -}
 module Pipeline.HiZ
   ( HiZ (..)

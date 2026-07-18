@@ -154,9 +154,9 @@ render opts allocator dev queues async = do
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
-      -- The graph's cull pass runs the same compaction as the windowed frame —
-      -- the second execution onwards is occlusion-culled against the previous
-      -- one's pyramid (same camera), so the depth-void check covers the culling too.
+      -- The graph's cull passes run the same two-phase compaction as the
+      -- windowed frame — every execution late-culls against its own pyramid,
+      -- so the depth-void check covers the culling too.
       runMode debugMode = do
         graph <- FG.newFrameGraph
         outs <- Passes.addScenePasses graph pls opts.tweaks scene (Passes.computeQueueId async) extent eye 0 (Just (pure . Exposure.target opts.meter, hostQueue)) debugMode

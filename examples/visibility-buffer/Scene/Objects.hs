@@ -15,10 +15,12 @@ base ('caveBase'), so every draw command's @firstInstance@ is static:
 The indirect buffer holds @mainCube mainKnot mainSphere@ (the camera pass draws
 these three), @occCube occKnot@ (the full occluder set the static bake draws,
 @occCube@ skipping the non-occluder glowstones; the orb spheres are not
-occluders), then one @orbOccCube orbOccKnot@ pair per orb — the per-frame
+occluders), one @orbOccCube orbOccKnot@ pair per orb — the per-frame
 @shadow.orbs@ refresh draws orb @i@'s pair, whose cube range the cull compacts
-to that orb's reach alone. The gen bumps the main and full-occ cube
-@instanceCount@s once; the cull resets and refills the per-orb ones each frame.
+to that orb's reach alone — and finally @lateCube@, the cubes the late cull
+disoccludes against this frame's pyramid (both its count and @firstInstance@
+are GPU-written). The gen bumps the main and full-occ cube @instanceCount@s
+once; the cull resets and refills the per-orb and late ones each frame.
 
 The vertex shaders don't index the table by @gl_InstanceIndex@ directly: each draw
 family goes through an instance remap (camera @visMain@, occluder @visOcc@) holding
@@ -41,6 +43,10 @@ module Scene.Objects
   , orbOccCountOffsets
   , orbOccCountWord0
   , orbOccCountWordStride
+  , lateDrawOffset
+  , lateCubeCountOffset
+  , lateCountWord
+  , lateFirstInstanceWord
   , drawStride
   , mainDrawCount
   , occluderDrawCount
@@ -136,8 +142,29 @@ orbOccCountWord0, orbOccCountWordStride :: Word32
 orbOccCountWord0 = fromIntegral (orbOccDrawOffset 0 + 4) `div` 4
 orbOccCountWordStride = 2 * drawStride `div` 4
 
+-- | Byte offset of the late cull's cube draw (after every other command).
+lateDrawOffset :: Vk.DeviceSize
+lateDrawOffset = fromIntegral (mainDrawCount + occluderDrawCount + 2 * Lights.orbCount) * fromIntegral drawStride
+
+-- | Byte offset of the late cube draw's @instanceCount@ (the late cull's counter).
+lateCubeCountOffset :: Vk.DeviceSize
+lateCubeCountOffset = lateDrawOffset + 4
+
+{- | The late draw's @instanceCount@ and @firstInstance@ as raw-word indices.
+
+The late draw's base word plus the @VkDrawIndirectCommand@ member index.
+Spliced into the late shader's @cmd[]@ access, so the command layout has one
+owner; the late cull writes both.
+-}
+lateCountWord, lateFirstInstanceWord :: Word32
+lateCountWord = lateWord0 + 1 -- instanceCount
+lateFirstInstanceWord = lateWord0 + 3 -- firstInstance
+
+lateWord0 :: Word32
+lateWord0 = fromIntegral lateDrawOffset `div` 4
+
 indirectBytes :: Vk.DeviceSize
-indirectBytes = fromIntegral (mainDrawCount + occluderDrawCount + 2 * Lights.orbCount) * fromIntegral drawStride
+indirectBytes = lateDrawOffset + fromIntegral drawStride
 
 -- | Bytes for an instance remap: one @uint@ object id per drawable slot.
 remapBytes :: Layout -> Vk.DeviceSize
@@ -177,6 +204,7 @@ uploadDrawCommands cb buffer l = Upload.slice cb buffer 0 commands
           [ [Vk.DrawIndirectCommand Meshes.cubeVertexCount 0 0 (l.total + i * orbOccCap l), occKnot] -- orb i's pair
           | i <- [0 .. Lights.orbCount - 1]
           ]
+        <> [Vk.DrawIndirectCommand Meshes.cubeVertexCount 0 0 0] -- lateCube (count and firstInstance GPU-written)
 
 {- | Write the CPU-known objects.
 

@@ -145,6 +145,8 @@ data SceneStatic = SceneStatic
   -- ^ Camera instance remap (see "Scene.Objects"), graph-tracked like 'indirect'.
   , visOcc :: ManagedBuffer
   -- ^ Occluder instance remap, as 'visMain'.
+  , caveVisBits :: ManagedBuffer
+  -- ^ One visibility word per cave cube, carried across frames ("Pipeline.Cull.Shader").
   , orbShadow :: Maybe OrbShadow
   -- ^ The per-frame orb shadow refresh's tracked targets; 'Nothing' without orbs.
   , caveCount :: Word32
@@ -193,6 +195,9 @@ allocateStatic allocator dev registry genQueue pls sharedFamilies = do
   -- cave range, which the per-frame cull compacts ("Pipeline.Cull").
   (_, visMain) <- deviceBuffer allocator (Objects.remapBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   (_, visOcc) <- deviceBuffer allocator (Objects.occRemapBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
+  -- Per-cave-cube visibility words, both cull phases' only cross-frame state
+  -- ("Pipeline.Cull.Shader"). Graphics-queue only, so EXCLUSIVE.
+  (_, visBits) <- deviceBuffer allocator (fromIntegral Cave.maxCubes * 4) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) Nothing
   let bufs = Voxels.GenBuffers{Voxels.objects = objectsBuffer, Voxels.indirect = indirect, Voxels.visMain = visMain, Voxels.visOcc = visOcc}
 
   -- The single lights buffer: orb draw (graphics), shadow render, resolve.
@@ -265,6 +270,9 @@ allocateStatic allocator dev registry genQueue pls sharedFamilies = do
     Objects.uploadStaticRemap cb visMain objLayout
     Objects.uploadStaticRemap cb visOcc objLayout
     Objects.seedOrbOccRemap cb visOcc objLayout
+    -- Seed all-visible: the first early cull draws everything in-frustum, as if
+    -- every cube had been visible last frame.
+    Vk.cmdFillBuffer cb visBits 0 Vk.WHOLE_SIZE 1
     Lights.upload cb lights 0
     Materials.upload cb materialsBuf
     Shadows.uploadViewProjs cb viewProjBuffer 0
@@ -302,6 +310,7 @@ allocateStatic allocator dev registry genQueue pls sharedFamilies = do
   indirectMB <- Buf.sharedAcrossQueues . Buf.describedAs "draw commands" <$> Buf.newManagedBuffer indirect
   visMainMB <- Buf.sharedAcrossQueues . Buf.describedAs "camera instance remap" <$> Buf.newManagedBuffer visMain
   visOccMB <- Buf.sharedAcrossQueues . Buf.describedAs "occluder instance remap" <$> Buf.newManagedBuffer visOcc
+  visBitsMB <- Buf.describedAs "cave visibility bits" <$> Buf.newManagedBuffer visBits
 
   pure
     SceneStatic
@@ -335,6 +344,7 @@ allocateStatic allocator dev registry genQueue pls sharedFamilies = do
       , shadowSet
       , visMain = visMainMB
       , visOcc = visOccMB
+      , caveVisBits = visBitsMB
       , orbShadow
       , caveCount
       }

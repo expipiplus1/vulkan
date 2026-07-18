@@ -214,7 +214,9 @@ data Bindings = Bindings
   , generation :: Word64
   -- ^ Bumped per swapchain (re)build; a slot rebuilds its targets on a change.
   , sharedHiZ :: Targets.SharedHiZ
-  -- ^ The one depth pyramid both frames' targets bind, for 1-frame occlusion history.
+  {- ^ The one depth pyramid both frames' targets bind: rebuilt and late-culled
+  against in-frame, 1-frame history for the early cull's trim.
+  -}
   }
 
 {- | Per-swapchain bindings: swapchain wrappers, exposure EMA, and the shared hi-Z.
