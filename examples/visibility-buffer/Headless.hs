@@ -31,7 +31,7 @@ import Data.Word (Word32)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (peek)
 import qualified Fragr as FG
-import qualified Fragr.Dot as Dot
+import qualified Fragr.Snapshot.Dot as FSDot
 import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), withHeadlessVk)
 import ImageReadback (makeReadbackImage, savePng)
 import Numeric.Half (Half)
@@ -183,7 +183,8 @@ render opts allocator dev queues async = do
           liftIO (writeIORef result (Just img))
         -- The family partition mirrors 'allocateQueueTable'.
         FG.compileWith (Passes.familyPartition sharedFamilies) graph
-        when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
+        when (debugMode == 0) $ liftIO do
+          FSDot.dump graph >>= TIO.writeFile "visibility-buffer.dot"
         runGraph dev queueTable graph
         liftIO (readIORef result) >>= maybe (error "headless: the host readback pass did not run") pure
 

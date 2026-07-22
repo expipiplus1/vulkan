@@ -41,7 +41,9 @@ import qualified Data.Text.IO as TIO
 import Data.Vector (Vector)
 import Data.Word (Word32, Word64)
 import qualified Fragr as FG
-import qualified Fragr.Dot as Dot
+import qualified Fragr.Snapshot as FS
+import qualified Fragr.Snapshot.Dot as FSDot
+import qualified Fragr.Snapshot.JSON as FSJson
 import GHC.Clock (getMonotonicTime)
 import qualified Graphics.UI.GLFW as GLFW
 import Say (sayErrString)
@@ -407,13 +409,9 @@ renderScene opts vc vma registry pls sceneStatic sharedFamilies window controls 
   -- dedups ownership hand-offs per family (and rejects two-family releases).
   FG.compileWith (Passes.familyPartition sharedFamilies) graph
 
-  -- A requested 'g' dump captures this frame's compiled graph — including
-  -- which passes the current view's demand culled.
-  wantDump <- liftIO (readIORef controls.dump)
-  when wantDump $ liftIO do
-    writeIORef controls.dump False
-    TIO.writeFile "visibility-buffer-live.dot" =<< Dot.dump graph
-    sayErrString ("graph dumped to visibility-buffer-live.dot, presenting " <> viewName mode)
+  -- A requested dump captures this frame's compiled graph,
+  -- including which passes the current view's demand culled.
+  liftIO $ dumpGraph controls.dump mode graph
 
   let
     dev = vcDevice vc
@@ -441,3 +439,17 @@ renderScene opts vc vma registry pls sceneStatic sharedFamilies window controls 
     blitSetup srcH swapchainH = do
       FG.readWith srcH TransferSrc
       FG.writeWith swapchainH TransferDst
+
+dumpGraph :: IORef Bool -> Word32 -> FG.FrameGraph a b -> IO ()
+dumpGraph flag mode graph = do
+  wantDump <- readIORef flag
+  when wantDump do
+    writeIORef flag False
+    snapshot <- FS.snapshot graph
+    sayErrString $ "dumping dot graph to " <> show pathDot <> ", presenting " <> viewName mode
+    TIO.writeFile pathDot $ FSDot.render FSDot.defaultOptions snapshot
+    sayErrString $ "dumping viewer json to " <> show pathJson
+    TIO.writeFile pathJson $ FSJson.render (FSJson.fromSnapshot snapshot)
+  where
+    pathDot = "visibility-buffer-live.dot"
+    pathJson = "visibility-buffer-live.json"
