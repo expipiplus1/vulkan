@@ -19,7 +19,7 @@ extra-deps:
 - gl-block-1.1
 - ptrdiff-0
 - spirv-enum-1.104.350.0
-- spirv-reflect-ffi-0.4
+- spirv-reflect-ffi-0.4.1
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
 - fragr-0.1.0.0

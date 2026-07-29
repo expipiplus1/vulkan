@@ -2,6 +2,7 @@ module Main (main) where
 
 import Control.Exception (ErrorCall, try)
 import Control.Monad (void)
+import Data.Bits ((.|.))
 import Data.IORef (IORef, modifyIORef', newIORef, readIORef)
 import Data.IntMap.Strict qualified as IntMap
 import Data.IntSet qualified as IntSet
@@ -175,7 +176,7 @@ transfers =
         (relFams, relLayouts, relAccess) <- imageHalf =<< takeBarriers rec
         relFams @?= (0, 1)
         relLayouts @?= (Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-        relAccess @?= (Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT, zero)
+        relAccess @?= (Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT, zero)
         -- The release performs the transition; the slot keeps the state it saw.
         readIORef mi.releasedRef >>= (@?= Just (Image.usageState Image.ColorAttachment))
         readIORef mi.stateRef >>= (@?= Image.usageState sampled)

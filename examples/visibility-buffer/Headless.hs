@@ -207,8 +207,8 @@ render opts allocator dev queues async = do
   -- (compute when async), so the out-of-graph copy submits there, not on graphics.
   forM_ (Targets.shadowImage scene) \moments -> do
     owner <- liftIO (readIORef moments.queueRef)
-    let slot = queueTable (fromMaybe FG.defaultQueue owner)
-    dumpShadowFace allocator dev (slot.queue, slot.family) moments
+    let QueueSlot{queue, family} = queueTable (fromMaybe FG.defaultQueue owner)
+    dumpShadowFace allocator dev (queue, family) moments
   let (visImage, depthImage) = Targets.debugImages scene
   pure (img, saved, visImage, depthImage, lum)
   where

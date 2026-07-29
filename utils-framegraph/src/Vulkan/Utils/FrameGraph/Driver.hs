@@ -254,7 +254,9 @@ submitGraphQueued graph config = do
       -- The families an ownership transfer names its two sides from; the host
       -- queue is not a family and owns nothing.
       setRecorderFamilies recorder \q ->
-        if Just q == hostQueue then Vk.QUEUE_FAMILY_IGNORED else (queueTable q).family
+        if Just q == hostQueue then Vk.QUEUE_FAMILY_IGNORED else
+          -- GHC 9.2 can't parse ".family" (special identifier)
+          let QueueSlot{family} = queueTable q in family
       deferredRef <- liftIO (newIORef [])
       FG.addPreExec graph flushBarriers
       -- The release hooks queue producer-side barriers after the pass body.
