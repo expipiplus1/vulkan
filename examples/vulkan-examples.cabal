@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -43,6 +43,8 @@ flag vr
 
 library
   exposed-modules:
+      Blit
+      Buffer
       HeadlessBoot
       ImageReadback
       RenderTarget
@@ -72,6 +74,7 @@ library
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -140,6 +143,7 @@ executable compute
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -205,6 +209,7 @@ executable compute-reflect
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -271,6 +276,7 @@ executable hlsl
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -338,6 +344,7 @@ executable info
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -393,6 +400,7 @@ executable mesh-reflect
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -460,6 +468,7 @@ executable pathtrace-reflect
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -530,6 +539,7 @@ executable rays
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -602,6 +612,7 @@ executable resize
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -625,7 +636,9 @@ executable resize
       VulkanMemoryAllocator
     , base <5
     , bytestring
+    , containers
     , extra
+    , fragr
     , lens
     , linear
     , resourcet >=1.2.4
@@ -639,6 +652,7 @@ executable resize
     , vulkan-examples
     , vulkan-init-sdl2
     , vulkan-utils
+    , vulkan-utils-framegraph
   default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
@@ -673,6 +687,7 @@ executable texture-reflect
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -697,13 +712,16 @@ executable texture-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
+    , fragr
     , gl-block
     , resourcet
     , spirv-reflect-ffi
+    , text
     , vector
     , vulkan
     , vulkan-examples
     , vulkan-utils
+    , vulkan-utils-framegraph
     , vulkan-utils-spirv
   default-language: Haskell2010
   if os(windows)
@@ -735,6 +753,7 @@ executable triangle-dynamic
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -792,6 +811,7 @@ executable triangle-glfw
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -851,6 +871,7 @@ executable triangle-headless
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -920,6 +941,7 @@ executable triangle-sdl2
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -954,6 +976,126 @@ executable triangle-sdl2
   if os(windows)
     ghc-options: -optl-mconsole
 
+executable visibility-buffer
+  main-is: Main.hs
+  other-modules:
+      Driver
+      Exposure
+      Headless
+      Options
+      Pipeline.Bloom
+      Pipeline.Bloom.Downsample
+      Pipeline.Bloom.Upsample
+      Pipeline.Common
+      Pipeline.Cull
+      Pipeline.Cull.Blocks
+      Pipeline.Cull.Shader
+      Pipeline.Gamma
+      Pipeline.Gamma.Shader
+      Pipeline.HiZ
+      Pipeline.HiZ.Shader
+      Pipeline.Knot
+      Pipeline.Knot.Gen
+      Pipeline.Luminance
+      Pipeline.Luminance.Shader
+      Pipeline.Mesh
+      Pipeline.Mesh.Shader
+      Pipeline.Sets
+      Pipeline.Shade
+      Pipeline.Shade.Shader
+      Pipeline.Shadow
+      Pipeline.Shadow.Occluder
+      Pipeline.Shadow.Params
+      Pipeline.Ssao
+      Pipeline.Ssao.Shader
+      Pipeline.Tonemap
+      Pipeline.Tonemap.Shader
+      Pipeline.Voxels
+      Pipeline.Voxels.Gen
+      Rendering.Passes
+      Rendering.Pipelines
+      Rendering.Shadows
+      Rendering.Static
+      Rendering.Targets
+      Requirements
+      Scene.Camera
+      Scene.Cave
+      Scene.Lights
+      Scene.Materials
+      Scene.Meshes
+      Scene.Objects
+      Upload
+      Windowed
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      visibility-buffer
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NegativeLiterals
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      GLFW-b
+    , JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , containers
+    , fragr
+    , geomancy
+    , gl-block
+    , half
+    , optparse-applicative
+    , resourcet
+    , say
+    , template-haskell
+    , text
+    , unliftio
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-init-glfw
+    , vulkan-utils
+    , vulkan-utils-framegraph
+    , vulkan-utils-spirv
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
 executable vrcube
   main-is: Main.hs
   other-modules:
@@ -979,6 +1121,7 @@ executable vrcube
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -1054,6 +1197,7 @@ test-suite depth-headless
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings
@@ -1111,6 +1255,7 @@ test-suite triangle-headless-dynamic
       LambdaCase
       MagicHash
       NamedFieldPuns
+      NegativeLiterals
       NoMonomorphismRestriction
       NumDecimals
       OverloadedStrings

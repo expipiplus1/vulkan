@@ -3,6 +3,7 @@ packages:
 - .
 - utils
 - utils-spirv
+- utils-framegraph
 - utils-init/vulkan-init-sdl2
 - utils-init/vulkan-init-glfw
 - examples
@@ -14,13 +15,16 @@ extra-deps:
 - unification-fd-0.12.0.2
 # generate-new
 - validation-selective-0.2.0.0
-- geomancy-0.3.0.1
+- geomancy-0.3.1.0
 - gl-block-1.1
 - ptrdiff-0
 - spirv-enum-1.104.350.0
-- spirv-reflect-ffi-0.4
+- spirv-reflect-ffi-0.4.1
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
+- fragr-0.1.0.0
+- git: https://github.com/bsl/bindings-GLFW
+  commit: b37d10453b23c77ff4cf2ce02ebb960d06ea4b0a
 
 # use ghcup, nix, setup actions
 system-ghc: true

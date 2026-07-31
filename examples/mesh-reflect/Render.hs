@@ -36,13 +36,13 @@ import Vulkan.Utils.Barrier (imageBarrier, transitionColorAttachment, transition
 import Vulkan.Utils.Descriptors (bufferWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, depthOnlyDynamicStates, dynamicStateFor, fullScissor)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
 
 import qualified Vulkan.Utils.SpirV.Array as Array
 import Vulkan.Utils.SpirV.Buffer (Buffer, unsafeAsBufferPtr, writeBufferElem)
-import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Signature (ArrayOf, Sig)
 
 import Mesh (Scene (..), Vertex (..))
@@ -129,29 +129,10 @@ render allocator dev graphicsQueueFamilyIndex = do
   liftIO $ poke (castPtr (VMA.mappedData sceneInfo)) sceneValue
 
   pipelines <- Mesh.allocatePipelines dev colorFormat depthFormat
-  let layout = pipelines.layout
 
-  -- One descriptor set: binding 0 -> Scene UBO, binding 1 -> Mesh SSBO.
-  (_, descriptorPool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 1
-            ]
-        }
-      Nothing
-      allocate
-  descriptorSets <-
-    Vk.allocateDescriptorSets
-      dev
-      zero
-        { Vk.descriptorPool = descriptorPool
-        , Vk.setLayouts = V.fromList (map snd layout.setLayouts)
-        }
-  let descriptorSet = V.head descriptorSets
+  -- One descriptor set (binding 0 -> Scene UBO, binding 1 -> Mesh SSBO), its
+  -- pool sized from the reflected bindings. Both pipelines share the layout.
+  descriptorSet <- Pipeline.allocateSet dev pipelines.depthColor 0
   Vk.updateDescriptorSets
     dev
     [ bufferWrite descriptorSet 0 Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER sceneBuffer
@@ -178,13 +159,13 @@ render allocator dev graphicsQueueFamilyIndex = do
     oneShot = zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
     -- Apply only the dynamic states the bound pipeline declares (the depth-only
     -- pipeline has no colour-blend state).
-    bindCommon dynStates cb pipeline = do
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
+    bindCommon dynStates cb pl = do
+      Pipeline.bind cb pl
       applyDynamicStates
         dynStates
         cb
         (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_LESS}
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS layout.pipelineLayout 0 [descriptorSet] []
+      Pipeline.bindSet cb pl 0 descriptorSet
       Vk.cmdDraw cb vertexCount 1 0 0
 
   -- Pass 1: depth-only z-prepass, then copy the depth image to the host buffer.
@@ -212,7 +193,7 @@ render allocator dev graphicsQueueFamilyIndex = do
       $ bindCommon allDynamicStates cb2 pipelines.depthColor
     copyImageToHost cb2 extent image cpuImage
   submitAndWait dev graphicsQueue cb2 "Timed out in the colour pass"
-  colorImage <- readback
+  colorImage <- liftIO readback
 
   pure (depthCentre, depthCorner, colorImage)
 

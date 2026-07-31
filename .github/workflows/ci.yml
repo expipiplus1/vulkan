@@ -264,6 +264,7 @@ jobs:
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A VulkanMemoryAllocator
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils-spirv
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils-framegraph
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-examples

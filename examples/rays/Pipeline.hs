@@ -251,7 +251,10 @@ createRayGenerationShader dev = do
         #extension GL_EXT_ray_tracing : require
 
         layout(binding = 0, set = 0) uniform accelerationStructureEXT topLevelAS;
-        layout(binding = 1, set = 0, rgba8) uniform writeonly image2D image;
+        // No format qualifier: the swapchain's UNORM pick may be BGRA or RGBA,
+        // and storage declarations must match exactly (needs the
+        // shaderStorageImageWriteWithoutFormat feature).
+        layout(binding = 1, set = 0) uniform writeonly image2D image;
         layout(location = 0) rayPayloadEXT vec3 prd;
 
 
@@ -310,7 +313,7 @@ createRayHitShader dev = do
         #version 460
         #extension GL_EXT_ray_tracing : require
 
-        layout(set = 0, location = 0) rayPayloadInEXT vec3 hitValue;
+        layout(location = 0) rayPayloadInEXT vec3 hitValue;
 
         struct Sphere {
           vec4 s;

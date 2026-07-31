@@ -191,21 +191,52 @@ executables:
     - vulkan-utils
     - vulkan-utils-spirv
 
+  visibility-buffer:
+    main: Main.hs
+    source-dirs: visibility-buffer
+    dependencies:
+    - GLFW-b
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - base <5
+    - bytestring
+    - containers
+    - fragr
+    - geomancy
+    - gl-block
+    - half
+    - optparse-applicative
+    - resourcet
+    - say
+    - template-haskell
+    - text
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
+    - vulkan-utils
+    - vulkan-utils-framegraph
+    - vulkan-utils-spirv
+
   texture-reflect:
     main: Main.hs
     source-dirs: texture-reflect
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator
+    - fragr
     - vulkan-examples
     - base <5
     - bytestring
     - gl-block
     - resourcet
     - spirv-reflect-ffi
+    - text
     - vector
     - vulkan
     - vulkan-utils
+    - vulkan-utils-framegraph
     - vulkan-utils-spirv
 
   resize:
@@ -216,7 +247,9 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
+    - containers
     - extra
+    - fragr
     - lens
     - linear
     - resourcet >= 1.2.4
@@ -230,6 +263,7 @@ executables:
     - vulkan-examples
     - vulkan-init-sdl2
     - vulkan-utils
+    - vulkan-utils-framegraph
 
   hlsl:
     main: Main.hs
@@ -387,6 +421,7 @@ default-extensions:
 - LambdaCase
 - MagicHash
 - NamedFieldPuns
+- NegativeLiterals
 - NoMonomorphismRestriction
 - NumDecimals
 - OverloadedStrings

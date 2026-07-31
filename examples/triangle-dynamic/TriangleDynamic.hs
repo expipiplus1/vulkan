@@ -24,7 +24,7 @@ module TriangleDynamic
   ( runTriangle
   ) where
 
-import Control.Monad.Trans.Resource (ResourceT, register)
+import Control.Monad.Trans.Resource (ResourceT)
 import qualified Data.Vector as V
 import qualified Triangle
 import qualified Vulkan.Core10 as Vk
@@ -36,14 +36,14 @@ import Vulkan.Utils.DynamicState (allDynamicStates, applyDynamicStates, dynamicS
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, noRecycledResources, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 
 {- | Drive a recycling-Frame render loop drawing the colored triangle with
 'VK_KHR_dynamic_rendering'.
 -}
 runTriangle
-  :: VulkanContext
+  :: VulkanContext ()
   -> Swapchain
   -- ^ Initial swapchain
   -> IO Vk.Extent2D
@@ -67,9 +67,8 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
     getDrawableSize
     shouldQuit
     WindowLoop
-      { wlMkState = \_sc -> do
-          k <- register (pure ())
-          pure ((), k)
+      { wlMkState = noWindowState
+      , wlMkRecycled = noRecycledResources
       , wlRender = \() -> drawTriangle vc pipeline
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
@@ -79,7 +78,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
 -- Per-frame draw
 ----------------------------------------------------------------
 
-drawTriangle :: VulkanContext -> Vk.Pipeline -> Frame -> ResourceT IO ()
+drawTriangle :: VulkanContext rr -> Vk.Pipeline -> Frame rr -> ResourceT IO ()
 drawTriangle vc pipeline f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   commands <- recordCommands vc f \cb -> do

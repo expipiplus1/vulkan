@@ -4,6 +4,7 @@ packages:
   ./VulkanMemoryAllocator
   ./utils
   ./utils-spirv
+  ./utils-framegraph
   ./utils-init/vulkan-init-sdl2
   ./utils-init/vulkan-init-glfw
   ./examples

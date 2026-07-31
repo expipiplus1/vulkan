@@ -1,0 +1,187 @@
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
+
+{-| The shade-pass (deferred resolve) compute shader.
+
+Reads the visibility buffer and writes linear HDR. Every surface reconstructs the
+same way (DAIS, "Pipeline.Common"): fetch the object's transform + mesh, fetch the hit
+triangle from the shared vertex SSBO, and barycentric-interpolate world position +
+normal at the pixel. Emissive objects (glowstones, the orb) output their stored
+emissive; lit objects shade PBR-lite (albedo + metalness + roughness) with per-light
+@N·L / dist²@ × an EVSM soft-shadow lookup ("Pipeline.Shadow") plus a normalized
+Blinn-Phong glint under the same shadow, the ambient terms scaled by the SSAO factor
+("Pipeline.Ssao"). A @debugMode@ push overrides the output with a raw
+material/geometry channel.
+
+The @Camera@ push carries the receiver-side knobs ('Pipeline.Shade.Tuning'); the EVSM
+encoding the shadow cubes were baked with is specialized in.
+-}
+module Pipeline.Shade.Shader
+  ( code
+  ) where
+
+import Data.ByteString (ByteString)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
+
+import Pipeline.Common (dais, evsm, lightReach2, lightStruct, tables)
+import qualified Pipeline.Common as Common
+
+code :: ByteString
+code =
+  $( Common.comp
+       [glsl|
+    #version 450
+    layout(local_size_x = 8, local_size_y = 8) in;
+
+    layout(set = 0, binding = 0, rg32ui) uniform readonly uimage2D visBuffer;
+    layout(set = 0, binding = 1, rgba16f) uniform writeonly image2D outColor;
+
+    $tables
+    layout(set = 0, binding = 2, std430) readonly buffer Vertices { Vertex verts[]; };
+    $lightStruct
+    $lightReach2
+    layout(set = 0, binding = 3, std430) readonly buffer Lights { Light lights[]; };
+    layout(set = 0, binding = 4) uniform samplerCubeArray shadowCube;
+    layout(set = 0, binding = 5, std430) readonly buffer Objects { Object objects[]; };
+    struct Material { vec4 albedo; vec4 pbr; }; // pbr = (metalness, roughness, -, -)
+    layout(set = 0, binding = 6, std430) readonly buffer Materials { Material materials[]; };
+    layout(set = 0, binding = 7, std430) readonly buffer Meshes { MeshEntry meshes[]; };
+    layout(set = 0, binding = 8) uniform sampler2D aoTex;
+
+    layout(push_constant, std430) uniform Camera {
+      mat4 viewProj;
+      vec4 camPos;
+      uint debugMode;
+      uint lightCount;
+      float ambient;
+      float indirect;
+      float bleed;
+      float shadowBias;
+      float normalBias;
+    } cam;
+
+    // The EVSM encoding the moment cubes were baked with (Pipeline.Shadow.Params).
+    $evsm
+
+    vec3 objColor(uint id) {
+      uint h = id * 2654435761u;
+      return vec3(float(h & 255u), float((h >> 8) & 255u), float((h >> 16) & 255u)) / 255.0;
+    }
+
+    float linstep(float lo, float hi, float v) { return clamp((v - lo) / (hi - lo), 0.0, 1.0); }
+
+    // One-tailed Chebyshev bound with light-bleed clamp.
+    float chebyshev(vec2 m, float t) {
+      float var = max(m.y - m.x * m.x, 2e-5);
+      float d = t - m.x;
+      float pmax = var / (var + d * d);
+      return (t <= m.x) ? 1.0 : linstep(cam.bleed, 1.0, pmax);
+    }
+
+    // Filtered EVSM visibility of @wpos@ (normal @n@) from light @li@ (1 = lit).
+    float shadowVis(uint li, vec3 wpos, vec3 n) {
+      vec3 dir = (wpos + n * cam.normalBias) - lights[li].posHalf.xyz;
+      float dist = max(0.0, length(dir) / SHADOW_FAR - cam.shadowBias);
+      vec4 mo = texture(shadowCube, vec4(normalize(dir), float(li)));
+      vec2 w = evsmWarp(dist);
+      return min(chebyshev(mo.xy, w.x), chebyshev(mo.zw, w.y));
+    }
+
+    // Shadowed direct light at wpos: diffuse irradiance and the unscaled Blinn glint,
+    // sharing one shadow lookup per light. The glint is normalized by (shininess+8)/8π
+    // so the lobe keeps its energy as it tightens. Lights below the horizon give
+    // neither term. Bounded by cam.lightCount, not lights.length(): an unlit scene
+    // still binds a one-slot placeholder buffer that must never be read.
+    void directShading(vec3 wpos, vec3 n, float shininess, out vec3 irr, out vec3 spec) {
+      vec3 V = normalize(cam.camPos.xyz - wpos);
+      float norm = (shininess + 8.0) / (8.0 * 3.14159265);
+      irr = vec3(0.0);
+      spec = vec3(0.0);
+      for (uint i = 0u; i < cam.lightCount; ++i) {
+        vec3 dv = lights[i].posHalf.xyz - wpos;
+        vec3 L = normalize(dv);
+        float ndl = max(0.0, dot(n, L));
+        if (ndl <= 0.0) continue;
+        float d2 = dot(dv, dv);
+        // Fade to zero over the last 20% of the light's reach. The shadow
+        // refresh culls occluders at that same reach, so the light must be
+        // spent there or culled shadows would leak.
+        float reach2 = lightReach2(lights[i]);
+        float win = 1.0 - smoothstep(0.64 * reach2, reach2, d2);
+        if (win <= 0.0) continue;
+        float atten = win * lights[i].colInt.w / (d2 + 0.001);
+        vec3 radiance = lights[i].colInt.rgb * (atten * shadowVis(i, wpos, n));
+        irr += radiance * ndl;
+        spec += radiance * (pow(max(0.0, dot(n, normalize(L + V))), shininess) * norm);
+      }
+    }
+
+    // PBR-lite shade: diffuse (metalness kills it) + Blinn glint (tinted by metal
+    // albedo) + ambient specular. Metals get no diffuse, so the ambient specular is
+    // their whole response to indirect light; it scales with the environment radiance,
+    // which is why an unlit scene leaves them nearly black rather than glowing.
+    // @ao@ attenuates only the ambient terms: direct light casts real shadows.
+    vec3 shadeSurface(Material mat, vec3 wpos, vec3 n, float ao) {
+      vec3 alb = mat.albedo.rgb;
+      float metal = mat.pbr.x, rough = mat.pbr.y;
+      float shininess = exp2(1.0 + (1.0 - rough) * 10.0);
+      float strength = mix(0.04, 1.0, metal) * (1.0 - rough);
+      vec3 irr, glint;
+      directShading(wpos, n, shininess, irr, glint);
+      vec3 V = normalize(cam.camPos.xyz - wpos);
+      // Schlick fresnel about the normal-incidence reflectance: dielectrics 4%, metals tint.
+      vec3 F0 = mix(vec3(0.04), alb, metal);
+      vec3 F = F0 + (1.0 - F0) * pow(1.0 - max(0.0, dot(n, V)), 5.0);
+      // Uniform environment radiance the surface reflects: constant ambient + a bounce.
+      vec3 ambient = (cam.ambient + cam.indirect * irr) * ao;
+      vec3 diffuse = alb * (cam.ambient * ao + irr) * (1.0 - metal);
+      vec3 spec = glint * strength * mix(vec3(1.0), alb, metal);
+      vec3 env = ambient * F;
+      return diffuse + spec + env;
+    }
+
+    $dais
+
+    void main() {
+      ivec2 p = ivec2(gl_GlobalInvocationID.xy);
+      ivec2 size = imageSize(outColor);
+      if (p.x >= size.x || p.y >= size.y) return;
+
+      uvec2 ids = imageLoad(visBuffer, p).rg;
+      uint c0 = ids.x;
+
+      Material mat = Material(vec4(0.0), vec4(0.0));
+      vec3 nrm = vec3(0.0);
+      vec3 col = vec3(0.0);
+      uint objId = 0u;
+      float ao = 1.0;
+
+      if (c0 == 0u) {
+        col = vec3(0.0); // void
+      } else {
+        objId = c0 - 1u;
+        ao = textureLod(aoTex, (vec2(p) + 0.5) / vec2(size), 0.0).r;
+        Object obj = objects[objId];
+        if (any(greaterThan(obj.emissive.rgb, vec3(0.0)))) {
+          col = obj.emissive.rgb; // emissive glowstone (HDR, drives bloom)
+          mat = Material(vec4(obj.emissive.rgb, 1.0), vec4(0.0));
+        } else {
+          vec3 wpos;
+          meshGeometry(objId, ids.y, p, size, wpos, nrm);
+          mat = materials[obj.materialId];
+          col = shadeSurface(mat, wpos, nrm, ao);
+        }
+      }
+
+      // Debug channels override the beauty output (see the driver's debugMode).
+      vec3 outc = col;
+      if (cam.debugMode == 1u) outc = mat.albedo.rgb;
+      else if (cam.debugMode == 2u) outc = vec3(mat.pbr.x);           // metalness
+      else if (cam.debugMode == 3u) outc = vec3(mat.pbr.y);           // roughness
+      else if (cam.debugMode == 4u) outc = (c0 == 0u) ? vec3(0.0) : nrm * 0.5 + 0.5; // normal
+      else if (cam.debugMode == 5u) outc = (c0 == 0u) ? vec3(0.0) : objColor(objId); // object id
+      else if (cam.debugMode == 6u) outc = (c0 == 0u) ? vec3(0.0) : vec3(ao); // ambient occlusion
+      imageStore(outColor, p, vec4(outc, 1.0));
+    }
+  |]
+   )

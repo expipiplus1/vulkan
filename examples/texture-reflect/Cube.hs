@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -13,14 +14,14 @@ record its shaders share with the offscreen pass is generated once, in "Tri".
 -}
 module Cube
   ( composes
-  , Pipeline (..)
   , allocatePipeline
   ) where
 
-import Control.Monad.Trans.Resource (ResourceT, allocate)
-import qualified Vulkan.Core10 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo (..))
+import Control.Monad.Trans.Resource (ResourceT)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
+import Vulkan.Utils.Pipeline (Pipeline (..), Set)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Zero (zero)
 
 import Data.SpirV.Reflect.FFI (loadBytes)
@@ -36,29 +37,19 @@ reflectStageSigBytes "FragSig" Shader.fragCode
 composes :: (MatchInterface VertSig FragSig, CompatibleResources VertSig FragSig) => Bool
 composes = True
 
-data Pipeline = Pipeline
-  { pipeline :: Vk.Pipeline
-  , pipelineLayout :: Vk.PipelineLayout
-  }
-
-{- | Colour + depth, vertex attributes from reflection. Set 0 is the layout
+{- | Colour + depth, vertex attributes from reflection. Set 0 is the 'Set'
 shared with the offscreen pipeline; set 1 holds this pipeline's sampler.
 -}
 allocatePipeline
   :: Vk.Device
   -> Vk.Format
   -> Vk.Format
-  -> Vk.DescriptorSetLayout
-  -> Vk.DescriptorSetLayout
+  -> Set
+  -> Set
   -> ResourceT IO Pipeline
-allocatePipeline dev colorFormat depthFormat set0Layout set1Layout = do
+allocatePipeline dev colorFormat depthFormat set0 set1 = do
   vertModule <- loadBytes Shader.vertCode
-  (_, pipelineLayout) <-
-    Vk.withPipelineLayout
-      dev
-      zero{PipelineLayoutCreateInfo.setLayouts = [set0Layout, set1Layout]}
-      Nothing
-      allocate
+  layout <- Pipeline.allocateLayout dev [(0, set0), (1, set1)] []
   (_, pipeline) <-
     Dynamic.allocatePipelineFromShaders
       dev
@@ -66,8 +57,8 @@ allocatePipeline dev colorFormat depthFormat set0Layout set1Layout = do
         { Dynamic.colorFormats = [colorFormat]
         , Dynamic.depthFormat = Just depthFormat
         , Dynamic.vertexInput = vertexInputState vertModule
-        , Dynamic.layout = Just pipelineLayout
+        , Dynamic.layout = Just layout.pipelineLayout
         }
       ()
       [(Vk.SHADER_STAGE_VERTEX_BIT, Shader.vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, Shader.fragCode)]
-  pure Pipeline{pipeline = pipeline, pipelineLayout = pipelineLayout}
+  pure Pipeline{pipeline, bindPoint = Vk.PIPELINE_BIND_POINT_GRAPHICS, layout}

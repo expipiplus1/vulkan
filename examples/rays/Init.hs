@@ -13,6 +13,7 @@ module Init
 import Control.Monad.IO.Class
 import Data.Word
 import Vulkan.CStruct.Extends (pattern (:&), pattern (::&))
+import Vulkan.Core10 (PhysicalDeviceFeatures)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures (..))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (PhysicalDeviceAccelerationStructureFeaturesKHR (..))
@@ -39,6 +40,7 @@ deviceRequirements =
   [reqs|
       1.2.162
 
+      PhysicalDeviceFeatures.shaderStorageImageWriteWithoutFormat
       PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline
       PhysicalDeviceAccelerationStructureFeaturesKHR.accelerationStructure
       PhysicalDeviceBufferDeviceAddressFeatures.bufferDeviceAddress

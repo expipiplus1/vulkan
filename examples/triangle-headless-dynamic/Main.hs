@@ -151,7 +151,7 @@ render allocator dev graphicsQueueFamilyIndex = do
         Vk.cmdDraw cb 3 1 0 0
       copyImageToHost cb extent image cpuImage
     submitAndWait dev graphicsQueue cb ("Timed out rendering variant: " <> name)
-    img <- readback
+    img <- liftIO readback
     pure (name, img)
 
 vertCode =

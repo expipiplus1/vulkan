@@ -28,9 +28,16 @@ import Data.Word (Word64)
 import Say (sayErr)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (waitSemaphoresSafe)
+import qualified Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as SemaphoreWaitInfo (SemaphoreWaitInfo (..))
 import Vulkan.Core13 (pattern API_VERSION_1_3)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..))
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SubmitInfo2 (..), queueSubmit2)
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as CommandBufferSubmitInfo (CommandBufferSubmitInfo (..))
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as SemaphoreSubmitInfo (SemaphoreSubmitInfo (..))
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
+import Vulkan.Utils.Frame (allocateTimelineSemaphore, syncDeviceRequirements)
 import qualified Vulkan.Utils.Init.Headless as Init
 import Vulkan.Utils.Initialization (physicalDeviceName)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
@@ -81,7 +88,7 @@ withHeadlessVk HeadlessConfig{..} = do
       )
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  (phys, dev, qs) <- allocateDevice inst Nothing deviceReqs
+  (phys, dev, qs) <- allocateDevice inst Nothing (syncDeviceRequirements ++ deviceReqs)
   (_, vma) <-
     VMA.withAllocator (allocatorCreateInfo vmaFlags API_VERSION_1_3 inst phys dev) allocate
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
@@ -95,8 +102,8 @@ withHeadlessVk HeadlessConfig{..} = do
       }
 
 {- | Submit a single command buffer to the queue, wait up to a second on a
-fresh fence for it to complete, throw on timeout. For longer-running work (e.g.
-a heavy compute dispatch) use 'submitAndWaitFor' with an explicit budget.
+fresh timeline for it to complete, throw on timeout. For longer-running work
+(e.g. a heavy compute dispatch) use 'submitAndWaitFor' with an explicit budget.
 -}
 submitAndWait
   :: (MonadResource m, MonadThrow m)
@@ -107,7 +114,11 @@ submitAndWait
   -> m ()
 submitAndWait = submitAndWaitFor (1 * 1000 * 1000 * 1000) -- 1 second
 
--- | As 'submitAndWait', but with a caller-supplied timeout in nanoseconds.
+{- | As 'submitAndWait', but with a caller-supplied timeout in nanoseconds.
+
+A one-shot timeline rather than a fence: the same signal, and the only
+completion primitive the rest of the codebase uses.
+-}
 submitAndWaitFor
   :: (MonadResource m, MonadThrow m)
   => Word64
@@ -118,13 +129,16 @@ submitAndWaitFor
   -> String
   -- ^ Message to throw if the wait times out.
   -> m ()
-submitAndWaitFor fenceTimeout dev queue commandBuffer timeoutMessage = do
-  (fenceKey, fence) <- Vk.withFence dev zero Nothing allocate
+submitAndWaitFor timeout dev queue commandBuffer timeoutMessage = do
+  (timelineKey, timeline) <- allocateTimelineSemaphore dev 0
   let submitInfo =
         zero
-          { Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
+          { commandBufferInfos = [SomeStruct zero{CommandBufferSubmitInfo.commandBuffer = Vk.commandBufferHandle commandBuffer}]
+          , signalSemaphoreInfos = [zero{SemaphoreSubmitInfo.semaphore = timeline, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT, SemaphoreSubmitInfo.value = 1}]
           }
-  Vk.queueSubmit queue [SomeStruct submitInfo] fence
-  liftIO (Vk.waitForFences dev [fence] True fenceTimeout) >>= \case
+          :: SubmitInfo2 '[]
+  queueSubmit2 queue [SomeStruct submitInfo] Vk.NULL_HANDLE
+  let waitInfo = zero{SemaphoreWaitInfo.semaphores = [timeline], SemaphoreWaitInfo.values = [1]}
+  liftIO (waitSemaphoresSafe dev waitInfo timeout) >>= \case
     Vk.TIMEOUT -> throwString timeoutMessage
-    _ -> release fenceKey
+    _ -> release timelineKey

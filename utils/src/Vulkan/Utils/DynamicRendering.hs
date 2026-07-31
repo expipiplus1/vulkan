@@ -24,6 +24,7 @@ module Vulkan.Utils.DynamicRendering
     -- * Rendering
   , colorAttachmentRenderingInfo
   , renderingInfo
+  , loadRenderingInfo
   ) where
 
 import Control.Monad.IO.Unlift (MonadUnliftIO)
@@ -181,30 +182,49 @@ renderingInfo
   -- ^ Optional depth attachment view with the clear depth applied by @LOAD_OP_CLEAR@.
   -> Vk.RenderingInfo '[]
 renderingInfo renderArea colorTargets depthTarget =
+  attachmentsInfo
+    renderArea
+    (fmap (\(v, c) -> (v, Just (Vk.Color c))) colorTargets)
+    (fmap (\(v, d) -> (v, Just (Vk.DepthStencil (Vk.ClearDepthStencilValue d 0)))) depthTarget)
+
+{- | Continue over stored contents.
+
+'renderingInfo' with @LOAD_OP_LOAD@ on every attachment — e.g. a second
+geometry pass into the same targets. Layout expectations as in 'renderingInfo'.
+-}
+loadRenderingInfo
+  :: Vk.Rect2D
+  -- ^ Render area (typically the full swapchain extent).
+  -> Vector Vk.ImageView
+  -- ^ Colour attachment views, loaded.
+  -> Maybe Vk.ImageView
+  -- ^ Optional depth attachment view, loaded.
+  -> Vk.RenderingInfo '[]
+loadRenderingInfo renderArea colorTargets depthTarget =
+  attachmentsInfo renderArea (fmap (\v -> (v, Nothing)) colorTargets) (fmap (\v -> (v, Nothing)) depthTarget)
+
+-- | The shared assembly: an attachment clears when given a value, else loads.
+attachmentsInfo
+  :: Vk.Rect2D
+  -> Vector (Vk.ImageView, Maybe Vk.ClearValue)
+  -> Maybe (Vk.ImageView, Maybe Vk.ClearValue)
+  -> Vk.RenderingInfo '[]
+attachmentsInfo renderArea colorTargets depthTarget =
   zero
     { Vk.renderArea = renderArea
     , Vk.layerCount = 1
-    , Vk.colorAttachments = fmap colorAttachment colorTargets
-    , Vk.depthAttachment = fmap depthAttachment depthTarget
+    , Vk.colorAttachments = fmap (attachment Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) colorTargets
+    , Vk.depthAttachment = fmap (attachment Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL) depthTarget
     }
   where
-    colorAttachment :: (Vk.ImageView, Vk.ClearColorValue) -> SomeStruct Vk.RenderingAttachmentInfo
-    colorAttachment (imageView, clearColor) =
+    attachment :: Vk.ImageLayout -> (Vk.ImageView, Maybe Vk.ClearValue) -> SomeStruct Vk.RenderingAttachmentInfo
+    attachment layout (imageView, clear) =
       SomeStruct
         zero
           { Vk.imageView = imageView
-          , Vk.imageLayout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-          , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
+          , Vk.imageLayout = layout
+          , Vk.loadOp = maybe Vk.ATTACHMENT_LOAD_OP_LOAD (const Vk.ATTACHMENT_LOAD_OP_CLEAR) clear
           , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
-          , Vk.clearValue = Vk.Color clearColor
-          }
-    depthAttachment :: (Vk.ImageView, Float) -> SomeStruct Vk.RenderingAttachmentInfo
-    depthAttachment (imageView, clearDepth) =
-      SomeStruct
-        zero
-          { Vk.imageView = imageView
-          , Vk.imageLayout = Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-          , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
-          , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
-          , Vk.clearValue = Vk.DepthStencil (Vk.ClearDepthStencilValue clearDepth 0)
+          , -- Ignored by @LOAD_OP_LOAD@; any value satisfies the struct.
+            Vk.clearValue = fromMaybe (Vk.Color (Vk.Float32 0 0 0 0)) clear
           }

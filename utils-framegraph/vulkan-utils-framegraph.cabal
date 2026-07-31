@@ -1,0 +1,97 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.39.6.
+--
+-- see: https://github.com/sol/hpack
+
+name:           vulkan-utils-framegraph
+version:        0.1.0.0
+synopsis:       Vulkan barrier-placement and resource adapter for the fragr frame graph
+category:       Graphics
+homepage:       https://github.com/expipiplus1/vulkan#readme
+bug-reports:    https://github.com/expipiplus1/vulkan/issues
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
+build-type:     Simple
+extra-source-files:
+    README.md
+    package.yaml
+
+source-repository head
+  type: git
+  location: https://github.com/expipiplus1/vulkan
+
+library
+  exposed-modules:
+      Vulkan.Utils.FrameGraph.Aliasing
+      Vulkan.Utils.FrameGraph.Buffer
+      Vulkan.Utils.FrameGraph.Driver
+      Vulkan.Utils.FrameGraph.Image
+      Vulkan.Utils.FrameGraph.Recorder
+      Vulkan.Utils.FrameGraph.Swapchain
+  other-modules:
+      Paths_vulkan_utils_framegraph
+  hs-source-dirs:
+      src
+  default-extensions:
+      BlockArguments
+      DerivingStrategies
+      DuplicateRecordFields
+      ImportQualifiedPost
+      LambdaCase
+      NamedFieldPuns
+      NoFieldSelectors
+      OverloadedLists
+      OverloadedRecordDot
+      OverloadedStrings
+      RecordWildCards
+      ScopedTypeVariables
+      StrictData
+      TypeApplications
+      TypeFamilies
+  ghc-options: -Wall
+  build-depends:
+      base >=4.16 && <5
+    , containers
+    , fragr
+    , resourcet
+    , text
+    , transformers
+    , vector
+    , vulkan ==3.27.*
+    , vulkan-utils
+  default-language: Haskell2010
+
+test-suite vulkan-utils-framegraph-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_vulkan_utils_framegraph
+  hs-source-dirs:
+      test
+  default-extensions:
+      BlockArguments
+      DerivingStrategies
+      DuplicateRecordFields
+      ImportQualifiedPost
+      LambdaCase
+      NamedFieldPuns
+      NoFieldSelectors
+      OverloadedLists
+      OverloadedRecordDot
+      OverloadedStrings
+      RecordWildCards
+      ScopedTypeVariables
+      StrictData
+      TypeApplications
+      TypeFamilies
+  ghc-options: -Wall
+  build-depends:
+      base
+    , containers
+    , fragr
+    , tasty
+    , tasty-hunit
+    , vector
+    , vulkan
+    , vulkan-utils-framegraph
+  default-language: Haskell2010

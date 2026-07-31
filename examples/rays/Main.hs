@@ -17,9 +17,9 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
 import Vulkan.Utils.Frame (Frame (..))
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
-import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noRecycledResources, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
@@ -35,7 +35,15 @@ main = runResourceT $ do
         , instanceReqs = instanceRequirements
         , deviceReqs = deviceRequirements
         , vmaFlags = VMA.ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
-        , swapchainConfig = defaultSwapchainConfig
+        , -- The raygen imageStores display-referred colours straight into the
+          -- acquired image through an rgba8 view, so the pick must support
+          -- storage — which sRGB formats don't (see 'unormEncoding').
+          swapchainConfig =
+            defaultSwapchainConfig
+              { scRequiredUsageFlags = [Vk.IMAGE_USAGE_STORAGE_BIT]
+              , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_STORAGE_IMAGE_BIT]
+              , scSurfaceFormatPreferences = [unormEncoding]
+              }
         }
       (sdl2Adapter win)
   let
@@ -90,6 +98,7 @@ main = runResourceT $ do
     (shouldQuit win)
     WindowLoop
       { wlMkState = noWindowState
+      , wlMkRecycled = noRecycledResources
       , wlRender = \() f -> renderFrame vc vma renderState f
       , wlOnFrame = noOnFrame
       , wlOnExit = \f -> liftIO $ do

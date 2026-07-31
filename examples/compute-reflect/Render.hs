@@ -7,12 +7,10 @@ module Render
   ) where
 
 import qualified Codec.Picture as JP
-import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Word (Word32)
 import Foreign.Marshal.Array (peekArray)
-import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (Ptr, castPtr, plusPtr)
+import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (sizeOf)
 import Geomancy.UVec2 (uvec2)
 import Geomancy.Vec2 (vec2)
@@ -23,6 +21,7 @@ import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -71,24 +70,8 @@ render allocator dev computeQueueFamilyIndex = do
 
   julia <- Julia.allocatePipeline dev maxIterations escapeRadius
 
-  (_, descriptorPool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 1
-            ]
-        }
-      Nothing
-      allocate
-  [descriptorSet] <-
-    Vk.allocateDescriptorSets
-      dev
-      zero
-        { Vk.descriptorPool = descriptorPool
-        , Vk.setLayouts = [julia.descriptorSetLayout]
-        }
+  -- One descriptor set, its pool sized from the reflected bindings.
+  descriptorSet <- Pipeline.allocateSet dev julia 0
 
   Vk.updateDescriptorSets
     dev
@@ -109,17 +92,10 @@ render allocator dev computeQueueFamilyIndex = do
       allocate
 
   Vk.useCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
-    Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE julia.pipeline
-    Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE julia.pipelineLayout 0 [descriptorSet] []
+    Pipeline.bind cb julia
+    Pipeline.bindSet cb julia 0 descriptorSet
     -- Push the reflected 'Params' (std430) for this dispatch.
-    liftIO $ with params $ \pParams ->
-      Vk.cmdPushConstants
-        cb
-        julia.pipelineLayout
-        Vk.SHADER_STAGE_COMPUTE_BIT
-        0
-        (fromIntegral (sizeOf params))
-        (castPtr pParams)
+    Pipeline.push cb julia params
     Vk.cmdDispatch
       cb
       (ceiling (realToFrac width / realToFrac @_ @Float Julia.workgroup))

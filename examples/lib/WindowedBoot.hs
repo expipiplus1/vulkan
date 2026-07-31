@@ -49,8 +49,9 @@ data WindowedConfig = WindowedConfig
   , vmaFlags :: VMA.AllocatorCreateFlags
   -- ^ VMA flags (e.g. @ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT@ for rays).
   , swapchainConfig :: SwapchainConfig
-  {- ^ Knobs for the initial swapchain. Pass 'defaultSwapchainConfig' for the
-  common case; compute-shader callers (e.g. @resize@) tweak the storage bits.
+  {- ^ Knobs for the initial swapchain. Start from 'defaultSwapchainConfig',
+  pin 'scSurfaceFormatPreferences' to the content's encoding; compute-shader
+  callers (e.g. @resize@) tweak the storage bits too.
   -}
   }
 
@@ -61,7 +62,7 @@ withWindowedVk
   :: (MonadResource m, MonadFail m)
   => WindowedConfig
   -> WindowAdapter m
-  -> m (VulkanContext, VMA.Allocator, Swapchain)
+  -> m (VulkanContext rr, VMA.Allocator, Swapchain)
 withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   inst <-
     waAllocateInstance

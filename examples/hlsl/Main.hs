@@ -19,9 +19,9 @@ import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
-import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
+import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noRecycledResources, runWindowLoop)
 import Vulkan.Zero (zero)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
@@ -36,7 +36,7 @@ main = runResourceT $ do
         , instanceReqs = []
         , deviceReqs = []
         , vmaFlags = zero
-        , swapchainConfig = defaultSwapchainConfig
+        , swapchainConfig = defaultSwapchainConfig{scSurfaceFormatPreferences = [unormEncoding]}
         }
       (sdl2Adapter win)
   let dev = vcDevice vc
@@ -58,6 +58,7 @@ main = runResourceT $ do
             traverse (\iv -> Framebuffer.allocateFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
           groupKey <- register (traverse_ (release . fst) framebuffers)
           pure (fmap snd framebuffers, groupKey)
+      , wlMkRecycled = noRecycledResources
       , wlRender = \fbs f ->
           renderFrame vc renderPass pipeline fbs f
       , wlOnFrame = noOnFrame

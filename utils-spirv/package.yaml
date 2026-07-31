@@ -69,6 +69,7 @@ default-extensions:
 - PatternSynonyms
 - RecordWildCards
 - ScopedTypeVariables
+- StrictData
 - TemplateHaskell
 - TupleSections
 - TypeApplications

@@ -13,6 +13,8 @@ module Vulkan.Utils.Swapchain
   ( Swapchain (..)
   , SwapchainConfig (..)
   , defaultSwapchainConfig
+  , srgbEncoding
+  , unormEncoding
   , allocateSwapchain
   , recreateSwapchain
   , threwSwapchainError
@@ -84,6 +86,40 @@ defaultSwapchainConfig =
         ]
     , scSurfaceFormatPreferences = []
     }
+
+{- | Does presenting through this surface format sRGB-encode written linear values?
+
+'selectSurfaceFormat' is first-fit and the platforms disagree — Mesa's surface
+list leads with sRGB formats, MoltenVK's with UNORM — so unpinned output is
+only correct on the platform whose pick matches what the app writes. Pin via
+'scSurfaceFormatPreferences': 'srgbEncoding' when passes produce linear colour
+(the hardware encodes on write), 'unormEncoding' when they produce
+display-referred (already-encoded) colour that must pass through untouched.
+A preference is best-effort — a surface offering no match falls back — so
+callers that can adapt should check the picked 'sFormat'.
+-}
+srgbEncoding :: KHR.SurfaceFormatKHR -> Bool
+srgbEncoding =
+  encodedAs
+    [ Vk.FORMAT_B8G8R8A8_SRGB
+    , Vk.FORMAT_R8G8B8A8_SRGB
+    , Vk.FORMAT_A8B8G8R8_SRGB_PACK32
+    ]
+
+-- | The pass-through counterpart of 'srgbEncoding': written values reach the display verbatim.
+unormEncoding :: KHR.SurfaceFormatKHR -> Bool
+unormEncoding =
+  encodedAs
+    [ Vk.FORMAT_B8G8R8A8_UNORM
+    , Vk.FORMAT_R8G8B8A8_UNORM
+    , Vk.FORMAT_A8B8G8R8_UNORM_PACK32
+    ]
+
+-- | One of the given formats, in the (non-HDR) sRGB colour space.
+encodedAs :: [Vk.Format] -> KHR.SurfaceFormatKHR -> Bool
+encodedAs formats sf =
+  SurfaceFormatKHR.format sf `elem` formats
+    && SurfaceFormatKHR.colorSpace sf == KHR.COLOR_SPACE_SRGB_NONLINEAR_KHR
 
 ----------------------------------------------------------------
 -- Swapchain

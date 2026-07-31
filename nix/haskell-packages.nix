@@ -60,6 +60,12 @@ let
         modifier = drv: addBuildTools [ pkgs.glslang ] (mod drv);
         returnShellEnv = false;
       };
+      vulkan-utils-framegraph = self.developPackage {
+        name = "vulkan-utils-framegraph";
+        root = gitignore ../utils-framegraph;
+        modifier = mod;
+        returnShellEnv = false;
+      };
       vulkan-init-sdl2 = self.developPackage {
         name = "vulkan-init-sdl2";
         root = gitignore ../utils-init/vulkan-init-sdl2;
@@ -129,9 +135,14 @@ let
       # dontCheck: hedgehog property gives up on discards
       geomancy = dontCheck (self.callHackageDirect {
         pkg = "geomancy";
-        ver = "0.3.0.1";
-        sha256 = "0c0mm70hg1zv6di4y8z2j7a8xbrdxccqqv2v826jis7cyfznppgp";
+        ver = "0.3.1.0";
+        sha256 = "0l9qkh958xwpv31wzddz4a25i57vbcr1q1b0jgrbwz72gmhqqlyp";
       } { });
+      fragr = self.callHackageDirect {
+        pkg = "fragr";
+        ver = "0.1.0.0";
+        sha256 = "18fpxbd4ghcnillzdn3xfj6xl3dmvgvww1bzkhaj6wifg6nlzfvs";
+      } { };
       gl-block = self.callHackageDirect {
         pkg = "gl-block";
         ver = "1.1";
@@ -144,8 +155,8 @@ let
       } { };
       spirv-reflect-ffi = self.callHackageDirect {
         pkg = "spirv-reflect-ffi";
-        ver = "0.4";
-        sha256 = "1861z86hb5pdi2x9fagl9yqrsxvkcm0pr11il5mklhs99xzkh49x";
+        ver = "0.4.1";
+        sha256 = "0f5j6ddrx6z2cq74sq8y0yh743qjy4nip0sm0gy7jm9cd433ik2k";
       } { };
       spirv-reflect-types = self.callHackageDirect {
         pkg = "spirv-reflect-types";

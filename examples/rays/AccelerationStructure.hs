@@ -18,9 +18,16 @@ import Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (waitSemaphoresSafe)
+import qualified Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as SemaphoreWaitInfo (SemaphoreWaitInfo (..))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..))
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SubmitInfo2 (..), queueSubmit2)
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as CommandBufferSubmitInfo (CommandBufferSubmitInfo (..))
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as SemaphoreSubmitInfo (SemaphoreSubmitInfo (..))
 import Vulkan.Extensions.VK_KHR_acceleration_structure as AccelerationStructureDeviceAddressInfoKHR (AccelerationStructureDeviceAddressInfoKHR (..))
 import qualified Vulkan.Extensions.VK_KHR_acceleration_structure as RT
 import Vulkan.Utils.Debug (nameObject)
+import Vulkan.Utils.Frame (allocateTimelineSemaphore)
 import Vulkan.Utils.QueueAssignment
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
@@ -34,7 +41,7 @@ import qualified VulkanMemoryAllocator as VMA
 
 createTLAS
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
@@ -135,7 +142,7 @@ createTLAS vc vma sceneBuffers = do
 
 buildAccelerationStructure
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> RT.AccelerationStructureBuildGeometryInfoKHR
   -> Vector RT.AccelerationStructureBuildRangeInfoKHR
@@ -197,7 +204,7 @@ buildAccelerationStructure vc vma geom ranges sizes = do
 
 createBLAS
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
@@ -229,7 +236,7 @@ createBLAS vc vma sceneBuffers = do
 
 sceneGeometry
   :: (MonadIO m)
-  => VulkanContext
+  => VulkanContext rr
   -> SceneBuffers
   -> m
        ( RT.AccelerationStructureGeometryKHR '[]
@@ -259,7 +266,7 @@ sceneGeometry vc SceneBuffers{..} = do
 
 oneShotComputeCommands
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
+  => VulkanContext rr
   -> (Vk.CommandBuffer -> IO ())
   -> m ()
 oneShotComputeCommands vc cmds = do
@@ -280,15 +287,18 @@ oneShotComputeCommands vc cmds = do
     commandBuffer
     zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
     (liftIO (cmds commandBuffer))
-  (fenceKey, fence) <- Vk.withFence dev zero Nothing allocate
-  Vk.queueSubmit
-    graphicsQueue
-    [SomeStruct zero{Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]}]
-    fence
+  (timelineKey, timeline) <- allocateTimelineSemaphore dev 0
+  let submitInfo =
+        zero
+          { commandBufferInfos = [SomeStruct zero{CommandBufferSubmitInfo.commandBuffer = Vk.commandBufferHandle commandBuffer}]
+          , signalSemaphoreInfos = [zero{SemaphoreSubmitInfo.semaphore = timeline, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT, SemaphoreSubmitInfo.value = 1}]
+          }
+          :: SubmitInfo2 '[]
+  queueSubmit2 graphicsQueue [SomeStruct submitInfo] Vk.NULL_HANDLE
   let oneSecond = 1e9
-  Vk.waitForFencesSafe dev [fence] True oneSecond >>= \case
+  waitSemaphoresSafe dev zero{SemaphoreWaitInfo.semaphores = [timeline], SemaphoreWaitInfo.values = [1]} oneSecond >>= \case
     Vk.SUCCESS -> pure ()
     Vk.TIMEOUT -> error "Timed out running one shot commands"
     _ -> error "Unhandled exit code in oneShotComputeCommands"
-  release fenceKey
+  release timelineKey
   release poolKey

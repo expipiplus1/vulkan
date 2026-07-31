@@ -34,7 +34,8 @@ import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Zero (zero)
 
 import Data.SpirV.Reflect.FFI (loadBytes)
-import Vulkan.Utils.SpirV.Pipeline (ReflectedLayout, allocateGraphicsPipeline, allocateReflectedLayout)
+import Vulkan.Utils.Pipeline (Pipeline)
+import Vulkan.Utils.SpirV.Pipeline (allocateGraphicsPipeline, allocateReflectedLayout)
 import Vulkan.Utils.SpirV.Stage (CompatibleResources, MatchInterface, reflectStageSigBytes)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 
@@ -53,9 +54,8 @@ pipelineComposes :: (MatchInterface VertSig FragSig, CompatibleResources VertSig
 pipelineComposes = True
 
 data Pipelines = Pipelines
-  { layout :: ReflectedLayout
-  , depthOnly :: Vk.Pipeline
-  , depthColor :: Vk.Pipeline
+  { depthOnly :: Pipeline
+  , depthColor :: Pipeline
   }
 
 {- | Two pipelines from the same vertex shader and the same reflected layout:
@@ -70,16 +70,16 @@ allocatePipelines dev colorFormat depthFormat = do
   -- Descriptor set layouts + pipeline layout from reflection, merged across both
   -- stages: Scene visible to vertex AND fragment (stage-flag union), the Mesh SSBO
   -- to the vertex stage. One layout, shared by both pipelines.
-  (_, layout) <- allocateReflectedLayout dev [vertModule, fragModule]
+  layout <- allocateReflectedLayout dev [vertModule, fragModule]
 
-  (_, depthOnly) <-
+  depthOnly <-
     allocateGraphicsPipeline
       dev
       layout
       zero{Dynamic.depthFormat = Just depthFormat}
       ()
       [(vertModule, Shader.vertCode)]
-  (_, depthColor) <-
+  depthColor <-
     allocateGraphicsPipeline
       dev
       layout
@@ -90,4 +90,4 @@ allocatePipelines dev colorFormat depthFormat = do
       ()
       [(vertModule, Shader.vertCode), (fragModule, Shader.fragCode)]
 
-  pure Pipelines{layout = layout, depthOnly = depthOnly, depthColor = depthColor}
+  pure Pipelines{depthOnly = depthOnly, depthColor = depthColor}

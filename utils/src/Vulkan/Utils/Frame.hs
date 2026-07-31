@@ -28,8 +28,16 @@ module Vulkan.Utils.Frame
   , presentFrameImage
   , drainFrames
   , allocateTimelineSemaphore
+  , allocateCommandPool
+  , allocatePrimary
+  , SubmitExtras (..)
+  , noExtras
+  , frameSubmitExtras
+  , waitTwice
   , frameInstanceRequirements
   , frameDeviceRequirements
+  , syncDeviceRequirements
+  , InitRecycledResources
   ) where
 
 import Control.Concurrent (forkIO)
@@ -37,7 +45,10 @@ import Control.Exception (finally, mask_, throwIO)
 import Control.Monad
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource
+import Data.Foldable (for_, toList)
 import Data.IORef
+import Data.List (nub)
+import qualified Data.Map.Strict as Map
 import qualified Data.Vector as V
 import Data.Word
 import System.IO (hPutStrLn, stderr)
@@ -46,6 +57,11 @@ import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
+import Vulkan.Core13 (PhysicalDeviceSynchronization2Features)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2 (..), PipelineStageFlags2)
+import Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SubmitInfo2 (..), queueSubmit2)
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as CommandBufferSubmitInfo (CommandBufferSubmitInfo (..))
+import qualified Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 as SemaphoreSubmitInfo (SemaphoreSubmitInfo (..))
 import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
@@ -58,14 +74,14 @@ import Vulkan.Utils.Swapchain (Swapchain (..), sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
-data Frame = Frame
+data Frame rr = Frame
   { fIndex :: Word64
   -- ^ Monotonic, used as the timeline-semaphore signal value for this frame.
   , fSwapchain :: Swapchain
   {- ^ The swapchain this frame targets. Held by reference so a frame
   in flight keeps its swapchain alive across recreation.
   -}
-  , fRecycled :: RecycledResources
+  , fRecycled :: RecycledResources rr
   {- ^ This frame's image-available semaphore + command pool — borrowed from
   the recycle channel; returned at retire time.
   -}
@@ -76,6 +92,12 @@ data Frame = Frame
   , fGPUWork :: IORef [(Vk.Semaphore, Word64)]
   {- ^ (Timeline semaphore, value) pairs the host wait thread will block on.
   Appended to by 'queueSubmitFrame'.
+  -}
+  , fDeferredWork :: IORef [IO ()]
+  {- ^ Host work the recycle thread runs before the 'fGPUWork' wait — e.g.
+  a frame graph's host-pass tail, which blocks on its own timeline values
+  and signals values listed in 'fGPUWork'. Runs in registration order, off
+  the render thread.
   -}
   , fResources :: (ReleaseKey, InternalState)
   {- ^ ResourceT scope for frame-local allocations; closed when the frame
@@ -99,34 +121,54 @@ frameInstanceRequirements =
       minBound
   ]
 
+{- | Timeline semaphores and synchronization2.
+
+The two primitives everything here synchronizes with: 'queueSubmitFrame' and
+'allocateTimelineSemaphore', and any submit built by hand. Both are core in
+1.3 and universally available in practice, so a headless boot wants them too
+— 'frameDeviceRequirements' is these plus a swapchain.
+-}
+syncDeviceRequirements :: [DeviceRequirement]
+syncDeviceRequirements =
+  [U.reqs|
+    VK_KHR_timeline_semaphore
+    PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+    VK_KHR_synchronization2
+    PhysicalDeviceSynchronization2Features.synchronization2
+  |]
+
 {- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
 'allocateTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
 calling 'Vulkan.Utils.Initialization.allocateDeviceFromRequirements'.
 -}
 frameDeviceRequirements :: [DeviceRequirement]
-frameDeviceRequirements =
-  [U.reqs|
-    VK_KHR_swapchain
-    VK_KHR_timeline_semaphore
-    PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
-  |]
+frameDeviceRequirements = [U.reqs|VK_KHR_swapchain|] <> syncDeviceRequirements
 
 ----------------------------------------------------------------
 -- Construction
 ----------------------------------------------------------------
 
+type InitRecycledResources m rr = VulkanContext rr -> Int -> Queues Vk.CommandPool -> m rr
+
 {- | Build the initial frame with one spare 'RecycledResources' seeded
 into the recycle channel. That, plus the set attached to this frame,
 caps max-in-flight at 2 (CPU recording + GPU executing the previous).
 -}
-initialFrame :: (MonadResource m) => VulkanContext -> Swapchain -> m Frame
-initialFrame vc fSwapchain = do
-  fRecycled <- mkRecycledResources vc
-  spare <- mkRecycledResources vc
+initialFrame
+  :: forall rr m
+   . (MonadResource m)
+  => VulkanContext rr
+  -> Swapchain
+  -> InitRecycledResources m rr
+  -> m (Frame rr)
+initialFrame vc fSwapchain mkRecycled = do
+  fResources <- allocate createInternalState closeInternalState
+  fRecycled <- mkRecycledResources vc $ mkRecycled vc 0
+  spare <- mkRecycledResources vc $ mkRecycled vc 1
   liftIO (vcRecycleBin vc spare)
   (_, fHostTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
-  fResources <- allocate createInternalState closeInternalState
+  fDeferredWork <- liftIO $ newIORef mempty
   liftIO $ runInternalState (resourceTRefCount (sRelease fSwapchain)) (snd fResources)
   pure Frame{fIndex = 1, ..}
 
@@ -135,20 +177,21 @@ Caller passes the (possibly-recreated) 'Swapchain'.
 -}
 advanceFrame
   :: (MonadResource m)
-  => VulkanContext
+  => VulkanContext rr
   -> Swapchain
   -- ^ Same as old, or freshly recreated
-  -> Frame
+  -> Frame rr
   -- ^ The just-finished frame
-  -> m Frame
+  -> m (Frame rr)
 advanceFrame vc sc f = do
+  fResources <- allocate createInternalState closeInternalState
   fRecycled <-
     liftIO $
       vcRecycleNib vc >>= \case
         Left block -> block
         Right rr -> pure rr
   fGPUWork <- liftIO $ newIORef mempty
-  fResources <- allocate createInternalState closeInternalState
+  fDeferredWork <- liftIO $ newIORef mempty
   liftIO $ runInternalState (resourceTRefCount (sRelease sc)) (snd fResources)
   pure
     Frame
@@ -157,6 +200,7 @@ advanceFrame vc sc f = do
       , fRecycled
       , fHostTimeline = fHostTimeline f
       , fGPUWork
+      , fDeferredWork
       , fResources
       }
 
@@ -165,20 +209,25 @@ advanceFrame vc sc f = do
 ----------------------------------------------------------------
 
 {- | Run a per-frame action against this frame's per-frame ResourceT scope,
-then asynchronously wait for the GPU work and recycle. The wait/recycle
-runs in a forked thread so the next frame can begin recording immediately.
+then asynchronously wait for the GPU work and recycle. The deferred host
+work and the wait/recycle run in a forked thread so the next frame can
+begin recording immediately.
 
 Anything 'allocate'd inside @action@ is freed when the frame retires.
 -}
-runFrame :: VulkanContext -> Frame -> ResourceT IO a -> IO a
+runFrame :: VulkanContext rr -> Frame rr -> ResourceT IO a -> IO a
 runFrame vc f action =
   runInternalState action (snd (fResources f))
     `finally` waitAndRecycle vc f
 
-waitAndRecycle :: VulkanContext -> Frame -> IO ()
+waitAndRecycle :: VulkanContext rr -> Frame rr -> IO ()
 waitAndRecycle vc f = do
   waits <- readIORef (fGPUWork f)
+  deferred <- readIORef (fDeferredWork f)
   void . forkIO $ do
+    -- The frame's host work first: it blocks on its own timeline values and
+    -- signals values the wait below (and in-flight submits) depend on.
+    sequence_ (reverse deferred)
     unless (null waits) $ do
       let waitInfo =
             zero
@@ -189,11 +238,11 @@ waitAndRecycle vc f = do
       case r of
         Vk.TIMEOUT -> hPutStrLn stderr "Frame wait timed out (1s) — GPU may be hung"
         _ -> pure ()
-    -- Pool reuse: reset, dropping all recorded buffers.
-    Vk.resetCommandPool
-      (vcDevice vc)
-      (rrCommandPool (fRecycled f))
-      Vk.COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+    -- Pool reuse: reset each distinct pool, dropping all recorded buffers.
+    -- No RELEASE_RESOURCES: the point of recycling a pool is to keep its
+    -- arena warm for the next frame's buffers.
+    for_ (nub (toList (rrCommandPools (fRecycled f)))) $ \pool ->
+      Vk.resetCommandPool (vcDevice vc) pool zero
     -- Free the per-frame ResourceT scope. Must precede the channel deposit so
     -- the deposit signals "all per-frame cleanup done" — otherwise the next
     -- frame could pick up the recycled pool while this frame's cleanup is
@@ -216,8 +265,8 @@ directly.
 -}
 recordCommands
   :: (MonadResource m, MonadFail m)
-  => VulkanContext
-  -> Frame
+  => VulkanContext rr
+  -> Frame rr
   -> (Vk.CommandBuffer -> m ())
   -> m Vk.CommandBuffer
 {-# INLINE recordCommands #-}
@@ -226,7 +275,7 @@ recordCommands vc Frame{fRecycled} record = do
     Vk.withCommandBuffers
       (vcDevice vc)
       zero
-        { Vk.commandPool = rrCommandPool fRecycled
+        { Vk.commandPool = qGraphics (rrCommandPools fRecycled)
         , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
         , Vk.commandBufferCount = 1
         }
@@ -244,13 +293,13 @@ swapchain's per-image render-finished semaphore (at @imageIndex@) plus its
 timeline value, and submits on the graphics queue.
 
 For a non-standard submit shape (multiple submit infos, different wait
-stage, extra signals), call 'Vk.queueSubmit' directly and append
+stage, extra signals), call 'queueSubmit2' directly and append
 @(fHostTimeline f, fIndex f)@ to @fGPUWork f@.
 -}
 queueSubmitFrame
   :: (MonadIO m)
-  => VulkanContext
-  -> Frame
+  => VulkanContext rr
+  -> Frame rr
   -> Word32
   {- ^ Acquired image index (from 'acquireFrameImage'); selects the per-image
   present-wait semaphore to signal.
@@ -259,23 +308,25 @@ queueSubmitFrame
   -> m ()
 {-# INLINE queueSubmitFrame #-}
 queueSubmitFrame vc Frame{..} imageIndex cbs = liftIO . mask_ $ do
-  Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
+  queueSubmit2 gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
   atomicModifyIORef' fGPUWork $ \jobs -> ((fHostTimeline, fIndex) : jobs, ())
   where
     gQ = snd (qGraphics (vcQueues vc))
     renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
+    -- The two WSI semaphores are binary (mandated: acquire signals one,
+    -- present waits on one) and ignore their values; the timeline is ours.
     submitInfo =
       zero
-        { Vk.waitSemaphores = [rrImageAvailable]
-        , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
-        , Vk.commandBuffers = fmap Vk.commandBufferHandle cbs
-        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
+        { waitSemaphoreInfos =
+            [zero{SemaphoreSubmitInfo.semaphore = rrImageAvailable, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_TOP_OF_PIPE_BIT}]
+        , commandBufferInfos =
+            fmap (\cb -> SomeStruct zero{CommandBufferSubmitInfo.commandBuffer = Vk.commandBufferHandle cb}) cbs
+        , signalSemaphoreInfos =
+            [ zero{SemaphoreSubmitInfo.semaphore = renderFinished, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT}
+            , zero{SemaphoreSubmitInfo.semaphore = fHostTimeline, SemaphoreSubmitInfo.stageMask = PIPELINE_STAGE_2_ALL_COMMANDS_BIT, SemaphoreSubmitInfo.value = fIndex}
+            ]
         }
-        ::& zero
-          { waitSemaphoreValues = [1]
-          , signalSemaphoreValues = [1, fIndex]
-          }
-          :& ()
+        :: SubmitInfo2 '[]
     RecycledResources{rrImageAvailable} = fRecycled
 
 {- | Acquire the next swapchain image for this frame, signalling the frame's
@@ -288,7 +339,7 @@ recreation. Timeouts and unexpected results are also translated to
 'ERROR_OUT_OF_DATE_KHR' — the main loop's swapchain-recreation path is the
 right place to recover.
 -}
-acquireFrameImage :: (MonadIO m) => VulkanContext -> Frame -> m (Vk.Result, Word32)
+acquireFrameImage :: (MonadIO m) => VulkanContext rr -> Frame rr -> m (Vk.Result, Word32)
 {-# INLINE acquireFrameImage #-}
 acquireFrameImage vc Frame{..} =
   liftIO $
@@ -316,7 +367,7 @@ If either the prior acquire (passed in) or this present reports
 'SUBOPTIMAL_KHR', raises 'ERROR_OUT_OF_DATE_KHR' so the main loop
 recreates the swapchain.
 -}
-presentFrameImage :: (MonadIO m) => VulkanContext -> Frame -> Vk.Result -> Word32 -> m ()
+presentFrameImage :: (MonadIO m) => VulkanContext rr -> Frame rr -> Vk.Result -> Word32 -> m ()
 {-# INLINE presentFrameImage #-}
 presentFrameImage vc f acquireResult imageIndex = liftIO $ do
   presentResult <-
@@ -341,7 +392,7 @@ to tear down GPU resources.
 
 Assumes max-in-flight is 2 (see 'initialFrame').
 -}
-drainFrames :: VulkanContext -> Frame -> IO ()
+drainFrames :: VulkanContext rr -> Frame rr -> IO ()
 drainFrames vc f = do
   waitAndRecycle vc f
   let take1 = vcRecycleNib vc >>= either id pure
@@ -370,24 +421,75 @@ allocateTimelineSemaphore dev initial =
 + a command pool keyed to the graphics queue family. (The present-wait
 semaphore is per swapchain image, on the 'Swapchain', not here.)
 -}
-mkRecycledResources :: (MonadResource m) => VulkanContext -> m RecycledResources
-mkRecycledResources vc = do
+mkRecycledResources
+  :: (MonadResource m)
+  => VulkanContext rr
+  -> (Queues Vk.CommandPool -> m rr)
+  -> m (RecycledResources rr)
+mkRecycledResources vc mkData = do
   (_, rrImageAvailable) <-
     Vk.withSemaphore
       dev
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
       Nothing
       allocate
-  (_, rrCommandPool) <-
-    Vk.withCommandPool
-      dev
-      zero{CommandPoolCreateInfo.queueFamilyIndex = qfi}
-      Nothing
-      allocate
+  -- One pool per distinct family, shared by every role on it.
+  byFamily <-
+    fmap Map.fromList $
+      traverse (\fam -> fmap (fam,) (allocateCommandPool dev fam)) (nub (toList families))
+  let rrCommandPools = fmap (byFamily Map.!) families
+  rrData <- mkData rrCommandPools
   pure RecycledResources{..}
   where
     dev = vcDevice vc
-    (QueueFamilyIndex qfi, _) = qGraphics (vcQueues vc)
+    families = fmap (\(QueueFamilyIndex fam, _) -> fam) (vcQueues vc)
+
+-- | Allocate a command pool for the family, released with the scope.
+allocateCommandPool :: (MonadResource m) => Vk.Device -> Word32 -> m Vk.CommandPool
+allocateCommandPool dev family = do
+  (_, pool) <- Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = family} Nothing allocate
+  pure pool
+
+-- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
+allocatePrimary :: (MonadResource m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
+allocatePrimary dev pool = do
+  (_, cbs) <-
+    Vk.withCommandBuffers
+      dev
+      zero{Vk.commandPool = pool, Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY, Vk.commandBufferCount = 1}
+      allocate
+  let cb = V.head cbs
+  Vk.beginCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+  pure cb
+
+{- | Frame-level waits and signals spliced into one submit.
+
+Timeline semaphores carry their value; a binary semaphore's value is
+ignored (pass 0).
+-}
+data SubmitExtras = SubmitExtras
+  { waits :: [(Vk.Semaphore, PipelineStageFlags2, Word64)]
+  , signals :: [(Vk.Semaphore, Word64)]
+  }
+
+noExtras :: SubmitExtras
+noExtras = SubmitExtras [] []
+
+{- | The canonical windowed frame extras.
+
+Wait image-available; signal this image's render-finished and the host
+timeline at the frame index — the shape 'queueSubmitFrame' hard-codes,
+for drivers that assemble their own submits.
+-}
+frameSubmitExtras :: Frame rr -> Word32 -> SubmitExtras
+frameSubmitExtras f imageIndex =
+  SubmitExtras
+    { waits = [(rrImageAvailable (fRecycled f), PIPELINE_STAGE_2_TOP_OF_PIPE_BIT, 0)]
+    , signals =
+        [ (sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex, 0)
+        , (fHostTimeline f, fIndex f)
+        ]
+    }
 
 {- | Wait for some semaphores; if the wait times out, give the device one
 more chance with a zero timeout. Catches the case where the host was

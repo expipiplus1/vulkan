@@ -1,17 +1,19 @@
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-{-| Julia-set compute shader pipeline. The pipeline + descriptor set layout
-are created once and never re-created; the descriptor sets are bound to
-swapchain image views, so they need to be recreated whenever the swapchain
-changes.
+{-| Julia-set compute shader pipeline. The pipeline + layout are created once
+and never re-created; the descriptor sets are bound to swapchain image views,
+so they need to be recreated whenever the swapchain changes.
+
+Everything is hand-written (no reflection) into a "Vulkan.Utils.Pipeline"
+bundle — compare with the @compute-reflect@ example.
 -}
 module Julia
-  ( JuliaPipeline (..)
-  , createJuliaPipeline
-  , createJuliaDescriptorSets
+  ( allocateJuliaPipeline
+  , allocateJuliaDescriptorSets
   , juliaWorkgroupX
   , juliaWorkgroupY
   ) where
@@ -21,24 +23,21 @@ import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.Descriptors (imageWrite)
+import Vulkan.Utils.Pipeline (Pipeline (..))
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (compileShaderQ, glsl)
 import Vulkan.Zero (zero)
 
 import Julia.Constants
 
-data JuliaPipeline = JuliaPipeline
-  { jpPipeline :: Vk.Pipeline
-  , jpPipelineLayout :: Vk.PipelineLayout
-  , jpDescriptorSetLayout :: Vk.DescriptorSetLayout
-  }
-
-createJuliaPipeline
+allocateJuliaPipeline
   :: (MonadResource m, MonadFail m)
   => Vk.Device
-  -> m JuliaPipeline
-createJuliaPipeline dev = do
-  (_, descriptorSetLayout) <-
-    Vk.withDescriptorSetLayout
+  -> m Pipeline
+allocateJuliaPipeline dev = do
+  set0 <-
+    Pipeline.allocateSetLayout
       dev
       zero
         { Vk.bindings =
@@ -50,28 +49,17 @@ createJuliaPipeline dev = do
                 }
             ]
         }
-      Nothing
-      allocate
-  (releaseShader, shader) <- juliaShader dev
-  (_, pipelineLayout) <-
-    Vk.withPipelineLayout
+  layout <-
+    Pipeline.allocateLayout
       dev
-      zero
-        { Vk.setLayouts = [descriptorSetLayout]
-        , Vk.pushConstantRanges =
-            [ Vk.PushConstantRange
-                Vk.SHADER_STAGE_COMPUTE_BIT
-                0
-                ((2 + 2 + 2 + 1) * 4)
-            ]
-        }
-      Nothing
-      allocate
+      [(0, set0)]
+      [Vk.PushConstantRange Vk.SHADER_STAGE_COMPUTE_BIT 0 ((2 + 2 + 2 + 1 + 1) * 4)]
+  (releaseShader, shader) <- juliaShader dev
   let
     pipelineCreateInfo :: Vk.ComputePipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { Vk.layout = pipelineLayout
+        { Vk.layout = layout.pipelineLayout
         , Vk.stage = shader
         , Vk.basePipelineHandle = zero
         }
@@ -83,70 +71,24 @@ createJuliaPipeline dev = do
       Nothing
       allocate
   release releaseShader
-  pure
-    JuliaPipeline
-      { jpPipeline = computePipeline
-      , jpPipelineLayout = pipelineLayout
-      , jpDescriptorSetLayout = descriptorSetLayout
-      }
+  pure Pipeline{pipeline = computePipeline, bindPoint = Vk.PIPELINE_BIND_POINT_COMPUTE, layout}
 
 {- | One descriptor set per supplied image view, bound to that view.
-Allocated from a fresh descriptor pool so that releasing this scope frees the lot.
+Allocated from a fresh descriptor pool so that releasing the key frees the lot.
 -}
-createJuliaDescriptorSets
-  :: (MonadResource m)
+allocateJuliaDescriptorSets
+  :: (MonadResource m, MonadFail m)
   => Vk.Device
-  -> Vk.DescriptorSetLayout
+  -> Pipeline
   -> Vector Vk.ImageView
   -> m (ReleaseKey, Vector Vk.DescriptorSet)
-createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
-  (poolKey, descriptorPool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = fromIntegral (V.length imageViews)
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize
-                Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
-                (fromIntegral (V.length imageViews))
-            ]
-        }
-      Nothing
-      allocate
-
-  -- Sets are freed automatically when the pool is destroyed.
-  descriptorSets <-
-    Vk.allocateDescriptorSets
-      dev
-      zero
-        { Vk.descriptorPool = descriptorPool
-        , Vk.setLayouts = V.replicate (V.length imageViews) descriptorSetLayout
-        }
-
+allocateJuliaDescriptorSets dev jp imageViews = do
+  set0 <- Pipeline.set jp.layout 0
+  (poolKey, descriptorSets) <- Pipeline.allocateDescriptorSets dev set0 (V.length imageViews)
   Vk.updateDescriptorSets
     dev
-    ( V.zipWith
-        ( \set view ->
-            SomeStruct
-              zero
-                { Vk.dstSet = set
-                , Vk.dstBinding = 0
-                , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
-                , Vk.descriptorCount = 1
-                , Vk.imageInfo =
-                    [ Vk.DescriptorImageInfo
-                        { Vk.sampler = Vk.NULL_HANDLE
-                        , Vk.imageView = view
-                        , Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL
-                        }
-                    ]
-                }
-        )
-        descriptorSets
-        imageViews
-    )
+    (V.zipWith (\set view -> imageWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL view) descriptorSets imageViews)
     []
-
   pure (poolKey, descriptorSets)
 
 juliaShader
@@ -182,17 +124,20 @@ juliaShader dev = do
           vec2 offset;
           vec2 c;
           float escapeRadius;
+          float time;
         } frame;
 
         // From https://iquilezles.org/www/articles/palettes/palettes.htm
         //
-        // Traditional Julia blue and orange
+        // Traditional Julia blue and orange, with the whole palette rotated by
+        // frame.time (advanced once per compute so the colours move exactly when
+        // — and only when — the image is recomputed).
         vec3 color(const float t) {
           const vec3 a = vec3(0.5);
           const vec3 b = vec3(0.5);
           const vec3 c = vec3(8);
           const vec3 d = vec3(0.5, 0.6, 0.7);
-          return a + b * cos(6.28318530718 * (c * t + d));
+          return a + b * cos(6.28318530718 * (c * t + d + frame.time));
         }
 
         // complex multiplication
