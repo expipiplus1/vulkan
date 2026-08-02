@@ -88,6 +88,27 @@ executables:
     - vulkan-init-glfw
     - vulkan-utils
 
+  glitch-post:
+    main: Main.hs
+    source-dirs: glitch-post
+    dependencies:
+    - VulkanMemoryAllocator
+    - base <5
+    - bytestring
+    - geomancy
+    - gl-block
+    - resourcet
+    - template-haskell
+    - text
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
+    - vulkan-utils
+    - vulkan-utils-spirv
+    - pl-synth
+    - openal-ffi
+
   triangle-headless:
     main: Main.hs
     source-dirs: triangle-headless
