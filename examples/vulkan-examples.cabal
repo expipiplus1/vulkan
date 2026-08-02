@@ -250,6 +250,90 @@ executable compute-reflect
   if os(windows)
     ghc-options: -optl-mconsole
 
+executable glitch-post
+  main-is: Main.hs
+  other-modules:
+      Camera
+      Glitch
+      Glitch.Grid
+      Glitch.Shader
+      Glsl
+      Mapped
+      Music.Player
+      Music.Tune
+      Particles
+      Particles.Banner
+      Particles.Grid
+      Particles.Shader
+      PingPong
+      Targets
+      Tune
+      Tunnel
+      Tunnel.Grid
+      Tunnel.Shader
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      glitch-post
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NegativeLiterals
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , geomancy
+    , gl-block
+    , openal-ffi
+    , pl-synth
+    , resourcet
+    , template-haskell
+    , text
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-init-glfw
+    , vulkan-utils
+    , vulkan-utils-spirv
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
 executable hlsl
   main-is: Main.hs
   other-modules:
