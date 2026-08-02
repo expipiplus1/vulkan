@@ -38,7 +38,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install libsdl2-dev
+        sudo apt-get install libsdl2-dev libopenal-dev
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -64,6 +64,20 @@ jobs:
         package sdl2
           extra-lib-dirs: $SDL2/lib/
           extra-include-dirs: $SDL2/include/SDL2/
+        EOF
+
+        curl -LO https://openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip
+        unzip -q openal-soft-1.23.1-bin.zip
+        # ld links -lopenal straight against the DLL (auto-import); no
+        # mingw import lib ships in the release, so give it the DLL name.
+        cp openal-soft-1.23.1-bin/bin/Win64/soft_oal.dll openal-soft-1.23.1-bin/libs/Win64/openal.dll
+        OPENAL=$(cygpath --windows --absolute "openal-soft-1.23.1-bin")
+        printf "%s\n" "$OPENAL/bin/Win64" >> "$GITHUB_PATH"
+
+        cat >> cabal.project <<EOF
+        package openal-ffi
+          extra-lib-dirs: $OPENAL/libs/Win64/
+          extra-include-dirs: $OPENAL/include/
         EOF
 
     - name: Prepare Vulkan SDK
@@ -175,7 +189,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install libsdl2-dev
+        sudo apt-get install libsdl2-dev libopenal-dev
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
@@ -193,6 +207,17 @@ jobs:
 
         yq --inplace ".\"extra-lib-dirs\" += [\"$SDL2/lib/\"]" stack.yaml
         yq --inplace ".\"extra-include-dirs\" += [\"$SDL2/include/\"]" stack.yaml
+
+        curl -LO https://openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip
+        unzip -q openal-soft-1.23.1-bin.zip
+        # ld links -lopenal straight against the DLL (auto-import); no
+        # mingw import lib ships in the release, so give it the DLL name.
+        cp openal-soft-1.23.1-bin/bin/Win64/soft_oal.dll openal-soft-1.23.1-bin/libs/Win64/openal.dll
+        OPENAL=$(cygpath --windows --absolute "openal-soft-1.23.1-bin")
+        printf "%s\n" "$OPENAL/bin/Win64" >> "$GITHUB_PATH"
+
+        yq --inplace ".\"extra-lib-dirs\" += [\"$OPENAL/libs/Win64/\"]" stack.yaml
+        yq --inplace ".\"extra-include-dirs\" += [\"$OPENAL/include/\"]" stack.yaml
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
