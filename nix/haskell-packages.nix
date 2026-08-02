@@ -171,6 +171,20 @@ let
       } { });
 
       #
+      # Dependencies for the glitch-post example, absent or too old in nixpkgs
+      #
+      pl-synth = self.callHackageDirect {
+        pkg = "pl-synth";
+        ver = "0.1.0.0";
+        sha256 = "0aqcwyxksc6wkinz3c7q5jgfv70hl12q6980sw8h9kxq66yf4xdq";
+      } { };
+      openal-ffi = self.callHackageDirect {
+        pkg = "openal-ffi";
+        ver = "0.0.2";
+        sha256 = "0la6c1hdxljk4rcj87n1dx7lp4s47va3gx9wjgbn42jl6iwqsr17";
+      } { };
+
+      #
       # Overrides for generate
       #
       pandoc = appendPatch ../generate-new/patches/pandoc-haddock-tables.patch
