@@ -2,8 +2,10 @@ name: vulkan-utils-framegraph
 version: "0.1.0.0"
 synopsis: Vulkan barrier-placement and resource adapter for the fragr frame graph
 category: Graphics
-maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-github: expipiplus1/vulkan
+maintainer: IC Rainbow <aenor.realm@gmail.com>
+license: BSD-3-Clause
+github: haskell-game/vulkan
+license-file: LICENSE
 extra-source-files:
 - README.md
 - package.yaml

@@ -1,6 +1,6 @@
-cabal-version: 1.12
+cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -8,10 +8,10 @@ name:           vulkan-init-glfw
 version:        0.1.0.0
 synopsis:       Vulkan initialization helpers for GLFW
 category:       Graphics
-homepage:       https://github.com/expipiplus1/vulkan#readme
-bug-reports:    https://github.com/expipiplus1/vulkan/issues
-maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-license:        BSD3
+homepage:       https://github.com/haskell-game/vulkan#readme
+bug-reports:    https://github.com/haskell-game/vulkan/issues
+maintainer:     IC Rainbow <aenor.realm@gmail.com>
+license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -21,13 +21,15 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/expipiplus1/vulkan
+  location: https://github.com/haskell-game/vulkan
 
 library
   exposed-modules:
       Vulkan.Utils.Init.GLFW
       Vulkan.Utils.Init.GLFW.Window
   other-modules:
+      Paths_vulkan_init_glfw
+  autogen-modules:
       Paths_vulkan_init_glfw
   hs-source-dirs:
       src

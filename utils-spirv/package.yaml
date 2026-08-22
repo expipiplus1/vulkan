@@ -2,8 +2,10 @@ name: vulkan-utils-spirv
 version: "0.1.0.0"
 synopsis: Generate Haskell types and Vulkan descriptor/pipeline layouts from SPIR-V reflection
 category: Graphics
-maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-github: expipiplus1/vulkan
+maintainer: IC Rainbow <aenor.realm@gmail.com>
+license: BSD-3-Clause
+license-file: LICENSE
+github: haskell-game/vulkan
 extra-source-files:
 - README.md
 - package.yaml

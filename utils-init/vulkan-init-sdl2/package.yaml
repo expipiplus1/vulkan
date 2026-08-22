@@ -2,10 +2,10 @@ name: vulkan-init-sdl2
 version: "0.1.0.0"
 synopsis: Vulkan initialization helpers for SDL2
 category: Graphics
-maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-github: expipiplus1/vulkan
-license: BSD3
+maintainer: IC Rainbow <aenor.realm@gmail.com>
+license: BSD-3-Clause
 license-file: LICENSE
+github: haskell-game/vulkan
 extra-source-files:
 - readme.md
 - changelog.md
