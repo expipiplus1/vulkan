@@ -8,6 +8,14 @@ For the vulkan instance and all physical devices it dumps layer and extension
 properties to stdout. It also prints features and properties for all physical
 devices.
 
+### The Triangle
+
+- `triangle-sdl2` using `vulkan-init-sdl2`
+- `triangle-glfw` using `vulkan-inid-glfw`
+- `triangle-headless` using `vulkan-utils` (without the windowing)
+- `triangle-dynamic` featuring dynamic rendering.
+- `hlsl` the shader is authored in HLSL.
+
 ### `resize`
 
 A nice example of rendering into a window which can be resized. It uses the
@@ -18,35 +26,6 @@ It renders a Julia set according the mouse position in the window.
 
 The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
 used to ensure resources are deallocated.
-
-### `hlsl`
-
-A nicer example of rendering into a window which can be resized, the shaders
-are written in HLSL and compiled with the `glslc` tool from
-[Shaderc](https://github.com/google/shaderc).
-
-If you don't have this tool installed then you might want to turn off the Cabal
-flag `have-shaderc` to stop this example from building.
-
-It renders a triangle, sharing the `lib/` recycling `Frame` infrastructure
-with `resize`, `rays`, `triangle-sdl2`, and `triangle-glfw`.
-
-### `rays`
-
-An example of using the `VK_KHR_ray_tracing_pipeline` extension. Needs quite a
-new driver to run!
-
-### `triangle-headless`
-
-This example:
-
-- Renders a triangle to an image
-- Copies the image contents to a CPU-mapped image
-- Writes that image to "triangle.png"
-
-It is a pretty minimal example of rendering something. Single-shot, no
-recycling Frame needed — just plain `ResourceT IO` with handles threaded as
-explicit args.
 
 ### `compute`
 
@@ -62,23 +41,27 @@ This program includes examples of:
 - Compute shader dipatch
 - Convenient shader creation using the `Vulkan.Utils.ShaderQQ.comp` QuasiQuoter
 
-Single-shot like `triangle-headless`; uses plain `ResourceT IO`.
+### Shader reflection
 
-### `triangle-sdl2`
+Mostly some test cases for working with Haskell data generated from SPIR-V reflection.
 
-This opens a window using SDL and renders a triangle.
+- `mesh-reflect`
+- `texture-reflect`
+- `compute-reflect`, same as `compute`.
+- `pathtrace-reflect`, the Ray Tracing in One Weekend scene, compute version. Does not actually use ray tracing hardware.
 
-The `managed` package is used for ensuring resources are deallocated.
+### `rays`
 
-Exit with `q`, `escape` or the window exit button.
+An example of using the `VK_KHR_ray_tracing_pipeline` extension.
 
-### `triangle-glfw`
+### `glitch-post`
 
-This opens a window using GLFW and renders a triangle.
+Dynamic rendering test case. A compute-draw-compute sandwich synched to a music player.
 
-The `managed` package is used for ensuring resources are deallocated.
+### `visibility-buffer`
 
-Exit with `q`, `escape` or the window exit button.
+Framegraph megademo, cramming **lots** of stuff for the sake of it.
+It is so sprawling it has its own "[anatomy of a frame](./visibility-buffer/docs/index.md)" page.
 
 ## Building and Running
 

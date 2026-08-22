@@ -1,4 +1,4 @@
-cabal-version: 1.24
+cabal-version: 2.2
 
 -- This file has been generated from package.yaml by hpack version 0.39.6.
 --
@@ -7,11 +7,10 @@ cabal-version: 1.24
 name:           vulkan-utils
 version:        0.5.11.0
 synopsis:       Utils for the vulkan package
-category:       Graphics
 homepage:       https://github.com/haskell-game/vulkan#readme
 bug-reports:    https://github.com/haskell-game/vulkan/issues
-maintainer:     IC Rainbow <aenor.realm@gmail.com>, Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-license:        BSD3
+maintainer:     IC Rainbow <aenor.realm@gmail.com>
+license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Custom
 extra-source-files:
